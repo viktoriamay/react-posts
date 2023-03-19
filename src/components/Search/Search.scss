@@ -2,14 +2,15 @@
   display: flex;
   align-items: center;
   position: relative;
-  min-width: 134px;
+  min-width: 120px;
+  width: 100%;
 
   &__input {
     width: 100%;
     border-radius: 30px;
     border: 1px solid transparent;
     outline: none;
-    padding: 10px 80px 10px 20px;
+    padding: 10px 20px 10px 20px;
     color: #000;
     font-size: 16px;
     font-family: 'Montserrat', sans-serif;

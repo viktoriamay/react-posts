@@ -5,8 +5,58 @@
   &__wrapper {
     display: flex;
     align-items: center;
-    gap: 3rem;
+    justify-content: space-between;
+    gap: 2rem;
+
+    &__login {
+      width: 50px;
+    }
   }
 
-  
+  &__action_menu {
+    display: flex;
+    gap: 3rem;
+    width: 32rem;
+  }
+
+  &__icons_menu {
+    display: flex;
+    gap: 2rem;
+  }
+
+  &__login_icon svg {
+    height: 32px;
+    width: 32px;
+    fill: #f1b600;
+    transition: 0.2s ease;
+    cursor: pointer;
+
+    &:hover {
+      fill: #e8e8e8;
+    }
+  }
+
+  &__favorites_icon svg {
+    height: 32px;
+    width: 32px;
+    fill: #f1b600;
+    transition: 0.2s ease;
+    cursor: pointer;
+
+    &:hover {
+      fill: #e8e8e8;
+    }
+  }
+
+  &__add_icon svg {
+    height: 32px;
+    width: 32px;
+    fill: #f1b600;
+    transition: 0.2s ease;
+    cursor: pointer;
+
+    &:hover {
+      fill: #e8e8e8;
+    }
+  }
 }
