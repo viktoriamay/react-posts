@@ -1,0 +1,39 @@
+.logo {
+  display: flex;
+  align-items: center;
+  cursor: pointer;
+
+  &__svg {
+    fill: none;
+    stroke: #f1b600;
+    transition: 0.2s ease;
+  }
+
+  &:hover .logo__svg {
+    stroke: #e8e8e8;
+  }
+
+  &:hover p {
+    color: #e8e8e8;
+  }
+
+  &:hover .logo__img {
+    transform: rotate(180deg);
+  }
+
+  &__img {
+    transition: 1s ease;
+  }
+
+  &_title_wrapper {
+    margin-left: 0.5rem;
+  }
+
+  &_title {
+    transition: 0.2s ease;
+    color: #f1b600;
+    font-size: 25px;
+    font-weight: 500;
+    margin: 0;
+  }
+}
