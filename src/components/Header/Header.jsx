@@ -3,14 +3,14 @@ import { Logo } from '../Logo/Logo';
 import { Search } from '../Search/Search';
 import './Header.scss';
 
-export const Header = () => {
+export const Header = ({onSubmit: formSubmitRequest, onInput: changeInput}) => {
   return (
     <header className="header">
       <div className="container">
         <div className="header__wrapper">
           <div className="header__action_menu">
             <Logo />
-            <Search />
+            <Search onSubmit={formSubmitRequest} onInput={changeInput} />
           </div>
           <div className="header__icons_menu">
             <PlusCircleOutlined className="header__add_icon" />
