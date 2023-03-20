@@ -52,7 +52,7 @@ export const Card = (props) => {
                   ? 'card__link_more card__link__more_hover'
                   : 'card__link_more'
               }>
-              Read More
+              Читать
               <RightOutlined />
             </span>
           </div>

@@ -1,14 +1,18 @@
 .card {
-  display: flex;
-  flex-direction: column;
   border: 1px solid #404040;
-  width: 250px;
+  width: 100%;
   cursor: pointer;
   transition: 0.3s ease;
   position: relative;
 
+  &__wrapper {
+    display: flex;
+    flex-direction: column;
+    height: 100%;
+  }
+
   &__img_container {
-    height: 270px;
+    height: 20rem;
   }
 
   &__img {
@@ -18,7 +22,12 @@
   }
 
   &__description {
+    height: 100%;
+    flex: 1;
+    display: flex;
+    flex-direction: column;
     padding: 16px;
+    gap: 2rem;
   }
 
   &__info {
@@ -39,9 +48,21 @@
     }
   }
 
+  &__title {
+    font-size: 20px;
+    margin: 0;
+    flex: 1;
+  }
+
+  &__text {
+    margin: 0;
+    font-size: 16px;
+  }
+
   &__link_more {
     display: flex;
     align-items: center;
+    font-size: 14px;
     font-weight: 600;
     transition: 0.15s ease;
     gap: 0.3rem;
