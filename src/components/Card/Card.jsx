@@ -8,17 +8,20 @@ import './Card.scss';
 import { useState } from 'react';
 
 export const Card = () => {
+  
   const [classActiveCard, setClassActiveCard] = useState(false);
   const [classHoverCard, setClassHoverCard] = useState(false);
-
   return (
+    
+
     <div className="card">
       <div
         className={'card__wrapper'}
         onMouseDown={() => setClassActiveCard(true)}
         onMouseUp={() => setClassActiveCard(false)}
         onMouseOver={() => setClassHoverCard(true)}
-        onMouseOut={() => setClassHoverCard(false)}>
+        onMouseOut={() => setClassHoverCard(false)}
+        >
         <div className="card__img_container">
           <img
             className="card__img"
