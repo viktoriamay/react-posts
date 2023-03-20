@@ -3,10 +3,10 @@ import api from '../../utils/api';
 import { Card } from '../Card/Card';
 import { CardList } from '../CardList/CardList';
 import { Header } from '../Header/Header';
+import { SearchInfo } from '../SearchInfo/SearchInfo';
 import './App.scss';
 
 function App() {
-
   const [posts, setPosts] = useState([]);
   const [currentUser, setCurrentUser] = useState(null);
   const [searchQuery, setSearchQuery] = useState('');
@@ -20,7 +20,7 @@ function App() {
       ([postsData, userData]) => {
         setPosts(postsData);
         setCurrentUser(userData);
-      }
+      },
     );
 
     /* БЕЗ ПРОМИСА
@@ -52,8 +52,8 @@ function App() {
 
     api.search(searchQuery).then((filteredPosts) => {
       setPosts([...filteredPosts]);
-    })
-  }
+    });
+  };
 
   // добавляем функцию фильтрации постов в юзэффект
   // следим за запросом в поисковой строке
@@ -65,18 +65,19 @@ function App() {
   const formSubmitRequest = (e) => {
     e.preventDefault();
     filterPostsRequest();
-  }
+  };
 
   return (
     <div className="App">
-
       {/* прокидываем пропсы, => formSubmitRequest={formSubmitRequest} changeInput={changeInput} то же самое что и ниже.  */}
       <Header onSubmit={formSubmitRequest} onInput={changeInput} />
 
       <main className="main container">
-        {/* прокидываем данные с постов в кардлист, чтобы принять их в карде */}
-      <CardList posts={posts} />
+        {/* прокидываем данные с вводимого значения в инпуте через условную переменную сёрчТекст. серчКаунт это количество постов (элементов в массиве) после фильтрации по запросу */}
+        <SearchInfo searchText={searchQuery} searchCount={posts.length} />
 
+        {/* прокидываем данные с постов в кардлист, чтобы принять их в карде */}
+        <CardList posts={posts} />
       </main>
     </div>
   );
