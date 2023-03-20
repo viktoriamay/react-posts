@@ -7,48 +7,48 @@ import {
 import './Card.scss';
 import { useState } from 'react';
 
-export const Card = () => {
-  
+export const Card = (props) => {
   const [classActiveCard, setClassActiveCard] = useState(false);
   const [classHoverCard, setClassHoverCard] = useState(false);
-  return (
-    
 
+  return (
     <div className="card">
       <div
         className={'card__wrapper'}
         onMouseDown={() => setClassActiveCard(true)}
         onMouseUp={() => setClassActiveCard(false)}
         onMouseOver={() => setClassHoverCard(true)}
-        onMouseOut={() => setClassHoverCard(false)}
-        >
+        onMouseOut={() => setClassHoverCard(false)}>
         <div className="card__img_container">
-          <img
-            className="card__img"
-            src="https://images.unsplash.com/photo-1535827841776-24afc1e255ac?ixlib=rb-4.0.3&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=435&q=80"
-            alt="desc"
-          />
+          <img className="card__img" src={props.image} alt="desc" />
         </div>
         <div className="card__description">
           <div className="card__info">
             <span className="card__info_about">
               <UserOutlined />
-              Author
+              {props.author.name}
             </span>
             <span className="card__info_about">
               <CommentOutlined />
-              Comments
+              {props.comments.length}
             </span>
           </div>
-          <h2 className="card__title">Title</h2>
-          <p className="card__text">Text</p>
+          <h2 className="card__title">
+            {props.title.replace(props.title[0], props.title[0].toUpperCase())}
+          </h2>
+          <p className="card__text">
+            {props.text
+              .replaceAll(/<\/?[A-Za-z]+[^>]*>/gi, '')
+              .slice(0, 50)
+              .replace(props.text[0], props.text[0].toUpperCase())}
+            {props.text.length > 40 && '...'}
+          </p>
           <div className="card__info">
             <span
               className={
                 classActiveCard
                   ? 'card__link_more card__link__more_active'
-                  : 'card__link_more' 
-                && classHoverCard
+                  : 'card__link_more' && classHoverCard
                   ? 'card__link_more card__link__more_hover'
                   : 'card__link_more'
               }>

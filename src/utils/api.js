@@ -10,15 +10,24 @@ class Api {
   }
 
   getPostsList() {
-    return fetch(`${this._baseUrl}/posts`, { headers: this._headers }).then(
-      onResponse,
-    );
+    return fetch(`${this._baseUrl}/posts`, {
+      headers: this._headers,
+      method: 'GET',
+    }).then(onResponse);
   }
 
   getUserInfo() {
-    return fetch(`${this._baseUrl}/users/me`, { headers: this._headers }).then(
-      onResponse,
-    );
+    return fetch(`${this._baseUrl}/users/me`, {
+      headers: this._headers,
+      method: 'GET',
+    }).then(onResponse);
+  }
+
+  search(searchQuery) {
+    return fetch(`${this._baseUrl}/posts/search?query=${searchQuery}`, {
+      headers: this._headers,
+      method: 'GET',
+    }).then(onResponse);
   }
 }
 
