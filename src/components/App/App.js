@@ -57,8 +57,8 @@ function App() {
   // создаем переменную фильтр, обращаемся к апи данным постов, фильтруем посты (пост из стейта), в фильтр кладем поле тайтл из поста, приводим его к нижнему регистру, но фильтруем то что содержит (инклюдес) серчКвери, то есть то, что мы написали в поисковой строке
   // затем сетим (изменяем) посты на измененный новый массив отфильтрованных
   const filterPostsRequest = () => {
-    /* const filteredPosts = posts.filter((post) => post.title.toUpperCase().includes(searchQuery.toUpperCase()));
-    setPosts([...filteredPosts]); */
+    const filteredPosts = posts.filter((post) => post.title.toUpperCase().includes(searchQuery.toUpperCase()));
+    setPosts([...filteredPosts]);
 
     api
       .search(searchQuery)
