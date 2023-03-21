@@ -1,0 +1,78 @@
+.post {
+  display: flex;
+  flex-direction: column;
+  gap: 3rem;
+  margin: 2rem 0;
+
+
+  &__wrapper {
+    display: grid;
+    grid-template-columns: 1.2fr 2fr;
+    align-items: center;
+    // border-bottom: 2px solid #404040;
+    // border-left: 2px solid #404040;
+    box-shadow: 0 2px 20px #40404083;
+  }
+
+  &__intro {
+    display: flex;
+    flex-direction: column;
+    text-align: center;
+    padding: 2rem;
+    gap: 1rem;
+  }
+
+  &__title {
+    margin: 0;
+  }
+
+  &__date {
+    font-size: 14px;
+  }
+
+  &__author_avatar {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 0.5rem;
+    font-weight: 500;
+  }
+
+  &__author_about {
+    font-size: 14px;
+  }
+
+  &__image {
+    height: 50vh;
+
+    img {
+      height: 100%;
+      object-fit: cover;
+    }
+  }
+
+  &__description {
+    display: flex;
+    flex-direction: column;
+    gap: 2rem;
+    align-items: center;
+  }
+
+  &__text {
+    font-size: 18px;
+    max-width: 80%;
+    text-align: center;
+    margin: 0;
+    line-height: 1.8rem;
+  }
+
+  &__tags {
+    color: #404040a3;
+  }
+
+  &__likes {
+    display: flex;
+    justify-content: center;
+    gap: 2rem;
+  }
+}
