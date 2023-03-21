@@ -99,12 +99,14 @@
       transition: all 0.3s ease;
 
       &:hover {
-        fill: #ff0000;
-        stroke: #ff0000;
+        fill: #f1b600;
+        stroke: #f1b600;
       }
 
       &:active {
         transform: scale(115%) rotate(20deg);
+        fill: #df0000;
+      stroke: #df0000;
       }
     }
   }

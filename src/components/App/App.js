@@ -85,13 +85,11 @@ function App() {
   const isLiked = (likes, userId) => likes?.some((id) => id === userId);
 
   const handlePostLike = (post) => {
-    console.log({post});
     const liked = isLiked(post.likes, currentUser?._id);
-    // console.log(post.likes);
     api.changeLikePost(post._id, liked).then((newCard) => {
       const newPosts = posts.map((postState) => {
-        console.log('Карточка из стейта', postState);
-        console.log('Карточка с сервера', newCard);
+        // console.log('Карточка из стейта', postState);
+        // console.log('Карточка с сервера', newCard);
         return postState._id === newCard._id ? newCard : postState;
       });
       setPosts(newPosts)
