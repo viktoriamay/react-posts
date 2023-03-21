@@ -135,7 +135,7 @@ function App() {
             }
           />
 
-          <Route path="/post" element={<PostPage posts={posts} />} />
+          <Route path="/post" element={<PostPage />} />
         </Routes>
       </main>
     </div>
