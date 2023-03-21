@@ -31,6 +31,7 @@ class Api {
   }
 
   changeLikePost(postId, isLike) {
+    // console.log(postId);
     return fetch(`${this._baseUrl}/posts/likes/${postId}`, {
       headers: this._headers,
       method: isLike ? 'DELETE': 'PUT' ,
@@ -39,7 +40,7 @@ class Api {
 }
 
 const config = {
-  baseUrl: 'https://api.react-learning.ru/v2/group-9/',
+  baseUrl: 'https://api.react-learning.ru/v2/group-9',
   headers: {
     'content-type': 'application/json',
     Authorization:

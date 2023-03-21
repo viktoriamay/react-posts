@@ -12,6 +12,7 @@ function App() {
   const [posts, setPosts] = useState([]);
   const [currentUser, setCurrentUser] = useState(null);
   const [searchQuery, setSearchQuery] = useState('');
+  const [favorites, setFavorites] = useState([]);
 
   // возвращает накопленное сёрчКвери
   const debounceSearchQuery = useDebounce(searchQuery, 1000);
@@ -25,6 +26,10 @@ function App() {
       ([postsData, userData]) => {
         setPosts(postsData);
         setCurrentUser(userData);
+        /* const favProducts = postsData.posts.filter((post) =>
+        isLiked(post.likes, userData._id) 
+        );
+        setFavorites(favProducts); */
       },
     );
 
@@ -77,6 +82,22 @@ function App() {
     filterPostsRequest();
   };
 
+  const isLiked = (likes, userId) => likes?.some((id) => id === userId);
+
+  const handlePostLike = (post) => {
+    console.log({post});
+    const liked = isLiked(post.likes, currentUser?._id);
+    // console.log(post.likes);
+    api.changeLikePost(post._id, liked).then((newCard) => {
+      const newPosts = posts.map((postState) => {
+        console.log('Карточка из стейта', postState);
+        console.log('Карточка с сервера', newCard);
+        return postState._id === newCard._id ? newCard : postState;
+      });
+      setPosts(newPosts)
+    });
+  };
+
   return (
     <div className="App">
       <Header currentUser={currentUser}>
@@ -89,7 +110,11 @@ function App() {
         <SearchInfo searchText={searchQuery} searchCount={posts.length} />
 
         {/* прокидываем данные с постов в кардлист, чтобы принять их в карде */}
-        <CardList posts={posts} />
+        <CardList
+          posts={posts}
+          currentUser={currentUser}
+          handlePostLike={handlePostLike}
+        />
       </main>
     </div>
   );

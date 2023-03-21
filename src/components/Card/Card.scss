@@ -88,6 +88,10 @@
     right: 10px;
     bottom: 10px;
     padding: 5px;
+    cursor: pointer;
+    background: none;
+    border: none;
+    display: flex;
 
     svg {
       width: 22px;
@@ -95,13 +99,27 @@
       transition: all 0.3s ease;
 
       &:hover {
-        fill: #df0000;
-        stroke: #df0000;
+        fill: #ff0000;
+        stroke: #ff0000;
       }
 
       &:active {
         transform: scale(115%) rotate(20deg);
       }
     }
+  }
+
+  &__like__is_active {
+    svg {
+      fill: #df0000;
+      stroke: #df0000;
+    }
+  }
+
+  &__like_length {
+    position: absolute;
+    right: 35px;
+    bottom: 10px;
+    padding: 5px;
   }
 }

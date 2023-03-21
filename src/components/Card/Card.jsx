@@ -11,6 +11,12 @@ export const Card = (props) => {
   const [classActiveCard, setClassActiveCard] = useState(false);
   const [classHoverCard, setClassHoverCard] = useState(false);
 
+  const handleLikeClick = () => {
+    props.handlePostLike(props._id, props.likes)
+  }
+
+  const liked = props.likes.some((id) => id === props.currentUser?._id)
+
   return (
     <div className="card">
       <div
@@ -58,7 +64,14 @@ export const Card = (props) => {
           </div>
         </div>
       </div>
-      <FireOutlined className="card__like" />
+      <div>
+        <span className="card__like_length">
+          {props.likes.length !== 0 && props.likes.length}
+        </span>
+        <button className={liked ? "card__like card__like__is_active" : "card__like"} onClick={() => handleLikeClick(props._id, props.likes)}>
+          <FireOutlined  />
+        </button>
+      </div>
     </div>
   );
 };
