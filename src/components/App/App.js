@@ -5,11 +5,16 @@ import { CardList } from '../CardList/CardList';
 import { Header } from '../Header/Header';
 import { SearchInfo } from '../SearchInfo/SearchInfo';
 import './App.scss';
+import useDebounce from './../../hooks/useDebounce';
+import { Search } from '../Search/Search';
 
 function App() {
   const [posts, setPosts] = useState([]);
   const [currentUser, setCurrentUser] = useState(null);
   const [searchQuery, setSearchQuery] = useState('');
+
+  // возвращает накопленное сёрчКвери
+  const debounceSearchQuery = useDebounce(searchQuery, 1000);
 
   // здесь мы получаем информацию с сервера апи запросами и помещаем данные в соответствующие стейты
   useEffect(() => {
@@ -50,16 +55,21 @@ function App() {
     /* const filteredPosts = posts.filter((post) => post.title.toUpperCase().includes(searchQuery.toUpperCase()));
     setPosts([...filteredPosts]); */
 
-    api.search(searchQuery).then((filteredPosts) => {
-      setPosts([...filteredPosts]);
-    });
+    api
+      .search(searchQuery)
+      .then((filteredPosts) => {
+        setPosts([...filteredPosts]);
+      })
+      .catch((error) => console.log(error));
   };
 
   // добавляем функцию фильтрации постов в юзэффект
   // следим за запросом в поисковой строке
+  // теперь следим за запросом в поисковой строке, но с учётом задержки (так как значение из инпута мы положили в стейт)
+  // реквест (запрос на сервер по вводимому значению в инпут) вызывается только тогда, когда изменяется дебаунсквери
   useEffect(() => {
     filterPostsRequest();
-  }, [searchQuery]);
+  }, [debounceSearchQuery]);
 
   // создаем функцию фильтрации постов по нажатию на баттон сабмит в сёрче
   const formSubmitRequest = (e) => {
@@ -69,8 +79,10 @@ function App() {
 
   return (
     <div className="App">
-      {/* прокидываем пропсы, => formSubmitRequest={formSubmitRequest} changeInput={changeInput} то же самое что и ниже.  */}
-      <Header onSubmit={formSubmitRequest} onInput={changeInput} />
+      <Header currentUser={currentUser}>
+        {/* прокидываем пропсы, => formSubmitRequest={formSubmitRequest} changeInput={changeInput} то же самое что и ниже.  */}
+        <Search onSubmit={formSubmitRequest} onInput={changeInput} />
+      </Header>
 
       <main className="main container">
         {/* прокидываем данные с вводимого значения в инпуте через условную переменную сёрчТекст. серчКаунт это количество постов (элементов в массиве) после фильтрации по запросу */}
