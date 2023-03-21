@@ -37,6 +37,13 @@ class Api {
       method: isLike ? 'DELETE': 'PUT' ,
     }).then(onResponse);
   }
+
+  getPostById(postId) {
+    return fetch(`${this._baseUrl}/posts/${postId}`, {
+      headers: this._headers,
+      method: 'GET',
+    }).then(onResponse);
+  }
 }
 
 const config = {

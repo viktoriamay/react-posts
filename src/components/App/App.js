@@ -7,6 +7,9 @@ import { SearchInfo } from '../SearchInfo/SearchInfo';
 import './App.scss';
 import useDebounce from './../../hooks/useDebounce';
 import { Search } from '../Search/Search';
+import Spinner from '../Spinner/Spinner';
+import { Route, Routes } from 'react-router-dom';
+import { PostPage } from '../../pages/PostPage/PostPage';
 
 function App() {
   const [posts, setPosts] = useState([]);
@@ -33,7 +36,7 @@ function App() {
       },
     );
 
-    /* БЕЗ ПРОМИСА
+    /* ----- БЕЗ ПРОМИСА -----
         
     // закинула информацию в карточки с апи запроса
     getPostsList().then((postsData) => {
@@ -57,7 +60,9 @@ function App() {
   // создаем переменную фильтр, обращаемся к апи данным постов, фильтруем посты (пост из стейта), в фильтр кладем поле тайтл из поста, приводим его к нижнему регистру, но фильтруем то что содержит (инклюдес) серчКвери, то есть то, что мы написали в поисковой строке
   // затем сетим (изменяем) посты на измененный новый массив отфильтрованных
   const filterPostsRequest = () => {
-    const filteredPosts = posts.filter((post) => post.title.toUpperCase().includes(searchQuery.toUpperCase()));
+    const filteredPosts = posts.filter((post) =>
+      post.title.toUpperCase().includes(searchQuery.toUpperCase()),
+    );
     setPosts([...filteredPosts]);
 
     api
@@ -82,17 +87,27 @@ function App() {
     filterPostsRequest();
   };
 
+  // метод some возвращает тру в данном случае если среди массива лайков поста (там хранятся айди тех, кто поставил лайки) есть каррентЮзерю_айди
   const isLiked = (likes, userId) => likes?.some((id) => id === userId);
 
   const handlePostLike = (post) => {
+    // найти в посте в массиве лайков тот айди, который будет равен каррентЮзер._айди
     const liked = isLiked(post.likes, currentUser?._id);
+
+    // другая запись функции выше без дополнительных переменных:
+    // const liked = post.likes.some((id) => id === currentUser?._id);
+
+    // обращаемся к апи запросу, передаем туда айди поста, на который ставим лайк и данные по лайку (если залайкан, то есть в массиве лайков есть наш айди), а в самом апи меняем методы пут и делит (если не отлайкан, то добавляем те метод пут, если отлайкан, то удаляем метод делит). Удаляем и добавляем в массив лайков наш айди
+    // так как после постановки лайка у нас поменялся вид карточки (это ньюКард), нам нужно её засетить заново
+    // newPosts это массив новых карточек после постановки лайка. Мы берем старые посты, мапим их (пробегаемся по всем постам) и возвращаем старые карточки, если лайк не поставлен (то есть в карточке нет в массиве лайков айди пользователя (это считается старой карточкой) по сравнению с массивом лайков в новой карточке), и новую если поставлен
     api.changeLikePost(post._id, liked).then((newCard) => {
       const newPosts = posts.map((postState) => {
         // console.log('Карточка из стейта', postState);
         // console.log('Карточка с сервера', newCard);
         return postState._id === newCard._id ? newCard : postState;
       });
-      setPosts(newPosts)
+      // в конце показываем карточки (сетим посты, отрисовываем) с учетом изменений (то есть изменяем те посты в которых что то поменялось)
+      setPosts(newPosts);
     });
   };
 
@@ -108,11 +123,20 @@ function App() {
         <SearchInfo searchText={searchQuery} searchCount={posts.length} />
 
         {/* прокидываем данные с постов в кардлист, чтобы принять их в карде */}
-        <CardList
-          posts={posts}
-          currentUser={currentUser}
-          handlePostLike={handlePostLike}
-        />
+        <Routes>
+          <Route
+            path="/"
+            element={
+              <CardList
+                posts={posts}
+                currentUser={currentUser}
+                handlePostLike={handlePostLike}
+              />
+            }
+          />
+
+          <Route path="/post" element={<PostPage />} />
+        </Routes>
       </main>
     </div>
   );

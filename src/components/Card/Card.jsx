@@ -12,9 +12,11 @@ export const Card = (props) => {
   const [classHoverCard, setClassHoverCard] = useState(false);
 
   const handleLikeClick = () => {
+    // пробрасываем айди поста и массив лайков этого поста, в апе он принимает значение пост и именно поэтому здесь нам нужно передать параметры объектом
     props.handlePostLike({ _id: props._id, likes: props.likes });
   };
 
+  // если в карточке товара, в массиве лайков (в нашем случае мы ищем в этом массиве id (id === айди пользователя)) есть айди который равен каррентЮзер._айди, значит этот пост отлайкан
   const liked = props.likes.some((id) => id === props.currentUser?._id);
 
   return (
@@ -68,9 +70,11 @@ export const Card = (props) => {
         <span className="card__like_length">
           {props.likes.length !== 0 && props.likes.length}
         </span>
+
+        {/* если liked === true, то есть пост отлайкан, нужно применить стиль эктив */}
         <button
           className={liked ? 'card__like card__like__is_active' : 'card__like'}
-          onClick={() => handleLikeClick(props._id, props.likes)}>
+          onClick={handleLikeClick}>
           <FireOutlined />
         </button>
       </div>
