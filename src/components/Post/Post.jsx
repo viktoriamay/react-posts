@@ -1,5 +1,5 @@
 
-import { LeftOutlined, SwapLeftOutlined } from '@ant-design/icons';
+import { LeftOutlined } from '@ant-design/icons';
 import './Post.scss';
 import { useNavigate } from 'react-router-dom';
 
@@ -14,7 +14,13 @@ export const Post = (props) => {
   const desctiptionHTML = {__html: props?.text?.replace(props?.text[0], props?.text[0].toUpperCase())};
 
   const navigate = useNavigate();
-  
+
+  const handleLikeClick = () => {
+    
+    // пробрасываем айди поста и массив лайков этого поста, в апе он принимает значение пост и именно поэтому здесь нам нужно передать параметры объектом
+    props.handlePostLike({ _id: props._id, likes: props.likes });
+  };
+
   return (
     <div>
       <div onClick={() => navigate(-1)} className="post__button_back">
@@ -54,12 +60,11 @@ export const Post = (props) => {
         <div className="post__description">
           <p className="post__text" dangerouslySetInnerHTML={desctiptionHTML} >
           </p>
-          {/* <hr width="70%" /> */}
         </div>
         {props?.tags?.length !== 0 && (
           <p className="post__tags">
             {props?.tags?.map((tag) => (
-              <span>#{tag}</span>
+              <span key={props._id + Math.random().toFixed(6)}>#{tag}</span>
             ))}
           </p>
         )}
@@ -67,7 +72,7 @@ export const Post = (props) => {
           <div>
             Нравится <span>{props?.likes?.length}</span>
           </div>
-          <div>Поставить лайк</div>
+          <div onClick={handleLikeClick}>Поставить лайк</div>
         </div>
       </div>
     </div>

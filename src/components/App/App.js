@@ -134,8 +134,16 @@ function App() {
               />
             }
           />
-          <Route path="/post/:postId" element={<PostPage />} />
-          <Route path='*' element={<div>Not Found</div>} />
+          <Route
+            path="/post/:postId"
+            element={
+              <PostPage
+                currentUser={currentUser}
+                handlePostLike={handlePostLike}
+              />
+            }
+          />
+          <Route path="*" element={<div>Not Found</div>} />
         </Routes>
       </main>
     </div>
