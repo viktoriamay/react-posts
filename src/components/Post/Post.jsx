@@ -15,12 +15,6 @@ export const Post = (props) => {
 
   const navigate = useNavigate();
 
-  const handleLikeClick = () => {
-    
-    // пробрасываем айди поста и массив лайков этого поста, в апе он принимает значение пост и именно поэтому здесь нам нужно передать параметры объектом
-    props.handlePostLike({ _id: props._id, likes: props.likes });
-  };
-
   return (
     <div>
       <div onClick={() => navigate(-1)} className="post__button_back">
@@ -40,7 +34,7 @@ export const Post = (props) => {
               </h2>
               <hr width="60%" style={{margin: '1rem auto'}} />
               <span className="post__date">
-                {new Date(props?.created_at).toLocaleString('ru-RU', options)}
+                {new Date(props?.created_at).toLocaleString('ru-RU', options).slice(0, -3)}
               </span>
             </div>
             <div className="post__author">
@@ -72,7 +66,7 @@ export const Post = (props) => {
           <div>
             Нравится <span>{props?.likes?.length}</span>
           </div>
-          <div onClick={handleLikeClick}>Поставить лайк</div>
+          <div onClick={props.onPostLike}>Поставить лайк</div>
         </div>
       </div>
     </div>

@@ -4,7 +4,7 @@ import api from '../../utils/api';
 import { Post } from '../../components/Post/Post';
 import { useParams } from 'react-router-dom';
 
-export const PostPage = ({handlePostLike}) => {
+export const PostPage = ({ handlePostLike }) => {
   const [cards, setCards] = useState([]);
   const [searchQuery, setSearchQuery] = useState('');
   const [currentUser, setCurrentUser] = useState(null);
@@ -37,6 +37,10 @@ export const PostPage = ({handlePostLike}) => {
       .finally(setIsLoading(false));
   }, [params.postId]);
 
+  const onPostLike = () => {
+    handlePostLike(post);
+  };
+
   return (
     <div>
       {isLoading ? (
@@ -46,7 +50,7 @@ export const PostPage = ({handlePostLike}) => {
           {...post}
           setPost={setPost}
           currentUser={currentUser}
-          handlePostLike={handlePostLike}
+          onPostLike={onPostLike}
         />
       )}
     </div>

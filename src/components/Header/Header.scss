@@ -17,6 +17,10 @@
     display: flex;
     gap: 3rem;
     width: 32rem;
+
+    a {
+      text-decoration: none;
+    }
   }
 
   &__icons_menu {
