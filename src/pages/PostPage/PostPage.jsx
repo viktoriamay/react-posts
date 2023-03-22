@@ -3,7 +3,7 @@ import { useState, useEffect } from 'react';
 import api from '../../utils/api';
 import { Post } from '../../components/Post/Post';
 
-const postId = '641804d1aa3971218392e58c';
+const postId = '641a1947aa39712183961233';
 
 export const PostPage = () => {
   const [cards, setCards] = useState([]);
