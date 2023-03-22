@@ -6,6 +6,7 @@ import {
 } from '@ant-design/icons';
 import './Card.scss';
 import { useState } from 'react';
+import { Link } from 'react-router-dom';
 
 export const Card = (props) => {
   const [classActiveCard, setClassActiveCard] = useState(false);
@@ -21,7 +22,7 @@ export const Card = (props) => {
 
   return (
     <div className="card">
-      <div
+      <Link to={'/post'}
         className={'card__wrapper'}
         onMouseDown={() => setClassActiveCard(true)}
         onMouseUp={() => setClassActiveCard(false)}
@@ -65,10 +66,10 @@ export const Card = (props) => {
             </span>
           </div>
         </div>
-      </div>
+      </Link>
       <div>
         <span className="card__like_length">
-          {props.likes.length !== 0 && props.likes.length}
+          {props?.likes?.length !== 0 && props?.likes?.length}
         </span>
 
         {/* если liked === true, то есть пост отлайкан, нужно применить стиль эктив */}

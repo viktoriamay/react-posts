@@ -1,14 +1,18 @@
 .card {
-  border: 1px solid #404040;
+  box-shadow: 0 0 20px #40404036;
+
   width: 100%;
   cursor: pointer;
   transition: 0.3s ease;
   position: relative;
 
+
   &__wrapper {
     display: flex;
     flex-direction: column;
     height: 100%;
+    text-decoration: none;
+    color: #404040;
   }
 
   &__img_container {

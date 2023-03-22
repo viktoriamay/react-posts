@@ -134,8 +134,8 @@ function App() {
               />
             }
           />
-
-          <Route path="/post" element={<PostPage />} />
+          <Route path="/post/" element={<PostPage />} />
+          <Route path='*' element={<div>Not Found</div>} />
         </Routes>
       </main>
     </div>

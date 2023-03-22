@@ -9,10 +9,9 @@ export const Post = (props) => {
     year: 'numeric',
   };
 
-  const desctiptionHTML = {__html: props?.text.replace(props?.text[0], props?.text[0].toUpperCase())};
+  // небезопасный способ вставки данных с бэка
+  const desctiptionHTML = {__html: props?.text?.replace(props?.text[0], props?.text[0].toUpperCase())};
   
-
-  console.log( desctiptionHTML );
   return (
     <div>
       <div className="post__button_back">
@@ -57,7 +56,7 @@ export const Post = (props) => {
         {props?.tags?.length !== 0 && (
           <p className="post__tags">
             {props?.tags?.map((tag) => (
-              <span className='post__tag'>#{tag}</span>
+              <span>#{tag}</span>
             ))}
           </p>
         )}
