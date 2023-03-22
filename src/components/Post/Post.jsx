@@ -1,6 +1,7 @@
 
 import { LeftOutlined, SwapLeftOutlined } from '@ant-design/icons';
 import './Post.scss';
+import { useNavigate } from 'react-router-dom';
 
 export const Post = (props) => {
   const options = {
@@ -11,10 +12,12 @@ export const Post = (props) => {
 
   // небезопасный способ вставки данных с бэка
   const desctiptionHTML = {__html: props?.text?.replace(props?.text[0], props?.text[0].toUpperCase())};
+
+  const navigate = useNavigate();
   
   return (
     <div>
-      <div className="post__button_back">
+      <div onClick={() => navigate(-1)} className="post__button_back">
         <LeftOutlined />
         <span>Назад</span>
       </div>

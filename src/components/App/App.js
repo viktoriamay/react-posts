@@ -134,7 +134,7 @@ function App() {
               />
             }
           />
-          <Route path="/post/" element={<PostPage />} />
+          <Route path="/post/:postId" element={<PostPage />} />
           <Route path='*' element={<div>Not Found</div>} />
         </Routes>
       </main>

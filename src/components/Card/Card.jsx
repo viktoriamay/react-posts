@@ -22,7 +22,7 @@ export const Card = (props) => {
 
   return (
     <div className="card">
-      <Link to={'/post'}
+      <Link to={`/post/${props._id}`}
         className={'card__wrapper'}
         onMouseDown={() => setClassActiveCard(true)}
         onMouseUp={() => setClassActiveCard(false)}
