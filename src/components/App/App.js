@@ -13,12 +13,17 @@ import { PostPage } from '../../pages/PostPage/PostPage';
 import { PostsContext } from '../../context/PostsContext';
 import { FavoritePage } from '../../pages/FavoritePage/FavoritePage';
 import { PostsPage } from '../../pages/PostsPage/PostsPage';
+import { RegisterForm } from '../Authorization/RegisterForm';
+import { Authorization } from '../Authorization/Authorization';
+import { Modal } from './../Modal/Modal';
 
 function App() {
   const [posts, setPosts] = useState([]);
   const [currentUser, setCurrentUser] = useState(null);
   const [searchQuery, setSearchQuery] = useState('');
   const [favorites, setFavorites] = useState([]);
+
+  const [activeModal, setActiveModal] = useState(false);
 
   // возвращает накопленное сёрчКвери
   const debounceSearchQuery = useDebounce(searchQuery, 1000);
@@ -121,10 +126,10 @@ function App() {
       } else {
         // если было отлайкано (и я его убрала) , то добавь в стейт старый массив отлайканных карточек, а затем отфильтруй старый массив отлайканных карточек (количество лайков до того как я его удалила) и убери ту карточку (из старого стейта), айди которой равен айди только что нажатой карточке
         setFavorites((prevState) =>
-        prevState.filter((card) => card._id !== newCard._id),
+          prevState.filter((card) => card._id !== newCard._id),
         );
       }
-      
+
       // в конце показываем карточки (сетим посты, отрисовываем) с учетом изменений (то есть изменяем те посты в которых что то поменялось)
       setPosts(newPosts);
     });
@@ -136,11 +141,23 @@ function App() {
     handlePostLike,
     currentUser,
   };
+/* 
+  const handleCloseModal = () => {
+    setActiveModal(false);
+  }; */
+
+  const [auth, setAuth] = useState(false)
+
+  const [add, setAdd] = useState(false)
 
   return (
     <div className="App">
       <PostsContext.Provider value={valueContextProvider}>
-        <Header currentUser={currentUser}>
+        <Header
+          activeModal={activeModal}
+          setActiveModal={setActiveModal}
+          currentUser={currentUser}
+          >
           {/* прокидываем пропсы, => formSubmitRequest={formSubmitRequest} changeInput={changeInput} то же самое что и ниже.  */}
           <Search onSubmit={formSubmitRequest} onInput={changeInput} />
         </Header>
