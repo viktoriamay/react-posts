@@ -156,7 +156,7 @@ function App() {
               element={
                 <PostsPage
                   // posts={posts}// заменила на контекст
-                  // currentUser={currentUser}
+                  currentUser={currentUser}
                   // handlePostLike={handlePostLike}
                 />
               }
