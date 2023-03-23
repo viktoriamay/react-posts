@@ -12,6 +12,7 @@ import { Route, Routes, useNavigate } from 'react-router-dom';
 import { PostPage } from '../../pages/PostPage/PostPage';
 import { PostsContext } from '../../context/PostsContext';
 import { FavoritePage } from '../../pages/FavoritePage/FavoritePage';
+import { PostsPage } from '../../pages/PostsPage/PostsPage';
 
 function App() {
   const [posts, setPosts] = useState([]);
@@ -34,17 +35,16 @@ function App() {
     // кладем апи запросы в массив, так как тут два запроса, в зенах данные с сервера по апи запросу
     Promise.all([api.getPostsList(), api.getUserInfo()]).then(
       ([postsData, userData]) => {
-        setPosts(postsData.posts);
+        setPosts(postsData);
         setCurrentUser(userData);
-        
-        console.log({postsData});
-        const favProducts = postsData.posts.filter((post) =>
-        isLiked(post.likes, userData._id),
+
+        const favProducts = postsData.filter((post) =>
+          isLiked(post.likes, userData._id),
         );
         setFavorites(favProducts);
       },
-      );
-      
+    );
+
     /* ----- БЕЗ ПРОМИСА -----
         
     // закинула информацию в карточки с апи запроса
@@ -114,6 +114,17 @@ function App() {
         // console.log('Карточка с сервера', newCard);
         return postState?._id === newCard?._id ? newCard : postState;
       });
+      // если было не отлайкано (но я его нажала), добавть в фейврит предыдущий список карточек(количество лайков до моего лайка)
+      // а затем верни развёрнутый массив уже отлайканных до моего предыдущего лайка карточек + добавь в него карточку которую я лайкнула только что
+      if (!liked) {
+        setFavorites((prevState) => [...prevState, newCard]);
+      } else {
+        // если было отлайкано (и я его убрала) , то добавь в стейт старый массив отлайканных карточек, а затем отфильтруй старый массив отлайканных карточек (количество лайков до того как я его удалила) и убери ту карточку (из старого стейта), айди которой равен айди только что нажатой карточке
+        setFavorites((prevState) =>
+        prevState.filter((card) => card._id !== newCard._id),
+        );
+      }
+      
       // в конце показываем карточки (сетим посты, отрисовываем) с учетом изменений (то есть изменяем те посты в которых что то поменялось)
       setPosts(newPosts);
     });
@@ -122,6 +133,8 @@ function App() {
   const valueContextProvider = {
     posts,
     favorites,
+    handlePostLike,
+    currentUser,
   };
 
   return (
@@ -141,10 +154,10 @@ function App() {
             <Route
               path="/"
               element={
-                <CardList
-                  //posts={posts} заменила на контекст
-                  currentUser={currentUser}
-                  handlePostLike={handlePostLike}
+                <PostsPage
+                  // posts={posts}// заменила на контекст
+                  // currentUser={currentUser}
+                  // handlePostLike={handlePostLike}
                 />
               }
             />
@@ -157,7 +170,10 @@ function App() {
                 />
               }
             />
-            <Route path="/favorites" element={<FavoritePage />} />
+            <Route
+              path="/favorites"
+              element={<FavoritePage />}
+            />
             <Route path="*" element={<div>Not Found</div>} />
           </Routes>
         </main>

@@ -3,16 +3,16 @@ import { Card } from '../Card/Card';
 import './CardList.scss';
 import { PostsContext } from './../../context/PostsContext';
 
-export const CardList = ({currentUser, handlePostLike }) => {
+export const CardList = ({handlePostLike, posts = [] }) => {
 
-  const {posts = [] } = useContext(PostsContext);
   return (
     <div className="cards">
       {posts.map((post) => (
         <Card
+        // posts={favorites}
           key={post._id}
           {...post}
-          currentUser={currentUser}
+          // currentUser={currentUser}
           handlePostLike={handlePostLike}
         />
       ))}
