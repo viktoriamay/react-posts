@@ -172,7 +172,7 @@ function App() {
             />
             <Route
               path="/favorites"
-              element={<FavoritePage />}
+              element={<FavoritePage currentUser={currentUser} />}
             />
             <Route path="*" element={<div>Not Found</div>} />
           </Routes>
