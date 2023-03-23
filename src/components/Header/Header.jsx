@@ -26,10 +26,10 @@ export const Header = ({ children, currentUser }) => {
           </div>
           <div className="header__icons_menu">
             <PlusCircleOutlined className="header__add_icon" />
-            <Link to={'/favorites'}>{
-favorites.length !== 0 &&
-            <span style={{color: 'white'}}>{favorites.length}</span>
-            }
+            <Link to={'/favorites'}>
+              {favorites.length !== 0 && (
+                <span style={{ color: 'white' }}>{favorites.length}</span>
+              )}
               <HeartOutlined className="header__favorites_icon" />
             </Link>
             <SmileOutlined className="header__login_icon" />
