@@ -2,6 +2,7 @@
 import { LeftOutlined } from '@ant-design/icons';
 import './Post.scss';
 import { useNavigate } from 'react-router-dom';
+import { useState } from 'react';
 
 export const Post = (props) => {
   const options = {
@@ -10,10 +11,22 @@ export const Post = (props) => {
     year: 'numeric',
   };
 
+  const isLike = props?.likes?.some((id) => id === props?.currentUser?._id);
+
+  const [isClicked, setClicked] = useState(isLike);
+
+
+
   // небезопасный способ вставки данных с бэка
   const desctiptionHTML = {__html: props?.text?.replace(props?.text[0], props?.text[0].toUpperCase())};
 
   const navigate = useNavigate();
+
+  const onLike = (e) => {
+    props?.onPostLike(e);
+    setClicked((state) => !state);
+
+  }
 
   return (
     <div>
@@ -66,7 +79,7 @@ export const Post = (props) => {
           <div>
             Нравится <span>{props?.likes?.length}</span>
           </div>
-          <div onClick={props.onPostLike}>Поставить лайк</div>
+          <div className={isLike ?'post__like_info_active' : 'post__like_info'} onClick={(e) => onLike(e)}>{isLike ? 'Удалить лайк' : 'Поставить лайк'}</div>
         </div>
       </div>
     </div>

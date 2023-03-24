@@ -1,8 +1,9 @@
 import Spinner from '../../components/Spinner/Spinner';
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useContext } from 'react';
 import api from '../../utils/api';
 import { Post } from '../../components/Post/Post';
 import { useParams } from 'react-router-dom';
+import { PostsContext } from './../../context/PostsContext';
 
 export const PostPage = ({ handlePostLike }) => {
   const [cards, setCards] = useState([]);
@@ -11,6 +12,7 @@ export const PostPage = ({ handlePostLike }) => {
   const [isLoading, setIsLoading] = useState(false);
   const [post, setPost] = useState(null);
 
+  const { favorites } = useContext(PostsContext);
   // const handlePostLike = () => {};
 
   // парамс это то, что приходит в апе в роутах path="/post/:postId", а именно :postId - динамический путь это и есть парамс
@@ -35,10 +37,11 @@ export const PostPage = ({ handlePostLike }) => {
       })
       .catch((error) => console.log(error))
       .finally(setIsLoading(false));
-  }, [params.postId]);
+  }, [params.postId, favorites]);
 
   const onPostLike = () => {
     handlePostLike(post);
+    setPost({ ...post });
   };
 
   return (

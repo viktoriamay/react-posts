@@ -125,6 +125,8 @@ function App() {
         setFavorites((prevState) => [...prevState, newCard]);
       } else {
         // если было отлайкано (и я его убрала) , то добавь в стейт старый массив отлайканных карточек, а затем отфильтруй старый массив отлайканных карточек (количество лайков до того как я его удалила) и убери ту карточку (из старого стейта), айди которой равен айди только что нажатой карточке
+
+        // отфильтруй так, чтобы кард айди не содержал новый кард айди
         setFavorites((prevState) =>
           prevState.filter((card) => card._id !== newCard._id),
         );
@@ -146,6 +148,7 @@ function App() {
     setActiveModal(false);
   }; */
 
+  console.log({posts});
 
   return (
     <div className="App">
@@ -171,7 +174,7 @@ function App() {
                 <PostsPage
                   // posts={posts}// заменила на контекст
                   currentUser={currentUser}
-                  // handlePostLike={handlePostLike}
+                  handlePostLike={handlePostLike}
                 />
               }
             />
