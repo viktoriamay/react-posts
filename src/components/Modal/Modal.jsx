@@ -11,7 +11,7 @@ export const Modal = ({
   handleCloseModal,
 }) => {
   // const [active, setActive] = useState(false);
-
+  // console.log({ children });
   const onKeydown = (e) => {
     switch (e.key) {
       case 'Escape':
@@ -29,10 +29,10 @@ export const Modal = ({
 
   const navigate = useNavigate();
 
-  const handleClickCloseModal = () => {
+ /*  const handleClickCloseModal = () => {
     setActiveModal(false);
     navigate('/');
-  };
+  }; */
 
   /* const closeModalEsc = (e) => {
     if (e.key === 'Escape') {
@@ -44,18 +44,16 @@ export const Modal = ({
   return (
     <div
       className={cn('modal', { ['active']: activeModal })}
-      onClick={() => handleClickCloseModal()}
+      onClick={() =>     setActiveModal(false)}
       // tabIndex={1} для того, чтобы можно было делать события клавиатуры
       // onKeyDown={closeModalEsc}
 
       // role="button"
     >
-
       <div
         className={cn('modal_content', { ['active']: activeModal })}
         onClick={(e) => e.stopPropagation()}>
         {children}
-        <RegisterForm />
       </div>
     </div>
   );

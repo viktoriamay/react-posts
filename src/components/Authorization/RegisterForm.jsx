@@ -1,6 +1,6 @@
 import { useForm } from 'react-hook-form';
 
-export const RegisterForm = () => {
+export const RegisterForm = ({setShowAuthComponent}) => {
   const {
     register,
     handleSubmit,
@@ -33,7 +33,7 @@ export const RegisterForm = () => {
           minLength: 6,
         })}
       />
-      <button className="form__button" type="submit">
+      <button className="form__button" type="submit" onClick={() => setShowAuthComponent('login')}>
         Reg
       </button>
     </form>

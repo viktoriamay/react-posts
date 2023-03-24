@@ -14,23 +14,20 @@ import { Modal } from '../Modal/Modal';
 import { RegisterForm } from '../Authorization/RegisterForm';
 
 export const Header = ({
-  handleCloseModal,
   children,
   currentUser,
   setActiveModal,
   activeModal,
-
-  add,
-  setAdd,
-  auth,
-  setAuth,
 }) => {
   const { favorites } = useContext(PostsContext);
   // console.log(currentUser?.name); не забывать ставить ?
-  const [modal, setModal] = useState({ isOpen: false, component: 'register' });
+  const [activeHeaderModal, setActiveHeaderModal] = useState({
+    isOpen: false,
+    component: 'register',
+  });
 
-  const handleFunc = () => {
-    setModal({ ...modal, isOpen: false });
+  const handleCloseModal = () => {
+    setActiveHeaderModal({ ...activeHeaderModal, isOpen: false });
   };
 
   return (
@@ -45,7 +42,9 @@ export const Header = ({
           </div>
           <div className="header__icons_menu">
             <PlusCircleOutlined
-              onClick={() => console.log()}
+              onClick={() =>
+                setActiveHeaderModal({ component: 'addPost', isOpen: true })
+              }
               className="header__add_icon"
             />
             <Link to={'/favorites'}>
@@ -54,14 +53,23 @@ export const Header = ({
               )}
               <HeartOutlined className="header__favorites_icon" />
             </Link>
-            <SmileOutlined onClick={() => setModal({component: 'register', isOpen: true})}
-            className="header__login_icon"></SmileOutlined>
+            <SmileOutlined
+              onClick={() =>
+                setActiveHeaderModal({ component: 'register', isOpen: true })
+              }
+              className="header__login_icon"></SmileOutlined>
           </div>
         </div>
       </div>
-      <Modal activeModal={modal.isOpen} setActiveModal={handleFunc} >
-        {activeModal.component === 'register' && <RegisterForm />}
-      </Modal>
+      <div className="modal__container">
+        <Modal
+          activeModal={activeHeaderModal.isOpen}
+          setActiveModal={handleCloseModal}>
+          {activeHeaderModal.component === 'addPost' && <div>Add post</div>}
+          {activeHeaderModal.component === 'register' && <Authorization activeModal={activeHeaderModal.isOpen}
+          setActiveModal={handleCloseModal} />}
+        </Modal>
+      </div>
     </header>
   );
 };

@@ -146,9 +146,6 @@ function App() {
     setActiveModal(false);
   }; */
 
-  const [auth, setAuth] = useState(false)
-
-  const [add, setAdd] = useState(false)
 
   return (
     <div className="App">
@@ -164,7 +161,7 @@ function App() {
 
         <main className="main container">
           {/* прокидываем данные с вводимого значения в инпуте через условную переменную сёрчТекст. серчКаунт это количество постов (элементов в массиве) после фильтрации по запросу */}
-          {/* <SearchInfo searchText={searchQuery} searchCount={posts.length} /> */}
+          <SearchInfo searchText={searchQuery} searchCount={posts.length} />
 
           {/* прокидываем данные с постов в кардлист, чтобы принять их в карде */}
           <Routes>
