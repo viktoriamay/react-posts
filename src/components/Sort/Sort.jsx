@@ -1,18 +1,18 @@
-import { useContext, useState, useEffect, useCallback } from 'react';
+import { useContext, useState } from 'react';
 import { PostsContext } from './../../context/PostsContext';
 import './Sort.scss';
 
 export const Sort = () => {
   const tabs = [
+    { id: 'newest', title: 'Самые новые ' },
     { id: 'popular', title: 'Популярные ' },
     { id: 'discussed', title: 'Обсуждаемые ' },
-    { id: 'newest', title: 'Самые новые ' },
     { id: 'oldest', title: 'Самые старые ' },
   ];
 
-  const [sortedId, setSortedId] = useState('popular');
+  const [sortedId, setSortedId] = useState('newest');
 
-  const { onSortData} = useContext(PostsContext);
+  const { onSortData } = useContext(PostsContext);
 
   const handleChangeSort = (id) => {
     setSortedId(id);

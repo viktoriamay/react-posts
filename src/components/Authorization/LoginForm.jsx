@@ -1,11 +1,13 @@
+import { Form } from './../Form/Form';
+
 export const LoginForm = ({setShowAuthComponent}) => {
   return (
     <div>
-      <form>
+      <Form>
 Login
       <input />
-      <button onClick={() => setShowAuthComponent('register')}>Register</button>
-      </form>
+      <div onClick={() => setShowAuthComponent('register')}>Register</div>
+      </Form>
     </div>
   )
 }

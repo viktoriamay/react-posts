@@ -138,33 +138,33 @@ function App() {
   };
 
   const sortedData = (currentSort) => {
-    console.log({ posts });
     switch (currentSort) {
       case 'popular':
         setPosts([
           ...posts.sort((a, b) => b?.likes?.length - a?.likes?.length),
         ]);
         break;
-        case 'discussed':
-          setPosts([
-            ...posts.sort((a, b) => b?.comments?.length - a?.comments?.length),
-          ]);
-          break;
-          case 'newest':
-            setPosts([
-              ...posts.sort(
-                (a, b) => new Date(b?.created_at) - new Date(a?.created_at),
-              ),
-            ]);
-            break;
-            case 'oldest':
-              setPosts([
-                ...posts.sort(
-                  (a, b) => new Date(a?.created_at) - new Date(b?.created_at),
-                )
-              ]);
-              break;
+      case 'discussed':
+        setPosts([
+          ...posts.sort((a, b) => b?.comments?.length - a?.comments?.length),
+        ]);
+        break;
+      case 'newest':
+        setPosts([
+          ...posts.sort(
+            (a, b) => new Date(b?.created_at) - new Date(a?.created_at),
+          ),
+        ]);
+        break;
+      case 'oldest':
+        setPosts([
+          ...posts.sort(
+            (a, b) => new Date(a?.created_at) - new Date(b?.created_at),
+          ),
+        ]);
+        break;
       default:
+        // чтобы обновить стейт, необходимо ... сделать в карточках, чтобы реакт увидел новый массив. если возвращается объект необходимо его поместить в фигуоные скобки
         setPosts([
           ...posts.sort((a, b) => b?.likes?.length - a?.likes?.length),
         ]);
