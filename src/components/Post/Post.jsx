@@ -1,8 +1,8 @@
-
 import { LeftOutlined } from '@ant-design/icons';
 import './Post.scss';
 import { useNavigate } from 'react-router-dom';
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
+import api from './../../utils/api';
 
 export const Post = (props) => {
   const options = {
@@ -14,19 +14,36 @@ export const Post = (props) => {
   const isLike = props?.likes?.some((id) => id === props?.currentUser?._id);
 
   const [isClicked, setClicked] = useState(isLike);
-
-
-
+const [users, setUsers] =useState([])
   // небезопасный способ вставки данных с бэка
-  const desctiptionHTML = {__html: props?.text?.replace(props?.text[0], props?.text[0].toUpperCase())};
+  const desctiptionHTML = {
+    __html: props?.text?.replace(props?.text[0], props?.text[0].toUpperCase()),
+  };
 
   const navigate = useNavigate();
 
   const onLike = (e) => {
     props?.onPostLike(e);
     setClicked((state) => !state);
+  };
 
-  }
+  /* api.getUserById(id).then((data) => {
+      console.log(data);
+    }); */
+
+    useEffect(() => {
+      api.getUsers().then(data => setUsers(data))
+      
+    }, []);
+
+    console.log({users});
+
+    const getUser =(id) => {
+if(!users.length) return ''
+const user = users.find((el) => el._id === id)
+console.log({user});
+return user?.name ?? 'User'
+    }
 
   return (
     <div>
@@ -45,9 +62,11 @@ export const Post = (props) => {
                   props?.title[0].toUpperCase(),
                 )}
               </h2>
-              <hr width="60%" style={{margin: '1rem auto'}} />
+              <hr width="60%" style={{ margin: '1rem auto' }} />
               <span className="post__date">
-                {new Date(props?.created_at).toLocaleString('ru-RU', options).slice(0, -3)}
+                {new Date(props?.created_at)
+                  .toLocaleString('ru-RU', options)
+                  .slice(0, -3)}
               </span>
             </div>
             <div className="post__author">
@@ -65,8 +84,9 @@ export const Post = (props) => {
           </div>
         </div>
         <div className="post__description">
-          <p className="post__text" dangerouslySetInnerHTML={desctiptionHTML} >
-          </p>
+          <p
+            className="post__text"
+            dangerouslySetInnerHTML={desctiptionHTML}></p>
         </div>
         {props?.tags?.length !== 0 && (
           <p className="post__tags">
@@ -79,7 +99,24 @@ export const Post = (props) => {
           <div>
             Нравится <span>{props?.likes?.length}</span>
           </div>
-          <div className={isLike ?'post__like_info_active' : 'post__like_info'} onClick={(e) => onLike(e)}>{isLike ? 'Удалить лайк' : 'Поставить лайк'}</div>
+          <div
+            className={isLike ? 'post__like_info_active' : 'post__like_info'}
+            onClick={(e) => onLike(e)}>
+            {isLike ? 'Удалить лайк' : 'Поставить лайк'}
+          </div>
+        </div>
+        <div className="post__reviews">
+          Comments
+          {props?.comments?.map((e) => (
+            <div>
+            <span>{getUser(e.author)}</span>
+              <span>{new Date(e?.created_at)
+                  .toLocaleString('ru-RU', options)
+                  .slice(0, -3)}</span>
+              <p>{e.text}</p>
+            </div>
+          ))}
+          <div>Comment post</div>
         </div>
       </div>
     </div>

@@ -1,7 +1,7 @@
 import { Form } from './../Form/Form';
 import './Authorization.scss';
 import { useContext } from 'react';
-import { 
+import {
   EMAIL_REGEXP,
   VALIDATE_CONFIG,
   PASS_REGEXP,
@@ -9,9 +9,10 @@ import {
 
 import { useForm } from 'react-hook-form';
 import { PostsContext } from './../../context/PostsContext';
-import {useNavigate } from 'react-router-dom';
+import { useNavigate } from 'react-router-dom';
+import { authApi } from './../../utils/authApi';
 
-export const LoginForm = ({ setShowAuthComponent ,handleCloseModal}) => {
+export const LoginForm = ({ setShowAuthComponent, handleCloseModal }) => {
   const {
     register,
     handleSubmit,
@@ -40,15 +41,19 @@ export const LoginForm = ({ setShowAuthComponent ,handleCloseModal}) => {
     },
   });
 
-  
-  const navigate = useNavigate()
+  const navigate = useNavigate();
 
   const sendData = (data) => {
-    console.log({ data });
-    handleCloseModal()
+    authApi
+      .login(data)
+      .then((result) => {
+        const { token } = result;
+        localStorage.setItem('token', token);
+      })
+      .catch((error) => {
+        console.log(error);
+      }).finally(handleCloseModal());
   };
-
-
 
   return (
     <Form

@@ -34,7 +34,7 @@ class Api {
     // console.log(postId);
     return fetch(`${this._baseUrl}/posts/likes/${postId}`, {
       headers: this._headers,
-      method: isLike ? 'DELETE': 'PUT' ,
+      method: isLike ? 'DELETE' : 'PUT',
     }).then(onResponse);
   }
 
@@ -42,6 +42,29 @@ class Api {
     return fetch(`${this._baseUrl}/posts/${postId}`, {
       headers: this._headers,
       method: 'GET',
+    }).then(onResponse);
+  }
+
+  getUsers() {
+    return fetch(`${this._baseUrl}/users`, {
+      headers: this._headers,
+      method: 'GET',
+    }).then(onResponse);
+  }
+
+  getUserById(userId) {
+    return fetch(`${this._baseUrl}/users/${userId}`, {
+      headers: this._headers,
+      method: 'GET',
+    }).then(onResponse);
+  }
+
+
+  login(dataUser ) {
+    return fetch(`${this._baseUrl}/signin`, {
+      headers: this._headers,
+      method: 'POST',
+      body: JSON.stringify(dataUser)
     }).then(onResponse);
   }
 }

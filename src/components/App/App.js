@@ -189,6 +189,8 @@ function App() {
     setActiveModal(false);
   }; */
 
+  console.log({posts});
+
   return (
     <div className="App">
       <PostsContext.Provider value={valueContextProvider}>
