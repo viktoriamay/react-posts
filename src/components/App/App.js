@@ -137,18 +137,55 @@ function App() {
     });
   };
 
+  const sortedData = (currentSort) => {
+    console.log({ posts });
+    switch (currentSort) {
+      case 'popular':
+        setPosts([
+          ...posts.sort((a, b) => b?.likes?.length - a?.likes?.length),
+        ]);
+        break;
+        case 'discussed':
+          setPosts([
+            ...posts.sort((a, b) => b?.comments?.length - a?.comments?.length),
+          ]);
+          break;
+          case 'newest':
+            setPosts([
+              ...posts.sort(
+                (a, b) => new Date(b?.created_at) - new Date(a?.created_at),
+              ),
+            ]);
+            break;
+            case 'oldest':
+              setPosts([
+                ...posts.sort(
+                  (a, b) => new Date(a?.created_at) - new Date(b?.created_at),
+                )
+              ]);
+              break;
+      default:
+        setPosts([
+          ...posts.sort((a, b) => b?.likes?.length - a?.likes?.length),
+        ]);
+
+        break;
+    }
+  };
+  // console.log({posts});
   const valueContextProvider = {
     posts,
+    setPosts,
     favorites,
     handlePostLike,
     currentUser,
+    onSortData: sortedData,
+    // setCurrentSort,
   };
-/* 
+  /* 
   const handleCloseModal = () => {
     setActiveModal(false);
   }; */
-
-  console.log({posts});
 
   return (
     <div className="App">
@@ -156,8 +193,7 @@ function App() {
         <Header
           activeModal={activeModal}
           setActiveModal={setActiveModal}
-          currentUser={currentUser}
-          >
+          currentUser={currentUser}>
           {/* прокидываем пропсы, => formSubmitRequest={formSubmitRequest} changeInput={changeInput} то же самое что и ниже.  */}
           <Search onSubmit={formSubmitRequest} onInput={changeInput} />
         </Header>
