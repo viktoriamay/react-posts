@@ -180,6 +180,8 @@ function App() {
     handlePostLike,
     currentUser,
     onSortData: sortedData,
+    setActiveModal,
+    activeModal
     // setCurrentSort,
   };
   /* 

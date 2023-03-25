@@ -1,13 +1,17 @@
 import { Form } from './../Form/Form';
 import './Authorization.scss';
-import { useForm } from 'react-hook-form';
-import {
+import { useContext } from 'react';
+import { 
   EMAIL_REGEXP,
   VALIDATE_CONFIG,
   PASS_REGEXP,
 } from './../../constants/constants';
 
-export const LoginForm = ({ setShowAuthComponent }) => {
+import { useForm } from 'react-hook-form';
+import { PostsContext } from './../../context/PostsContext';
+import {useNavigate } from 'react-router-dom';
+
+export const LoginForm = ({ setShowAuthComponent ,handleCloseModal}) => {
   const {
     register,
     handleSubmit,
@@ -36,9 +40,15 @@ export const LoginForm = ({ setShowAuthComponent }) => {
     },
   });
 
+  
+  const navigate = useNavigate()
+
   const sendData = (data) => {
     console.log({ data });
+    handleCloseModal()
   };
+
+
 
   return (
     <Form

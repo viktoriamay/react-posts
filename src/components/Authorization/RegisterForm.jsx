@@ -8,7 +8,7 @@ import {
   PASS_REGEXP,
 } from './../../constants/constants';
 
-export const RegisterForm = ({ setShowAuthComponent }) => {
+export const RegisterForm = ({ setShowAuthComponent, handleCloseModal }) => {
   const {
     register,
     handleSubmit,
@@ -39,6 +39,7 @@ export const RegisterForm = ({ setShowAuthComponent }) => {
 
   const sendData = (data) => {
     console.log({ data });
+    handleCloseModal()
   };
 
   const navigate = useNavigate()

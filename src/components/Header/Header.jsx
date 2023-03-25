@@ -67,7 +67,7 @@ export const Header = ({
           setActiveModal={handleCloseModal}>
           {activeHeaderModal.component === 'addPost' && <div>Add post</div>}
           {activeHeaderModal.component === 'register' && <Authorization activeModal={activeHeaderModal.isOpen}
-          setActiveModal={handleCloseModal} />}
+          handleCloseModal={handleCloseModal} />}
         </Modal>
       </div>
     </header>

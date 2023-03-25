@@ -52,7 +52,8 @@ export const Modal = ({
     >
       <div
         className={cn('modal_content', { ['active']: activeModal })}
-        onClick={(e) => e.stopPropagation()}>
+        onClick={(e) => e.stopPropagation()}
+        >
         {children}
       </div>
     </div>
