@@ -1,41 +1,72 @@
+import { Form } from './../Form/Form';
+import './Authorization.scss';
 import { useForm } from 'react-hook-form';
+import { useNavigate } from 'react-router-dom';
+import {
+  EMAIL_REGEXP,
+  VALIDATE_CONFIG,
+  PASS_REGEXP,
+} from './../../constants/constants';
 
-export const RegisterForm = ({setShowAuthComponent}) => {
+export const RegisterForm = ({ setShowAuthComponent }) => {
   const {
     register,
     handleSubmit,
     formState: { errors },
   } = useForm({ mode: 'onChange' });
 
-  const onSubmit = (data) => {
-    console.log(data);
+  const emailRegister = register('email', {
+    required: {
+      value: true,
+      message: VALIDATE_CONFIG.requiredMessage,
+    },
+    pattern: {
+      value: EMAIL_REGEXP,
+      message: VALIDATE_CONFIG.email,
+    },
+  });
+
+  const passwordRegister = register('password', {
+    required: {
+      value: true,
+      message: VALIDATE_CONFIG.requiredMessage,
+    },
+    pattern: {
+      value: PASS_REGEXP,
+      message: VALIDATE_CONFIG.password,
+    },
+  });
+
+  const sendData = (data) => {
+    console.log({ data });
   };
 
+  const navigate = useNavigate()
+
   return (
-    <form onSubmit={handleSubmit(onSubmit)}>
-      <h3>Reg</h3>
+    <Form
+      handleFormSubmit={handleSubmit(sendData)}
+      className="login"
+      title="Register">
+      <input {...emailRegister} type="email" name="email" placeholder="Email" />
+      {errors.email && <p>{errors?.email?.message}</p>}
       <input
-        className="register__input"
-        type="email"
-        placeholder="email"
-        {...register('email', {
-          required: true,
-          maxLength: 20,
-        })}
-      />
-      <div>{errors?.name && <p>{errors?.name?.message}</p>}</div>
-      <input
-        className="register__input"
+        {...passwordRegister}
         type="password"
-        placeholder="password"
-        {...register('password', {
-          required: true,
-          minLength: 6,
-        })}
+        name="password"
+        placeholder="Password"
       />
-      <button className="form__button" type="submit" onClick={() => setShowAuthComponent('login')}>
-        Reg
-      </button>
-    </form>
+      {errors.password && <p>{errors?.password?.message}</p>}
+      <p
+          className="auth__info"
+          onClick={() => {navigate('/policy')}}
+          style={{ textAlign: 'left', fontSize: '12px', lineHeight: '14px' }}>
+          Регистрируясь на сайте, вы соглашаетесь с нашими Правилами и Политикой
+          конфиденциальности и соглашаетесь на информационную рассылку.
+        </p>
+      <button type="submit">Register</button>
+      
+      <div onClick={() => setShowAuthComponent('login')}>Login</div>
+    </Form>
   );
 };

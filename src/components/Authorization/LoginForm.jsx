@@ -1,13 +1,64 @@
 import { Form } from './../Form/Form';
+import './Authorization.scss';
+import { useForm } from 'react-hook-form';
+import {
+  EMAIL_REGEXP,
+  VALIDATE_CONFIG,
+  PASS_REGEXP,
+} from './../../constants/constants';
 
-export const LoginForm = ({setShowAuthComponent}) => {
+export const LoginForm = ({ setShowAuthComponent }) => {
+  const {
+    register,
+    handleSubmit,
+    formState: { errors },
+  } = useForm({ mode: 'onChange' });
+
+  const emailRegister = register('email', {
+    required: {
+      value: true,
+      message: VALIDATE_CONFIG.requiredMessage,
+    },
+    pattern: {
+      value: EMAIL_REGEXP,
+      message: VALIDATE_CONFIG.email,
+    },
+  });
+
+  const passwordRegister = register('password', {
+    required: {
+      value: true,
+      message: VALIDATE_CONFIG.requiredMessage,
+    },
+    pattern: {
+      value: PASS_REGEXP,
+      message: VALIDATE_CONFIG.password,
+    },
+  });
+
+  const sendData = (data) => {
+    console.log({ data });
+  };
+
   return (
-    <div>
-      <Form>
-Login
-      <input />
+    <Form
+      handleFormSubmit={handleSubmit(sendData)}
+      className="login"
+      title="Login">
+      <input {...emailRegister} type="email" name="email" placeholder="Email" />
+      {errors.email && <p>{errors?.email?.message}</p>}
+      <input
+        {...passwordRegister}
+        type="password"
+        name="password"
+        placeholder="Password"
+      />
+      {errors.password && <p>{errors?.password?.message}</p>}
+      <button type="submit">Login</button>
+      <div onClick={() => setShowAuthComponent('reset-pass')}>
+        Reset password
+      </div>
       <div onClick={() => setShowAuthComponent('register')}>Register</div>
-      </Form>
-    </div>
-  )
-}
+    </Form>
+  );
+};
