@@ -11,21 +11,21 @@ class Api {
 
   getPostsList() {
     return fetch(`${this._baseUrl}/posts`, {
-      headers: this._headers,
+      ...this._configFunc(),
       method: 'GET',
     }).then(onResponse);
   }
 
   getUserInfo() {
     return fetch(`${this._baseUrl}/users/me`, {
-      headers: this._headers,
+      ...this._configFunc(),
       method: 'GET',
     }).then(onResponse);
   }
 
   search(searchQuery) {
     return fetch(`${this._baseUrl}/posts/search?query=${searchQuery}`, {
-      headers: this._headers,
+      ...this._configFunc(),
       method: 'GET',
     }).then(onResponse);
   }
@@ -33,28 +33,28 @@ class Api {
   changeLikePost(postId, isLike) {
     // console.log(postId);
     return fetch(`${this._baseUrl}/posts/likes/${postId}`, {
-      headers: this._headers,
+      ...this._configFunc(),
       method: isLike ? 'DELETE' : 'PUT',
     }).then(onResponse);
   }
 
   getPostById(postId) {
     return fetch(`${this._baseUrl}/posts/${postId}`, {
-      headers: this._headers,
+      ...this._configFunc(),
       method: 'GET',
     }).then(onResponse);
   }
 
   getUsers() {
     return fetch(`${this._baseUrl}/users`, {
-      headers: this._headers,
+      ...this._configFunc(),
       method: 'GET',
     }).then(onResponse);
   }
 
   getUserById(userId) {
     return fetch(`${this._baseUrl}/users/${userId}`, {
-      headers: this._headers,
+      ...this._configFunc(),
       method: 'GET',
     }).then(onResponse);
   }
@@ -62,7 +62,7 @@ class Api {
 
   login(dataUser ) {
     return fetch(`${this._baseUrl}/signin`, {
-      headers: this._headers,
+      ...this._configFunc(),
       method: 'POST',
       body: JSON.stringify(dataUser)
     }).then(onResponse);
@@ -70,7 +70,7 @@ class Api {
 
   addComment(postId, comment ) {
     return fetch(`${this._baseUrl}/posts/comments/${postId}`, {
-      headers: this._headers,
+      ...this._configFunc(),
       method: 'POST',
       body: JSON.stringify(comment)
     }).then(onResponse);
@@ -78,9 +78,27 @@ class Api {
 
   deleteComment(postId, commentId ) {
     return fetch(`${this._baseUrl}/posts/comments/${postId}/${commentId}`, {
-      headers: this._headers,
+      ...this._configFunc(),
       method: 'DELETE',
     }).then(onResponse);
+  }
+
+  editUserInfo(dataUser) {
+    return fetch(`${this._baseUrl}/users/me`, {
+      ...this._configFunc(),
+      method: 'PATCH',
+      body: JSON.stringify(dataUser)
+    }).then(onResponse);
+  }
+}
+
+const configFunc = () => {
+  return {
+  headers: {
+    'content-type': 'application/json',
+    Authorization:
+      `Bearer ${localStorage.getItem('token')}`,
+  },
   }
 }
 
@@ -89,8 +107,9 @@ const config = {
   headers: {
     'content-type': 'application/json',
     Authorization:
-      'Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJfaWQiOiI2M2QxYmM1ODU5Yjk4YjAzOGY3N2FiZTQiLCJncm91cCI6Imdyb3VwLTkiLCJpYXQiOjE2NzkxODcyMjgsImV4cCI6MTcxMDcyMzIyOH0.1XyGJixnaIW0oiF1p_VnvSpg0Vq_AnPSy3ci9RItwQU',
+      `Bearer ${localStorage.getItem('token')}`,
   },
+  configFunc: configFunc
 };
 
 const api = new Api(config);

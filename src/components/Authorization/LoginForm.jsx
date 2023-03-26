@@ -41,6 +41,9 @@ export const LoginForm = ({ setShowAuthComponent, handleCloseModal }) => {
     },
   });
 
+
+const {setIsAuth} = useContext(PostsContext);
+
   const navigate = useNavigate();
 
   const sendData = (data) => {
@@ -49,6 +52,7 @@ export const LoginForm = ({ setShowAuthComponent, handleCloseModal }) => {
       .then((result) => {
         const { token } = result;
         localStorage.setItem('token', token);
+        setIsAuth(true)
       })
       .catch((error) => {
         console.log(error);

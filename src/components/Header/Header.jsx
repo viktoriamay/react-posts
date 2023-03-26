@@ -19,10 +19,10 @@ export const Header = ({
   currentUser,
   setActiveModal,
   activeModal,
-  isAuth,
   setIsAuth,
 }) => {
-  const { favorites } = useContext(PostsContext);
+  
+  const { favorites, isAuth } = useContext(PostsContext);
   // console.log(currentUser?.name); не забывать ставить ?
   const [activeHeaderModal, setActiveHeaderModal] = useState({
     isOpen: false,

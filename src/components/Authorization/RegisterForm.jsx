@@ -8,6 +8,8 @@ import {
   PASS_REGEXP,
 } from './../../constants/constants';
 import { authApi } from './../../utils/authApi';
+import { useContext } from 'react';
+import { PostsContext } from './../../context/PostsContext';
 
 export const RegisterForm = ({ setShowAuthComponent, handleCloseModal }) => {
   const {
@@ -38,12 +40,17 @@ export const RegisterForm = ({ setShowAuthComponent, handleCloseModal }) => {
     },
   });
 
+const {setIsAuth} = useContext(PostsContext);
+
+
   const sendData = (data) => {
     authApi
       .registration({...data, group: 'group-9'})
       .then((result) => {
         const { token } = result;
         localStorage.setItem('token', token);
+        setIsAuth(true)
+
       })
       .catch((error) => console.log(error))
       .finally(handleCloseModal());

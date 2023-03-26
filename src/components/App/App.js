@@ -16,6 +16,7 @@ import { PostsPage } from '../../pages/PostsPage/PostsPage';
 import { RegisterForm } from '../Authorization/RegisterForm';
 import { Authorization } from '../Authorization/Authorization';
 import { Modal } from './../Modal/Modal';
+import { Profile } from '../Profile/Profile';
 
 function App() {
   const [posts, setPosts] = useState([]);
@@ -36,6 +37,9 @@ function App() {
 
   // здесь мы получаем информацию с сервера апи запросами и помещаем данные в соответствующие стейты
   useEffect(() => {
+    if (!isAuth) {
+      return
+    }
     // промисы нужны для того, чтобы вся информация с апи приходила одновременно, то есть один апи запрос ждал другой, пока они не подгрузятся, чтобы не было такого, что более поздний запрос (и необходимая информация по нему) пришел раньше, чем более нужный ранний;
     // то есть ждём пока все запросы выполнятся и тогда выводим данные
     // кладем апи запросы в массив, так как тут два запроса, в зенах данные с сервера по апи запросу
@@ -62,7 +66,7 @@ function App() {
     getUserInfo().then((userData) => {
       setCurrentUser(userData); 
     }); */
-  }, []);
+  }, [isAuth]);
 
   // console.log(posts[0]._id); вывод в консоль данных айди первого элемента (поста) в массиве с сервера
 
@@ -94,6 +98,9 @@ function App() {
   // теперь следим за запросом в поисковой строке, но с учётом задержки (так как значение из инпута мы положили в стейт)
   // реквест (запрос на сервер по вводимому значению в инпут) вызывается только тогда, когда изменяется дебаунсквери
   useEffect(() => {
+    if (!isAuth) {
+      return
+    }
     filterPostsRequest();
   }, [debounceSearchQuery]);
 
@@ -241,6 +248,7 @@ function App() {
               path="/favorites"
               element={<FavoritePage currentUser={currentUser} />}
             />
+            <Route path='/profile' element={<Profile />} />
             <Route path="*" element={<div>Not Found</div>} />
           </Routes>
         </main>
