@@ -67,6 +67,16 @@ class Api {
       body: JSON.stringify(dataUser)
     }).then(onResponse);
   }
+
+  addComment(postId, comment ) {
+    return fetch(`${this._baseUrl}/posts/comments/${postId}`, {
+      headers: this._headers,
+      method: 'POST',
+      body: JSON.stringify(comment)
+    }).then(onResponse);
+  }
+
+  // comments/:postId
 }
 
 const config = {

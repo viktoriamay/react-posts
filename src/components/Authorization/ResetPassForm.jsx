@@ -79,8 +79,6 @@ const {setIsAuth} = useContext(PostsContext);
     }
   };
 
-  const navigate = useNavigate();
-
   return (
     <Form
       handleFormSubmit={handleSubmit(sendData)}

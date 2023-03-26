@@ -3,6 +3,9 @@ import './Post.scss';
 import { useNavigate } from 'react-router-dom';
 import { useState, useEffect } from 'react';
 import api from './../../utils/api';
+import { Form } from '../Form/Form';
+import { useForm } from 'react-hook-form';
+import { VALIDATE_CONFIG } from './../../constants/constants';
 
 export const Post = (props) => {
   const options = {
@@ -15,6 +18,12 @@ export const Post = (props) => {
 
   const [isClicked, setClicked] = useState(isLike);
   const [users, setUsers] = useState([]);
+
+  const [showForm, setShowForm] = useState(false);
+
+  const [reviewsProduct, setReviewsProduct] = useState(props?.comments);
+
+
   // небезопасный способ вставки данных с бэка
   const desctiptionHTML = {
     __html: props?.text?.replace(props?.text[0], props?.text[0].toUpperCase()),
@@ -35,7 +44,6 @@ export const Post = (props) => {
     api.getUsers().then((data) => setUsers(data));
   }, []);
 
-  console.log({ users });
 
   const getUser = (id) => {
     if (!users.length) return '';
@@ -43,6 +51,31 @@ export const Post = (props) => {
     console.log({ user });
     return user?.name ?? 'User';
   };
+
+  const {
+    register,
+    handleSubmit,
+    formState: { errors },
+  } = useForm({ mode: 'onChange' });
+
+  const reviewRegister = register('text', {
+    required: {
+      value: true,
+      message: VALIDATE_CONFIG.requiredMessage,
+    },
+    minLength: {
+      value: 5,
+      message: 'Минимум 5 символов',
+    },
+  });
+
+  const sendComment = (data) => {
+    props.onSendComment({ ...data
+    });
+    // setShowForm(false);
+  };
+
+  
 
   return (
     <div>
@@ -105,8 +138,8 @@ export const Post = (props) => {
           </div>
         </div>
         <div className="post__reviews">
-          Comments
-          {props?.comments?.map((e) => (
+          Comments {props?.comments?.length}
+          {props?.comments?.sort((a, b) => new Date(b.created_at) - new Date(a.created_at)).map((e) => (
             <div>
               <span>{getUser(e.author)}</span>
               <span>
@@ -118,6 +151,20 @@ export const Post = (props) => {
             </div>
           ))}
           <div>Comment post</div>
+          <Form
+            handleFormSubmit={handleSubmit(sendComment)}
+            title="Review">
+            <textarea
+          {...reviewRegister}
+              type='text'
+              name='text'
+              placeholder='Send review'
+            />
+            {errors.text && <p>{errors?.text?.message}</p>}
+            
+            <button type="submit">Send review</button>
+            
+          </Form>
         </div>
       </div>
     </div>

@@ -1,9 +1,10 @@
 import Spinner from '../../components/Spinner/Spinner';
 import { useState, useEffect, useContext } from 'react';
-import api from '../../utils/api';
+// import api from '../../utils/api';
 import { Post } from '../../components/Post/Post';
 import { useParams } from 'react-router-dom';
 import { PostsContext } from './../../context/PostsContext';
+import api from './../../utils/api';
 
 export const PostPage = ({ handlePostLike }) => {
   const [cards, setCards] = useState([]);
@@ -44,6 +45,22 @@ export const PostPage = ({ handlePostLike }) => {
     setPost({ ...post });
   };
 
+  const onSendComment = (data) => {
+    setIsLoading(true);
+    api
+      .addComment(post._id, data)
+      .then((result) => {
+        setPost({ ...result });
+        // openNotification('success', 'Успешно', 'Ваш отзыв успешно отправлен');
+      })
+      .catch((error) => {
+        // openNotification('error', 'Ошибка', 'Не получилось отправить отзыв');
+      })
+      .finally(() => {
+        setIsLoading(false);
+      });
+  };
+
   return (
     <div>
       {isLoading ? (
@@ -54,6 +71,7 @@ export const PostPage = ({ handlePostLike }) => {
           setPost={setPost}
           currentUser={currentUser}
           onPostLike={onPostLike}
+          onSendComment={onSendComment}
         />
       )}
     </div>
