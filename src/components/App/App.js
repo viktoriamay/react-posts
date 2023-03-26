@@ -190,7 +190,8 @@ function App() {
     setActiveModal,
     activeModal,
     setIsAuth,
-    isAuth
+    isAuth,
+    setCurrentUser
   };
   /* 
   const handleCloseModal = () => {

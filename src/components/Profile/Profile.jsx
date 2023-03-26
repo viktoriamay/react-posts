@@ -7,7 +7,7 @@ import api from './../../utils/api';
 import { useNavigate } from 'react-router-dom';
 
 export const Profile = () => {
-  const { currentUser } = useContext(PostsContext);
+  const { currentUser, setCurrentUser } = useContext(PostsContext);
   console.log({ currentUser });
 
   const {
@@ -16,14 +16,12 @@ export const Profile = () => {
     formState: { errors },
   } = useForm({ mode: 'onBlur' });
 
-  const editProfile = async (data) => {
-    console.log({ data });
-   await api.editUserInfo({name: data.name, about: data.about});
+  const editProfile =  (data) => {
+    api.editUserInfo({name: data.name, about: data.about}).then((newUser) => setCurrentUser({...newUser}));
   };
 
-  const editAvatar = async (src) => {
-    console.log({ src });
-    await api.editUserAvatar({avatar: src.avatar});
+  const editAvatar =  (src) => {
+     api.editUserAvatar({avatar: src.avatar}).then((newUser) => setCurrentUser({...newUser}));
   };
 
   const required = {
