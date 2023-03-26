@@ -59,24 +59,23 @@ class Api {
     }).then(onResponse);
   }
 
-
-  login(dataUser ) {
+  login(dataUser) {
     return fetch(`${this._baseUrl}/signin`, {
       ...this._configFunc(),
       method: 'POST',
-      body: JSON.stringify(dataUser)
+      body: JSON.stringify(dataUser),
     }).then(onResponse);
   }
 
-  addComment(postId, comment ) {
+  addComment(postId, comment) {
     return fetch(`${this._baseUrl}/posts/comments/${postId}`, {
       ...this._configFunc(),
       method: 'POST',
-      body: JSON.stringify(comment)
+      body: JSON.stringify(comment),
     }).then(onResponse);
   }
 
-  deleteComment(postId, commentId ) {
+  deleteComment(postId, commentId) {
     return fetch(`${this._baseUrl}/posts/comments/${postId}/${commentId}`, {
       ...this._configFunc(),
       method: 'DELETE',
@@ -87,29 +86,35 @@ class Api {
     return fetch(`${this._baseUrl}/users/me`, {
       ...this._configFunc(),
       method: 'PATCH',
-      body: JSON.stringify(dataUser)
+      body: JSON.stringify(dataUser),
+    }).then(onResponse);
+  }
+
+  editUserAvatar(body) {
+    return fetch(`${this._baseUrl}/users/me/avatar`, {
+      ...this._configFunc(),
+      method: 'PATCH',
+      body: JSON.stringify(body)
     }).then(onResponse);
   }
 }
 
 const configFunc = () => {
   return {
-  headers: {
-    'content-type': 'application/json',
-    Authorization:
-      `Bearer ${localStorage.getItem('token')}`,
-  },
-  }
-}
+    headers: {
+      'content-type': 'application/json',
+      Authorization: `Bearer ${localStorage.getItem('token')}`,
+    },
+  };
+};
 
 const config = {
   baseUrl: 'https://api.react-learning.ru/v2/group-9',
   headers: {
     'content-type': 'application/json',
-    Authorization:
-      `Bearer ${localStorage.getItem('token')}`,
+    Authorization: `Bearer ${localStorage.getItem('token')}`,
   },
-  configFunc: configFunc
+  configFunc: configFunc,
 };
 
 const api = new Api(config);

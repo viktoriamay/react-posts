@@ -18,7 +18,12 @@ export const Profile = () => {
 
   const editProfile = async (data) => {
     console.log({ data });
-    api.editUserInfo(data)
+   await api.editUserInfo({name: data.name, about: data.about});
+  };
+
+  const editAvatar = async (src) => {
+    console.log({ src });
+    await api.editUserAvatar({avatar: src.avatar});
   };
 
   const required = {
@@ -26,58 +31,76 @@ export const Profile = () => {
     message: VALIDATE_CONFIG.requiredMessage,
   };
 
-  const navigate =useNavigate()
-  const handleLogout =() => {
-    localStorage.removeItem('token')
-    navigate('/')
-  }
+  const navigate = useNavigate();
+  const handleLogout = () => {
+    localStorage.removeItem('token');
+    navigate('/');
+  };
 
   return (
     <div>
       Profile
       <span>Back</span>
       {currentUser ? (
-        <Form className="" handleFormSubmit={handleSubmit(editProfile)}>
-          <input
-            {...register('name', {
-              required,
-            })}
-            type="text"
-            name="name"
-            placeholder="Имя"
-            defaultValue={currentUser.name}
-          />
-          {errors.name && <p>{errors?.name.message}</p>}
-          <input
-            {...register('about', {
-              required,
-            })}
-            type="text"
-            name="about"
-            placeholder="about"
-            defaultValue={currentUser.about}
-          />
-          {errors.name && <p>{errors?.about.message}</p>}
+        <>
+          <Form className="" handleFormSubmit={handleSubmit(editProfile)}>
+            <input
+              {...register('name', {
+                required,
+              })}
+              type="text"
+              name="name"
+              placeholder="Имя"
+              defaultValue={currentUser.name}
+            />
+            {errors.name && <p>{errors?.name.message}</p>}
+            <input
+              {...register('about', {
+                required,
+              })}
+              type="text"
+              name="about"
+              placeholder="about"
+              defaultValue={currentUser.about}
+            />
+            {errors.name && <p>{errors?.about.message}</p>}
 
-          <input
-            type="email"
-            name="email"
-            placeholder="email"
-            defaultValue={currentUser.email}
-            disabled
-          />
+            <input
+              type="email"
+              name="email"
+              placeholder="email"
+              defaultValue={currentUser.email}
+              disabled
+            />
 
-          <input
-            type="text"
-            name="id"
-            placeholder="id"
-            defaultValue={currentUser._id}
-            disabled
-          />
+            <input
+              type="text"
+              name="id"
+              placeholder="id"
+              defaultValue={currentUser._id}
+              disabled
+            />
 
-          <button type="submit">Edit profile</button>
-        <button type='button' onClick={handleLogout}>Exit</button>
-        </Form>
+            <button type="submit">Edit profile</button>
+            <button type="button" onClick={handleLogout}>
+              Exit
+            </button>
+          </Form>
+          <Form className="" handleFormSubmit={handleSubmit(editAvatar)}>
+            <input
+              {...register('avatar', {
+                required,
+              })}
+              type="text"
+              name="avatar"
+              placeholder="avatar"
+              defaultValue={currentUser.avatar}
+            />
+            {errors.name && <p>{errors?.about.message}</p>}
+            <button type='submit'>Edit ava</button>
+          </Form>
+          <img src={currentUser.avatar} />
+        </>
       ) : (
         <div>Error</div>
       )}
