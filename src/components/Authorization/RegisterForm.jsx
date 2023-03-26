@@ -7,6 +7,7 @@ import {
   VALIDATE_CONFIG,
   PASS_REGEXP,
 } from './../../constants/constants';
+import { authApi } from './../../utils/authApi';
 
 export const RegisterForm = ({ setShowAuthComponent, handleCloseModal }) => {
   const {
@@ -38,11 +39,18 @@ export const RegisterForm = ({ setShowAuthComponent, handleCloseModal }) => {
   });
 
   const sendData = (data) => {
+    authApi
+      .registration({...data, group: 'group-9'})
+      .then((result) => {
+        const { token } = result;
+        localStorage.setItem('token', token);
+      })
+      .catch((error) => console.log(error))
+      .finally(handleCloseModal());
     console.log({ data });
-    handleCloseModal()
   };
 
-  const navigate = useNavigate()
+  const navigate = useNavigate();
 
   return (
     <Form
@@ -59,14 +67,16 @@ export const RegisterForm = ({ setShowAuthComponent, handleCloseModal }) => {
       />
       {errors.password && <p>{errors?.password?.message}</p>}
       <p
-          className="auth__info"
-          onClick={() => {navigate('/policy')}}
-          style={{ textAlign: 'left', fontSize: '12px', lineHeight: '14px' }}>
-          Регистрируясь на сайте, вы соглашаетесь с нашими Правилами и Политикой
-          конфиденциальности и соглашаетесь на информационную рассылку.
-        </p>
+        className="auth__info"
+        onClick={() => {
+          navigate('/policy');
+        }}
+        style={{ textAlign: 'left', fontSize: '12px', lineHeight: '14px' }}>
+        Регистрируясь на сайте, вы соглашаетесь с нашими Правилами и Политикой
+        конфиденциальности и соглашаетесь на информационную рассылку.
+      </p>
       <button type="submit">Register</button>
-      
+
       <div onClick={() => setShowAuthComponent('login')}>Login</div>
     </Form>
   );

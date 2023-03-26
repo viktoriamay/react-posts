@@ -16,6 +16,30 @@ class Api {
       body: JSON.stringify(dataUser)
     }).then(onResponse);
   }
+
+  registration(dataUser) {
+    return fetch(`${this._baseUrl}/signup`, {
+      headers: this._headers,
+      method: 'POST',
+      body: JSON.stringify(dataUser)
+    }).then(onResponse);
+  }
+
+  resetPassword(dataUser) {
+    return fetch(`${this._baseUrl}/forgot-password`, {
+      headers: this._headers,
+      method: 'POST',
+      body: JSON.stringify(dataUser)
+    }).then(onResponse);
+  }
+
+  resetPasswordToken(dataUser, token) {
+    return fetch(`${this._baseUrl}/password-reset/${token}`, {
+      headers: this._headers,
+      method: 'PATCH',
+      body: JSON.stringify(dataUser)
+    }).then(onResponse);
+  }
 }
 
 const config = {

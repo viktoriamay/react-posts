@@ -24,6 +24,7 @@ function App() {
   const [favorites, setFavorites] = useState([]);
 
   const [activeModal, setActiveModal] = useState(false);
+  const [isAuth, setIsAuth] = useState(false);
 
   // возвращает накопленное сёрчКвери
   const debounceSearchQuery = useDebounce(searchQuery, 1000);
@@ -181,7 +182,9 @@ function App() {
     currentUser,
     onSortData: sortedData,
     setActiveModal,
-    activeModal
+    activeModal,
+    setIsAuth,
+    isAuth
     // setCurrentSort,
   };
   /* 
@@ -189,7 +192,12 @@ function App() {
     setActiveModal(false);
   }; */
 
-  console.log({posts});
+  console.log({ posts });
+
+  useEffect(() => {
+    const haveToken = localStorage.getItem('token');
+    setIsAuth(!!haveToken);
+  }, []);
 
   return (
     <div className="App">
@@ -199,6 +207,7 @@ function App() {
           setActiveModal={setActiveModal}
           currentUser={currentUser}>
           {/* прокидываем пропсы, => formSubmitRequest={formSubmitRequest} changeInput={changeInput} то же самое что и ниже.  */}
+          
           <Search onSubmit={formSubmitRequest} onInput={changeInput} />
         </Header>
 

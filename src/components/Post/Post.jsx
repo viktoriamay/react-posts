@@ -14,7 +14,7 @@ export const Post = (props) => {
   const isLike = props?.likes?.some((id) => id === props?.currentUser?._id);
 
   const [isClicked, setClicked] = useState(isLike);
-const [users, setUsers] =useState([])
+  const [users, setUsers] = useState([]);
   // небезопасный способ вставки данных с бэка
   const desctiptionHTML = {
     __html: props?.text?.replace(props?.text[0], props?.text[0].toUpperCase()),
@@ -31,19 +31,18 @@ const [users, setUsers] =useState([])
       console.log(data);
     }); */
 
-    useEffect(() => {
-      api.getUsers().then(data => setUsers(data))
-      
-    }, []);
+  useEffect(() => {
+    api.getUsers().then((data) => setUsers(data));
+  }, []);
 
-    console.log({users});
+  console.log({ users });
 
-    const getUser =(id) => {
-if(!users.length) return ''
-const user = users.find((el) => el._id === id)
-console.log({user});
-return user?.name ?? 'User'
-    }
+  const getUser = (id) => {
+    if (!users.length) return '';
+    const user = users.find((el) => el._id === id);
+    console.log({ user });
+    return user?.name ?? 'User';
+  };
 
   return (
     <div>
@@ -109,10 +108,12 @@ return user?.name ?? 'User'
           Comments
           {props?.comments?.map((e) => (
             <div>
-            <span>{getUser(e.author)}</span>
-              <span>{new Date(e?.created_at)
+              <span>{getUser(e.author)}</span>
+              <span>
+                {new Date(e?.created_at)
                   .toLocaleString('ru-RU', options)
-                  .slice(0, -3)}</span>
+                  .slice(0, -3)}
+              </span>
               <p>{e.text}</p>
             </div>
           ))}

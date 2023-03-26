@@ -27,7 +27,10 @@ export const Authorization = ({ activeModal, handleCloseModal }) => {
         />
       )}
       {showAuthComponent === 'reset-pass' && (
-        <ResetPassForm handleCloseModal={handleCloseModal} setShowAuthComponent={setShowAuthComponent} />
+        <ResetPassForm
+          handleCloseModal={handleCloseModal}
+          setShowAuthComponent={setShowAuthComponent}
+        />
       )}
     </div>
   );

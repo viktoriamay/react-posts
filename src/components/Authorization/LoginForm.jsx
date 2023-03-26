@@ -52,7 +52,8 @@ export const LoginForm = ({ setShowAuthComponent, handleCloseModal }) => {
       })
       .catch((error) => {
         console.log(error);
-      }).finally(handleCloseModal());
+      })
+      .finally(handleCloseModal());
   };
 
   return (
