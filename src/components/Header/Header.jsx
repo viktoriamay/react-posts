@@ -1,10 +1,11 @@
 import {
   HeartOutlined,
+  LoginOutlined,
   PlusCircleOutlined,
   SmileOutlined,
 } from '@ant-design/icons';
 import { useContext, useState } from 'react';
-import { Link } from 'react-router-dom';
+import { Link, useNavigate } from 'react-router-dom';
 import { PostsContext } from '../../context/PostsContext';
 import { Logo } from '../Logo/Logo';
 import { Search } from '../Search/Search';
@@ -18,8 +19,10 @@ export const Header = ({
   currentUser,
   setActiveModal,
   activeModal,
+  isAuth,
+  setIsAuth,
 }) => {
-  const { favorites, isAuth } = useContext(PostsContext);
+  const { favorites } = useContext(PostsContext);
   // console.log(currentUser?.name); не забывать ставить ?
   const [activeHeaderModal, setActiveHeaderModal] = useState({
     isOpen: false,
@@ -29,6 +32,8 @@ export const Header = ({
   const handleCloseModal = () => {
     setActiveHeaderModal({ ...activeHeaderModal, isOpen: false });
   };
+
+  const navigate = useNavigate();
 
   return (
     <header className="header">
@@ -47,19 +52,23 @@ export const Header = ({
               }
               className="header__add_icon"
             />
-            {isAuth &&
-            <Link to={'/favorites'}>
-              {favorites.length !== 0 && (
-                <span style={{ color: 'white' }}>{favorites.length}</span>
-              )}
-              <HeartOutlined className="header__favorites_icon" />
-            </Link>
-            }
-            <SmileOutlined
-              onClick={() =>
-                setActiveHeaderModal({ component: 'register', isOpen: true })
-              }
-              className="header__login_icon"></SmileOutlined>
+            {isAuth && (
+              <Link to={'/favorites'}>
+                {favorites.length !== 0 && (
+                  <span style={{ color: 'white' }}>{favorites.length}</span>
+                )}
+                <HeartOutlined className="header__favorites_icon" />
+              </Link>
+            )}
+            {isAuth ? (
+              <SmileOutlined onClick={() => navigate('/profile')}
+                
+                className="header__login_icon"></SmileOutlined>
+            ) : (
+              <LoginOutlined onClick={() =>
+                  setActiveHeaderModal({ component: 'register', isOpen: true })
+                }  />
+            )}
           </div>
         </div>
       </div>
@@ -68,8 +77,13 @@ export const Header = ({
           activeModal={activeHeaderModal.isOpen}
           setActiveModal={handleCloseModal}>
           {activeHeaderModal.component === 'addPost' && <div>Add post</div>}
-          {activeHeaderModal.component === 'register' && <Authorization activeModal={activeHeaderModal.isOpen}
-          handleCloseModal={handleCloseModal} />}
+          {activeHeaderModal.component === 'register' && (
+            <Authorization
+              activeModal={activeHeaderModal.isOpen}
+              setIsAuth={setIsAuth}
+              handleCloseModal={handleCloseModal}
+            />
+          )}
         </Modal>
       </div>
     </header>

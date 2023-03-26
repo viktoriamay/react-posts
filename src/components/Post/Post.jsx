@@ -48,7 +48,6 @@ export const Post = (props) => {
   const getUser = (id) => {
     if (!users.length) return '';
     const user = users.find((el) => el._id === id);
-    console.log({ user });
     return user?.name ?? 'User';
   };
 
@@ -75,6 +74,12 @@ export const Post = (props) => {
     // setShowForm(false);
   };
 
+  const deleteComment = (e) => {
+    props.onDeleteComment()
+    // setShowForm(false);
+    // console.log({comment});
+  };
+  
   
 
   return (
@@ -148,7 +153,9 @@ export const Post = (props) => {
                   .slice(0, -3)}
               </span>
               <p>{e.text}</p>
+            {e.author === props?.currentUser?._id && <b onClick={()=>props.onDeleteComment(e._id)}>Delete comment</b>}
             </div>
+
           ))}
           <div>Comment post</div>
           <Form
@@ -163,7 +170,6 @@ export const Post = (props) => {
             {errors.text && <p>{errors?.text?.message}</p>}
             
             <button type="submit">Send review</button>
-            
           </Form>
         </div>
       </div>

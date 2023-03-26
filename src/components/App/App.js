@@ -173,7 +173,6 @@ function App() {
         break;
     }
   };
-  // console.log({posts});
   const valueContextProvider = {
     posts,
     setPosts,
@@ -185,19 +184,16 @@ function App() {
     activeModal,
     setIsAuth,
     isAuth
-    // setCurrentSort,
   };
   /* 
   const handleCloseModal = () => {
     setActiveModal(false);
   }; */
 
-  console.log({ posts });
-
   useEffect(() => {
     const haveToken = localStorage.getItem('token');
     setIsAuth(!!haveToken);
-  }, []);
+  });
 
   return (
     <div className="App">
@@ -205,7 +201,10 @@ function App() {
         <Header
           activeModal={activeModal}
           setActiveModal={setActiveModal}
-          currentUser={currentUser}>
+          currentUser={currentUser}
+          isAuth={isAuth}
+          setIsAuth={setIsAuth}>
+
           {/* прокидываем пропсы, => formSubmitRequest={formSubmitRequest} changeInput={changeInput} то же самое что и ниже.  */}
           
           <Search onSubmit={formSubmitRequest} onInput={changeInput} />
@@ -233,6 +232,8 @@ function App() {
                 <PostPage
                   currentUser={currentUser}
                   handlePostLike={handlePostLike}
+                  posts={posts}
+                   setPosts={setPosts}
                 />
               }
             />

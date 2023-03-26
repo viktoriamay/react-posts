@@ -6,7 +6,7 @@ import { useParams } from 'react-router-dom';
 import { PostsContext } from './../../context/PostsContext';
 import api from './../../utils/api';
 
-export const PostPage = ({ handlePostLike }) => {
+export const PostPage = ({ handlePostLike, setPosts }) => {
   const [cards, setCards] = useState([]);
   const [searchQuery, setSearchQuery] = useState('');
   const [currentUser, setCurrentUser] = useState(null);
@@ -46,7 +46,7 @@ export const PostPage = ({ handlePostLike }) => {
   };
 
   const onSendComment = (data) => {
-    setIsLoading(true);
+    // setIsLoading(true);
     api
       .addComment(post._id, data)
       .then((result) => {
@@ -56,8 +56,21 @@ export const PostPage = ({ handlePostLike }) => {
       .catch((error) => {
         // openNotification('error', 'Ошибка', 'Не получилось отправить отзыв');
       })
-      .finally(() => {
+      /* .finally(() => {
         setIsLoading(false);
+      }); */
+  };
+
+  const onDeleteComment = (comment) => {
+    console.log(comment);
+    api
+      .deleteComment(post._id, comment)
+      .then((result) => {
+        setPost({ ...result });
+        // openNotification('success', 'Успешно', 'Ваш отзыв успешно отправлен');
+      })
+      .catch((error) => {
+        // openNotification('error', 'Ошибка', 'Не получилось отправить отзыв');
       });
   };
 
@@ -72,6 +85,7 @@ export const PostPage = ({ handlePostLike }) => {
           currentUser={currentUser}
           onPostLike={onPostLike}
           onSendComment={onSendComment}
+          onDeleteComment={onDeleteComment}
         />
       )}
     </div>
