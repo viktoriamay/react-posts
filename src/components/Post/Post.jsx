@@ -101,9 +101,10 @@ export const Post = (props) => {
         <LeftOutlined />
         <span>Назад</span>
       </div>
+      {props?.currentUser?._id === props?.post?.author?._id &&
         <p onClick={() =>
                 setActivePostModal({ component: 'editPost', isOpen: true })
-              }>Edit Post</p>
+              }>Edit Post</p>}
       <div className="post">
       {props?.currentUser?._id === props?.post?.author?._id &&
       <span onClick={()=>deletePost(props.post._id)}>delete</span>

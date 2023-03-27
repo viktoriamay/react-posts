@@ -1,0 +1,19 @@
+.sort {
+  box-shadow: 0 0 20px #40404036;
+  padding: 1.3rem;
+  margin-top: 18px;
+  display: flex;
+  gap: 1rem;
+
+  &__item {
+    cursor: pointer;
+    transition: 0.2s ease;
+    &:hover {
+      transform: translateY(-3px);
+    }
+  }
+
+  &__item_active {
+    font-weight: 600;
+  }
+}

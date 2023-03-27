@@ -4,21 +4,24 @@
   position: relative;
   min-width: 120px;
   width: 100%;
+  padding: 0px;
+  border-bottom: 2px solid #f1b600;
+  height: 41px;
 
   &__input {
     width: 100%;
     border-radius: 30px;
-    border: 1px solid transparent;
+    border: 0px solid transparent;
     outline: none;
-    padding: 10px 20px 10px 20px;
-    color: #000;
+    color: rgb(255, 255, 255);
     font-size: 16px;
     font-family: 'Montserrat', sans-serif;
-    line-height: 20px;
+    line-height: 30px;
     caret-color: #f1b600;
+    background: transparent;
 
     &:focus {
-      background: #ffffff;
+      // background: #ffffff;
     }
 
     &::placeholder {
@@ -33,7 +36,7 @@
     padding: 0;
     cursor: pointer;
     position: absolute;
-    right: 20px;
+    right: 10px;
     display: flex;
 
     svg {

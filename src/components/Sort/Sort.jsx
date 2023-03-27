@@ -23,7 +23,7 @@ export const Sort = () => {
     <div className="sort">
       {tabs.map(({ id, title }) => (
         <span
-          className={id === sortedId ? 'active' : 'non'}
+          className={id === sortedId ? 'sort__item sort__item_active' : 'sort__item'}
           key={id}
           onClick={() => handleChangeSort(id)}>
           {title}
