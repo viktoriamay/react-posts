@@ -13,6 +13,7 @@ import './Header.scss';
 import { Authorization } from './../Authorization/Authorization';
 import { Modal } from '../Modal/Modal';
 import { RegisterForm } from '../Authorization/RegisterForm';
+import { AddPostForm } from './../AddPostForm/AddPostForm';
 
 export const Header = ({
   children,
@@ -76,7 +77,7 @@ export const Header = ({
         <Modal
           activeModal={activeHeaderModal.isOpen}
           setActiveModal={handleCloseModal}>
-          {activeHeaderModal.component === 'addPost' && <div>Add post</div>}
+          {activeHeaderModal.component === 'addPost' && <AddPostForm />}
           {activeHeaderModal.component === 'register' && (
             <Authorization
               activeModal={activeHeaderModal.isOpen}

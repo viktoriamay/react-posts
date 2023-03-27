@@ -7,11 +7,12 @@ export const CardList = ({handlePostLike, posts = [], currentUser }) => {
 
   return (
     <div className="cards">
-      {posts.map((post) => (
+      {posts?.map((post) => (
         <Card
         // posts={favorites}
           key={post._id}
           {...post}
+          post={post}
           currentUser={currentUser}
           handlePostLike={handlePostLike}
         />

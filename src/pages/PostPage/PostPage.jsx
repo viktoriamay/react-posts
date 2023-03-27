@@ -2,18 +2,18 @@ import Spinner from '../../components/Spinner/Spinner';
 import { useState, useEffect, useContext } from 'react';
 // import api from '../../utils/api';
 import { Post } from '../../components/Post/Post';
-import { useParams } from 'react-router-dom';
+import { useParams, useNavigate } from 'react-router-dom';
 import { PostsContext } from './../../context/PostsContext';
 import api from './../../utils/api';
 
-export const PostPage = ({ handlePostLike, setPosts }) => {
+export const PostPage = ({ handlePostLike /* setPosts */ }) => {
   const [cards, setCards] = useState([]);
   const [searchQuery, setSearchQuery] = useState('');
   const [currentUser, setCurrentUser] = useState(null);
   const [isLoading, setIsLoading] = useState(false);
   const [post, setPost] = useState(null);
 
-  const { favorites } = useContext(PostsContext);
+  const { favorites, setPosts, posts } = useContext(PostsContext);
   // const handlePostLike = () => {};
 
   // парамс это то, что приходит в апе в роутах path="/post/:postId", а именно :postId - динамический путь это и есть парамс
@@ -45,6 +45,7 @@ export const PostPage = ({ handlePostLike, setPosts }) => {
     setPost({ ...post });
   };
 
+  console.log(post?._id);
   const onSendComment = (data) => {
     // setIsLoading(true);
     api
@@ -55,8 +56,8 @@ export const PostPage = ({ handlePostLike, setPosts }) => {
       })
       .catch((error) => {
         // openNotification('error', 'Ошибка', 'Не получилось отправить отзыв');
-      })
-      /* .finally(() => {
+      });
+    /* .finally(() => {
         setIsLoading(false);
       }); */
   };
@@ -74,6 +75,47 @@ export const PostPage = ({ handlePostLike, setPosts }) => {
       });
   };
 
+  /* 
+  .then((newCard) => {
+      const newPosts = posts?.map((postState) => {
+        // console.log('Карточка из стейта', postState);
+        // console.log('Карточка с сервера', newCard);
+        return postState?._id === newCard?._id ? newCard : postState;
+      });
+  
+  setFavorites((prevState) =>
+          prevState.filter((card) => card._id !== newCard._id),
+        ); */
+  const navigate = useNavigate();
+
+  // const [deletePost, setDeletePost] = useState();
+  // const onDeletePost = () => {
+  //   const deleted = posts.some((id) => id === currentUser?._id);
+  //   api
+  //     .deletePost(post._id)
+  //     .then((newCard) => {
+  //       const newPosts = posts?.map((postState) => {
+  //         // console.log('Карточка из стейта', postState);
+  //         // console.log('Карточка с сервера', newCard);
+  //         return postState?._id === newCard?._id ? newCard : postState;
+  //       });
+  //       if (deleted) {
+  //         setDeletePost((prevState) =>
+  //           prevState.filter((card) => card._id !== newCard._id),
+  //         );
+  //       }
+  //       setPosts(newPosts);
+  //     })
+  //     .then(navigate('/'));
+  //   /* .then((result) => {
+  //       setPosts({ ...result });
+  //       // openNotification('success', 'Успешно', 'Ваш отзыв успешно отправлен');
+  //     })
+  //     .catch((error) => {
+  //       // openNotification('error', 'Ошибка', 'Не получилось отправить отзыв');
+  //     }); */
+  // };
+
   return (
     <div>
       {isLoading ? (
@@ -81,11 +123,13 @@ export const PostPage = ({ handlePostLike, setPosts }) => {
       ) : (
         <Post
           {...post}
+          post={post}
           setPost={setPost}
           currentUser={currentUser}
           onPostLike={onPostLike}
           onSendComment={onSendComment}
           onDeleteComment={onDeleteComment}
+          // onDeletePost={onDeletePost}
         />
       )}
     </div>

@@ -1,11 +1,12 @@
 import { LeftOutlined } from '@ant-design/icons';
 import './Post.scss';
 import { useNavigate } from 'react-router-dom';
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useContext } from 'react';
 import api from './../../utils/api';
 import { Form } from '../Form/Form';
 import { useForm } from 'react-hook-form';
 import { VALIDATE_CONFIG } from './../../constants/constants';
+import { PostsContext } from './../../context/PostsContext';
 
 export const Post = (props) => {
   const options = {
@@ -22,6 +23,7 @@ export const Post = (props) => {
   const [showForm, setShowForm] = useState(false);
 
   const [reviewsProduct, setReviewsProduct] = useState(props?.comments);
+
 
 
   // небезопасный способ вставки данных с бэка
@@ -44,6 +46,9 @@ export const Post = (props) => {
     api.getUsers().then((data) => setUsers(data));
   }, []);
 
+  const {deletePost } = useContext(PostsContext);
+
+
 
   const getUser = (id) => {
     if (!users.length) return '';
@@ -61,7 +66,7 @@ export const Post = (props) => {
     required: {
       value: true,
       message: VALIDATE_CONFIG.requiredMessage,
-    },
+    }, 
     minLength: {
       value: 5,
       message: 'Минимум 5 символов',
@@ -74,12 +79,6 @@ export const Post = (props) => {
     // setShowForm(false);
   };
 
-  const deleteComment = (e) => {
-    props.onDeleteComment()
-    // setShowForm(false);
-    // console.log({comment});
-  };
-  
   
 
   return (
@@ -88,8 +87,9 @@ export const Post = (props) => {
         <LeftOutlined />
         <span>Назад</span>
       </div>
-
       <div className="post">
+      <span onClick={()=>deletePost(props.post._id)}>delete</span>
+
         <div className="post__wrapper">
           <div className="post__intro">
             <div className="post__intro_info">

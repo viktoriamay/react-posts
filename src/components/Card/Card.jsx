@@ -5,8 +5,10 @@ import {
   UserOutlined,
 } from '@ant-design/icons';
 import './Card.scss';
-import { useState } from 'react';
+import { useState, useContext } from 'react';
 import { Link } from 'react-router-dom';
+import api from './../../utils/api';
+import { PostsContext } from './../../context/PostsContext';
 
 export const Card = (props) => {
   const [classActiveCard, setClassActiveCard] = useState(false);
@@ -21,6 +23,10 @@ export const Card = (props) => {
   // для изменения внешнего вида кнопки (залайкано / не залайкано)
   const liked = props.likes.some((id) => id === props.currentUser?._id);
 
+  const { deletePost } = useContext(PostsContext);
+
+
+  
   return (
     <div className="card">
       <Link to={`/post/${props._id}`}
@@ -68,6 +74,8 @@ export const Card = (props) => {
           </div>
         </div>
       </Link>
+      <b onClick={()=>deletePost(props.post._id)}>Delete Post</b>
+
       <div>
         <span className="card__like_length">
           {props?.likes?.length !== 0 && props?.likes?.length}

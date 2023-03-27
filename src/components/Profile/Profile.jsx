@@ -8,7 +8,7 @@ import { useNavigate } from 'react-router-dom';
 
 export const Profile = () => {
   const { currentUser, setCurrentUser } = useContext(PostsContext);
-  console.log({ currentUser });
+  // console.log({ currentUser });
 
   const {
     register,

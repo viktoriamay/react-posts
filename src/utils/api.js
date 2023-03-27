@@ -97,6 +97,21 @@ class Api {
       body: JSON.stringify(body)
     }).then(onResponse);
   }
+
+  addPost(newPost) {
+    return fetch(`${this._baseUrl}/posts`, {
+      ...this._configFunc(),
+      method: 'POST',
+      body: JSON.stringify(newPost)
+    }).then(onResponse);
+  }
+
+  deletePost(postId) {
+    return fetch(`${this._baseUrl}/posts/${postId}`, {
+      ...this._configFunc(),
+      method: 'DELETE',
+    }).then(onResponse);
+  }
 }
 
 const configFunc = () => {

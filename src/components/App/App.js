@@ -38,7 +38,7 @@ function App() {
   // здесь мы получаем информацию с сервера апи запросами и помещаем данные в соответствующие стейты
   useEffect(() => {
     if (!isAuth) {
-      return
+      return;
     }
     // промисы нужны для того, чтобы вся информация с апи приходила одновременно, то есть один апи запрос ждал другой, пока они не подгрузятся, чтобы не было такого, что более поздний запрос (и необходимая информация по нему) пришел раньше, чем более нужный ранний;
     // то есть ждём пока все запросы выполнятся и тогда выводим данные
@@ -99,7 +99,7 @@ function App() {
   // реквест (запрос на сервер по вводимому значению в инпут) вызывается только тогда, когда изменяется дебаунсквери
   useEffect(() => {
     if (!isAuth) {
-      return
+      return;
     }
     filterPostsRequest();
   }, [debounceSearchQuery]);
@@ -180,6 +180,26 @@ function App() {
         break;
     }
   };
+
+  const addPost = async (data) => {
+    try {
+      await api.addPost(data).then((newPost) => {
+        setPosts((state) => [newPost, ...state]);
+      });
+    } catch (error) {}
+  };
+
+  const deletePost = (postId) => {
+    console.log({postId});
+    api
+      .deletePost(postId)
+      .then(() => {
+        const updatedPosts = posts.filter((post) => post._id !== postId);
+        setPosts(updatedPosts);
+      })
+      .then(navigate('/'));
+  };
+
   const valueContextProvider = {
     posts,
     setPosts,
@@ -191,8 +211,11 @@ function App() {
     activeModal,
     setIsAuth,
     isAuth,
-    setCurrentUser
+    setCurrentUser,
+    addPost,
+    deletePost,
   };
+
   /* 
   const handleCloseModal = () => {
     setActiveModal(false);
@@ -212,9 +235,8 @@ function App() {
           currentUser={currentUser}
           isAuth={isAuth}
           setIsAuth={setIsAuth}>
-
           {/* прокидываем пропсы, => formSubmitRequest={formSubmitRequest} changeInput={changeInput} то же самое что и ниже.  */}
-          
+
           <Search onSubmit={formSubmitRequest} onInput={changeInput} />
         </Header>
 
@@ -241,7 +263,7 @@ function App() {
                   currentUser={currentUser}
                   handlePostLike={handlePostLike}
                   posts={posts}
-                   setPosts={setPosts}
+                  setPosts={setPosts}
                 />
               }
             />
@@ -249,7 +271,7 @@ function App() {
               path="/favorites"
               element={<FavoritePage currentUser={currentUser} />}
             />
-            <Route path='/profile' element={<Profile />} />
+            <Route path="/profile" element={<Profile />} />
             <Route path="*" element={<div>Not Found</div>} />
           </Routes>
         </main>
