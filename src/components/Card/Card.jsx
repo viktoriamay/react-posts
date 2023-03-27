@@ -74,7 +74,10 @@ export const Card = (props) => {
           </div>
         </div>
       </Link>
+      {props.currentUser._id === props.post.author._id &&
+
       <b onClick={()=>deletePost(props.post._id)}>Delete Post</b>
+      }
 
       <div>
         <span className="card__like_length">

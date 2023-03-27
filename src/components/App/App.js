@@ -27,6 +27,7 @@ function App() {
   const [activeModal, setActiveModal] = useState(false);
   const [isAuth, setIsAuth] = useState(false);
 
+
   // возвращает накопленное сёрчКвери
   const debounceSearchQuery = useDebounce(searchQuery, 1000);
 
@@ -67,6 +68,8 @@ function App() {
       setCurrentUser(userData); 
     }); */
   }, [isAuth]);
+
+
 
   // console.log(posts[0]._id); вывод в консоль данных айди первого элемента (поста) в массиве с сервера
 
@@ -188,6 +191,7 @@ function App() {
       });
     } catch (error) {}
   };
+  console.log({posts});
 
   const deletePost = (postId) => {
     console.log({postId});
@@ -199,6 +203,12 @@ function App() {
       })
       .then(navigate('/'));
   };
+
+  
+
+  /* const editProfile =  (data) => {
+    api.editUserInfo({name: data.name, about: data.about}).then((newUser) => setCurrentUser({...newUser}));
+  }; */
 
   const valueContextProvider = {
     posts,

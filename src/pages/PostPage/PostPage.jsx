@@ -45,7 +45,6 @@ export const PostPage = ({ handlePostLike /* setPosts */ }) => {
     setPost({ ...post });
   };
 
-  console.log(post?._id);
   const onSendComment = (data) => {
     // setIsLoading(true);
     api
@@ -62,6 +61,58 @@ export const PostPage = ({ handlePostLike /* setPosts */ }) => {
       }); */
   };
 
+
+  /* const editPost = (data) => {
+    api.editPost(post._id, data).then((result) => {setPost({...result, ...data})}).then((post) => {
+      setPosts((state) => [post, ...state]);
+    });
+  } */
+
+  /* const editPost = (data) => {
+    api.editPost(post._id, data)
+      .then((result) => {
+        setPost({...result, data});
+        return result;
+      })
+      .then((post) => {
+        setPosts(post);
+      });
+  } */
+
+  /* const editPost = (data) => {
+    api.editPost(post._id, data)
+      .then((result) => {
+        setPost({...result, ...data});
+        if(currentUser?._id !== post?.author?._id) {
+          return post
+        }
+        // currentUser._id === props.post.author._id
+        return result;
+      })
+      .then((updatedPost) => {
+        setPosts((state) => state.map((post) => post._id === updatedPost._id ? updatedPost : post));
+      });
+  } */
+
+  const editPost = (data) => {
+    api.editPost(post._id, data)
+      .then((result) => {
+        const updatedPost = {...result, data}; // создаем новый объект для обновления состояния post
+        if (currentUser?._id !== post?.author?._id) {
+          return post; // не изменять состояние post, если это не пост текущего пользователя
+        }
+        setPost(updatedPost);
+        // return updatedPost; // возвращаем новый объект, а не result
+      })
+      .then((updatedPost) => {
+        setPosts((state) => state.map((post) => post._id === updatedPost._id ? updatedPost : post));
+      });
+  }
+
+  console.log(currentUser?._id);
+  console.log(post?.author?._id);
+
+
   const onDeleteComment = (comment) => {
     console.log(comment);
     api
@@ -75,47 +126,9 @@ export const PostPage = ({ handlePostLike /* setPosts */ }) => {
       });
   };
 
-  /* 
-  .then((newCard) => {
-      const newPosts = posts?.map((postState) => {
-        // console.log('Карточка из стейта', postState);
-        // console.log('Карточка с сервера', newCard);
-        return postState?._id === newCard?._id ? newCard : postState;
-      });
-  
-  setFavorites((prevState) =>
-          prevState.filter((card) => card._id !== newCard._id),
-        ); */
   const navigate = useNavigate();
 
-  // const [deletePost, setDeletePost] = useState();
-  // const onDeletePost = () => {
-  //   const deleted = posts.some((id) => id === currentUser?._id);
-  //   api
-  //     .deletePost(post._id)
-  //     .then((newCard) => {
-  //       const newPosts = posts?.map((postState) => {
-  //         // console.log('Карточка из стейта', postState);
-  //         // console.log('Карточка с сервера', newCard);
-  //         return postState?._id === newCard?._id ? newCard : postState;
-  //       });
-  //       if (deleted) {
-  //         setDeletePost((prevState) =>
-  //           prevState.filter((card) => card._id !== newCard._id),
-  //         );
-  //       }
-  //       setPosts(newPosts);
-  //     })
-  //     .then(navigate('/'));
-  //   /* .then((result) => {
-  //       setPosts({ ...result });
-  //       // openNotification('success', 'Успешно', 'Ваш отзыв успешно отправлен');
-  //     })
-  //     .catch((error) => {
-  //       // openNotification('error', 'Ошибка', 'Не получилось отправить отзыв');
-  //     }); */
-  // };
-
+  
   return (
     <div>
       {isLoading ? (
@@ -129,6 +142,7 @@ export const PostPage = ({ handlePostLike /* setPosts */ }) => {
           onPostLike={onPostLike}
           onSendComment={onSendComment}
           onDeleteComment={onDeleteComment}
+          editPost={editPost}
           // onDeletePost={onDeletePost}
         />
       )}

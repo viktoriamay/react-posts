@@ -7,6 +7,8 @@ import { Form } from '../Form/Form';
 import { useForm } from 'react-hook-form';
 import { VALIDATE_CONFIG } from './../../constants/constants';
 import { PostsContext } from './../../context/PostsContext';
+import { Modal } from './../Modal/Modal';
+import { EditPostForm } from './../EditPostForm/EditPostForm';
 
 export const Post = (props) => {
   const options = {
@@ -16,6 +18,9 @@ export const Post = (props) => {
   };
 
   const isLike = props?.likes?.some((id) => id === props?.currentUser?._id);
+
+  const { setActiveModal } = useContext(PostsContext);
+
 
   const [isClicked, setClicked] = useState(isLike);
   const [users, setUsers] = useState([]);
@@ -79,7 +84,16 @@ export const Post = (props) => {
     // setShowForm(false);
   };
 
-  
+  const [activePostModal, setActivePostModal] = useState({
+    isOpen: false,
+    component: 'editPost',
+  });
+
+  const handleCloseModal = () => {
+    setActivePostModal({ ...activePostModal, isOpen: false });
+  };
+
+  console.log({activePostModal});
 
   return (
     <div>
@@ -87,9 +101,13 @@ export const Post = (props) => {
         <LeftOutlined />
         <span>Назад</span>
       </div>
+        <p onClick={() =>
+                setActivePostModal({ component: 'editPost', isOpen: true })
+              }>Edit Post</p>
       <div className="post">
+      {props?.currentUser?._id === props?.post?.author?._id &&
       <span onClick={()=>deletePost(props.post._id)}>delete</span>
-
+      }
         <div className="post__wrapper">
           <div className="post__intro">
             <div className="post__intro_info">
@@ -172,6 +190,16 @@ export const Post = (props) => {
             <button type="submit">Send review</button>
           </Form>
         </div>
+<div className='modal__container'>
+
+        <Modal
+          activeModal={activePostModal.isOpen}
+          setActiveModal={handleCloseModal}
+          >
+          {activePostModal.component === 'editPost' && <EditPostForm editPost={props.editPost} />}
+          
+        </Modal>
+</div>
       </div>
     </div>
   );

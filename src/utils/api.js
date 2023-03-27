@@ -112,6 +112,14 @@ class Api {
       method: 'DELETE',
     }).then(onResponse);
   }
+
+  editPost(postId, newData) {
+    return fetch(`${this._baseUrl}/posts/${postId}`, {
+      ...this._configFunc(),
+      method: 'PATCH',
+      body: JSON.stringify(newData)
+    }).then(onResponse);
+  }
 }
 
 const configFunc = () => {

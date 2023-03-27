@@ -30,6 +30,8 @@ export const Header = ({
     component: 'register',
   });
 
+
+
   const handleCloseModal = () => {
     setActiveHeaderModal({ ...activeHeaderModal, isOpen: false });
   };
