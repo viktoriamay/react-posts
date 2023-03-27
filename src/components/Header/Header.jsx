@@ -56,11 +56,13 @@ export const Header = ({
               className="header__add_icon"
             />
             {isAuth && (
-              <Link to={'/favorites'}>
+              <Link to={'/favorites'}><div className='header__favorites_icon_wrapper'>
+
                 {favorites.length !== 0 && (
-                  <span style={{ color: 'white' }}>{favorites.length}</span>
+                  <span className='header__favorites_counter'>{favorites.length}</span>
                 )}
                 <HeartOutlined className="header__favorites_icon" />
+              </div>
               </Link>
             )}
             {isAuth ? (

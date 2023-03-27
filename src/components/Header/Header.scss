@@ -42,17 +42,38 @@
     }
   }
 
+  &__favorites_icon_wrapper {
+    position: relative;
+    transition: 0.2s ease;
+
+    &:hover {
+      transform: scale(106%) rotate(5deg);
+    }
+
+    &:hover svg {
+      fill: #e8e8e8;
+    }
+  }
+  
   &__favorites_icon svg {
     height: 34px;
     width: 34px;
     fill: #f1b600;
     transition: 0.2s ease;
     cursor: pointer;
+  }
 
-    &:hover {
-      fill: #e8e8e8;
-      transform: scale(106%) rotate(5deg);
-    }
+  &__favorites_counter {
+    position: absolute;
+    top: 13px;
+    right: -8px;
+    color: #404040;
+    font-size: 18px;
+    font-weight: 500;
+    background-color: #e8e8e8;
+    line-height: 14px;
+    padding: 2px 4px;
+    border-radius: 40%;
   }
 
   &__add_icon svg {
@@ -71,8 +92,8 @@
 
 .auth {
   background-color: red;
-  }
-  
-  .add {
+}
+
+.add {
   background-color: blue;
-  }
+}
