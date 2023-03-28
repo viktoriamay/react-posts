@@ -1,5 +1,13 @@
 .form {
-  width: 200px;
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
+  // max-width: 50%;
+  /* width: 200px;
   height: 200px;
-  background-color: aliceblue;
+  background-color: aliceblue; */
+
+  &__title {
+    margin: 0 0 0.3rem 0;
+  }
 }

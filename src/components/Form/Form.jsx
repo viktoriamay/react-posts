@@ -1,9 +1,9 @@
 import './Form.scss';
 
-export const Form = ({ title, handleFormSubmit, children }) => {
+export const Form = ({ title, handleFormSubmit, children, className }) => {
   return (
-    <form className="form" onSubmit={handleFormSubmit}>
-      <h1 className="form__title">{title}</h1>
+    <form className={className  ? `${className} form` : 'form'} onSubmit={handleFormSubmit}>
+      <h3 className="form__title">{title}</h3>
       {children}
     </form>
   );

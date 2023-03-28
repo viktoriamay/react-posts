@@ -87,7 +87,13 @@ export const Post = (props) => {
     setActivePostModal({ ...activePostModal, isOpen: false });
   };
 
-  console.log({ activePostModal });
+  const getUserAvatar = (id) => {
+    if (!users.length) return '';
+    const user = users.find((el) => el._id === id);
+    return user?.avatar ?? 'User';
+  };
+
+  console.log(getUserAvatar('63d1bc5859b98b038f77abe4'));
 
   return (
     <div className="post">
@@ -170,38 +176,56 @@ export const Post = (props) => {
             {isLike ? 'Удалить лайк' : 'Поставить лайк'}
           </div>
         </div>
-        <div className="post__reviews">
-          Comments {props?.comments?.length}
+        <div className="post__comments">
+          <h2>
+            Комментарии <span>{props?.comments?.length}</span>
+          </h2>
+          <div className="post__comments_wrapper">
           {props?.comments
             ?.sort((a, b) => new Date(b.created_at) - new Date(a.created_at))
             .map((e) => (
-              <div>
-                <span>{getUser(e.author)}</span>
-                <span>
-                  {new Date(e?.created_at)
-                    .toLocaleString('ru-RU', options)
-                    .slice(0, -3)}
-                </span>
-                <p>{e.text}</p>
-                {e.author === props?.currentUser?._id && (
-                  <b onClick={() => props.onDeleteComment(e._id)}>
-                    Delete comment
-                  </b>
-                )}
+              <div className="post__comments_author_flex">
+              <div className="post__comments_author">
+
+                <div className="post__comments_author_avatar">
+                  <img src={getUserAvatar(e.author)} alt="avatar" />
+                </div>
+                <div className="post__comments_author_data">
+                  <h3 className="post__comments_author_name">
+                    {getUser(e.author)}
+                  </h3>
+                  <span className="post__comments_author_date">
+                    {new Date(e?.created_at)
+                      .toLocaleString('ru-RU', options)
+                      .slice(0, -3)}
+                  </span>
+                  <p className="post__comments_author_text">{e.text}</p>
+                </div>
+              </div>
+                  {e.author === props?.currentUser?._id && (
+                    <button
+                      className="post__edit_icon post__edit_icon_comments"
+                      onClick={() => props.onDeleteComment(e._id)}>
+                      <DeleteOutlined />
+                    </button>
+                  )}
               </div>
             ))}
-          <div>Comment post</div>
-          <Form handleFormSubmit={handleSubmit(sendComment)} title="Review">
-            <textarea
+            </div>
+          <div>
+          <h2>Оставьте свой комментарий</h2>
+          <Form className='post__comments_form' handleFormSubmit={handleSubmit(sendComment)} title="">
+            <textarea className='post__comments_textarea'
               {...reviewRegister}
               type="text"
               name="text"
-              placeholder="Send review"
+              placeholder="Комментарий"
             />
-            {errors.text && <p>{errors?.text?.message}</p>}
+            {errors.text && <span className='post__comments_errors>'>{errors?.text?.message}</span>}
 
-            <button type="submit">Send review</button>
+            <button className='post__comments_button' type="submit">Отправить комментарий</button>
           </Form>
+          </div>
         </div>
         <div className="modal__container">
           <Modal
