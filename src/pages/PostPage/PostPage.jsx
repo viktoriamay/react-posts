@@ -105,7 +105,7 @@ export const PostPage = ({ handlePostLike /* setPosts */ }) => {
         // return updatedPost; // возвращаем новый объект, а не result
       })
       .then((updatedPost) => {
-        setPosts((state) => state.map((post) => post?._id === updatedPost._id ? updatedPost : post));
+        setPosts((state) => state.map((post) => post?._id === updatedPost?._id ? updatedPost : post));
       });
   }
 
