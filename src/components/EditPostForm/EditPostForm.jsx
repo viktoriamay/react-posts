@@ -4,8 +4,9 @@ import { VALIDATE_CONFIG } from '../../constants/constants';
 import { useContext, useEffect, useState } from 'react';
 import { PostsContext } from '../../context/PostsContext';
 import { Modal } from '../Modal/Modal';
+import './EditPostForm.scss'
 
-export const EditPostForm = ({editPost}) => {
+export const EditPostForm = ({editPost, post}) => {
   const {
     register,
     handleSubmit,
@@ -70,29 +71,40 @@ export const EditPostForm = ({editPost}) => {
 
 
   return (
-    <>
-      <Form handleFormSubmit={handleSubmit(editPost)}>
+      <Form handleFormSubmit={handleSubmit(editPost)} title='Изменить пост' className='edit_post_form'>
         <input
+        className='edit_post_form__input'
           {...register('title', {
             required,
           })}
           type="text"
           name="title"
-          placeholder="title"
-          defaultValue={''}
+          placeholder="Заголовок"
+          defaultValue={post?.title}
         />
         <input
+        className='edit_post_form__input'
           {...register('text', {
             required,
           })}
           type="text"
           name="text"
-          placeholder="text"
-          defaultValue={''}
+          placeholder="Текст"
+          defaultValue={post?.text}
         />
+        <input
+        className='edit_post_form__input'
+          {...register('image', {
+            required,
+          })}
+          type="text"
+          name="image"
+          placeholder="Изображение"
+          defaultValue={post?.image}
+        />
+        <img src={post?.image} style={{maxWidth: 300}} />
         {errors.name && <p>{errors?.name.message}</p>}
-        <button type="submit">Edit post</button>
+        <button className='edit_post_form__button' type="submit">Сохранить изменения</button>
       </Form>
-    </>
   );
 };

@@ -232,7 +232,7 @@ export const Post = (props) => {
             activeModal={activePostModal.isOpen}
             setActiveModal={handleCloseModal}>
             {activePostModal.component === 'editPost' && (
-              <EditPostForm editPost={props.editPost} />
+              <EditPostForm editPost={props.editPost} post={props.post} />
             )}
           </Modal>
         </div>
