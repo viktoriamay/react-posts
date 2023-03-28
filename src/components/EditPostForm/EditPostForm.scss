@@ -7,16 +7,12 @@
 
   &__textarea {
     padding: 0.4rem 0.5rem;
-resize: none;
-height: 5rem;
+    resize: none;
+    height: 5rem;
   }
 
   &__image {
     max-width: 25rem;
-
-    img {
-      // width: 100%;
-    }
   }
 
   &__button {

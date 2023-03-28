@@ -46,16 +46,19 @@ export const Header = ({
             <Link to={'/'}>
               <Logo />
             </Link>
+
             {children}
           </div>
           <div className="header__icons_menu">
+            {isAuth && (
+              <>
             <PlusCircleOutlined
               onClick={() =>
                 setActiveHeaderModal({ component: 'addPost', isOpen: true })
               }
               className="header__add_icon"
             />
-            {isAuth && (
+
               <Link to={'/favorites'}><div className='header__favorites_icon_wrapper'>
 
                 {favorites.length !== 0 && (
@@ -64,13 +67,14 @@ export const Header = ({
                 <HeartOutlined className="header__favorites_icon" />
               </div>
               </Link>
+              </>
             )}
             {isAuth ? (
               <SmileOutlined onClick={() => navigate('/profile')}
                 
                 className="header__login_icon"></SmileOutlined>
             ) : (
-              <LoginOutlined onClick={() =>
+              <LoginOutlined className="header__login_icon" onClick={() =>
                   setActiveHeaderModal({ component: 'register', isOpen: true })
                 }  />
             )}

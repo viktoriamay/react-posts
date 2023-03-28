@@ -2,9 +2,9 @@ import { Form } from './../Form/Form';
 import { useForm } from 'react-hook-form';
 import { VALIDATE_CONFIG } from './../../constants/constants';
 import api from './../../utils/api';
-import { useContext, useEffect } from 'react';
+import { useContext, useEffect, useState } from 'react';
 import { PostsContext } from './../../context/PostsContext';
-
+import './AddPostForm.scss';
 export const AddPostForm = () => {
   const {
     register,
@@ -19,7 +19,6 @@ export const AddPostForm = () => {
     message: VALIDATE_CONFIG.requiredMessage,
   };
 
-
   /* const onSendComment = (data) => {
     // setIsLoading(true);
     api
@@ -31,7 +30,7 @@ export const AddPostForm = () => {
  
   }; */
 
-/*  const handlePostLike = (post) => {
+  /*  const handlePostLike = (post) => {
     // найти в посте в массиве лайков тот айди, который будет равен каррентЮзер._айди
 
     // другая запись функции выше без дополнительных переменных:
@@ -56,38 +55,58 @@ export const AddPostForm = () => {
     });
   }; */
 
-  
+  const [imageSrc, setImageSrc] = useState();
 
-
-
-  
-
-
-  
+  function handleImageChange(event) {
+    setImageSrc(event.target.value);
+  }
 
   return (
     <>
-      <Form handleFormSubmit={handleSubmit(addPost)}>
+      <Form
+        className="add_post_form"
+        handleFormSubmit={handleSubmit(addPost)}
+        title="Добавьте ваш пост">
         <input
+          className="form__input"
           {...register('title', {
             required,
           })}
           type="text"
           name="title"
-          placeholder="title"
+          placeholder="Заголовок"
           defaultValue={''}
         />
-        <input
+        {errors.title && <span>{errors?.title.message}</span>}
+
+        <textarea
+          className="form__textarea"
           {...register('text', {
             required,
           })}
           type="text"
           name="text"
-          placeholder="text"
+          placeholder="Описание"
           defaultValue={''}
         />
-        {errors.name && <p>{errors?.name.message}</p>}
-        <button type="submit">Add post</button>
+        {errors.text && <span>{errors?.text.message}</span>}
+
+        <input
+          className="form__input"
+          {...register('image', {
+            required,
+          })}
+          type="text"
+          name="image"
+          placeholder="Изображение"
+          defaultValue={''}
+          onChange={handleImageChange}
+        />
+        {imageSrc && <img src={imageSrc} alt="add-post-pic" />}
+        {errors.image && <span>{errors?.image.message}</span>}
+        <button className="form__button" type="submit">
+          Добавить пост
+        </button>
       </Form>
     </>
   );

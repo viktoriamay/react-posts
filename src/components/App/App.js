@@ -247,7 +247,7 @@ function App() {
           setIsAuth={setIsAuth}>
           {/* прокидываем пропсы, => formSubmitRequest={formSubmitRequest} changeInput={changeInput} то же самое что и ниже.  */}
 
-          <Search onSubmit={formSubmitRequest} onInput={changeInput} />
+          <Search isAuth={isAuth} onSubmit={formSubmitRequest} onInput={changeInput} />
         </Header>
 
         <main className="main container">
