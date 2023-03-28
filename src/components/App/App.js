@@ -191,8 +191,8 @@ function App() {
       });
     } catch (error) {}
   };
-  console.log({posts});
 
+  
   const deletePost = (postId) => {
     console.log({postId});
     api
