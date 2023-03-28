@@ -1,4 +1,4 @@
-import { LeftOutlined } from '@ant-design/icons';
+import { DeleteOutlined, FormOutlined, LeftOutlined } from '@ant-design/icons';
 import './Post.scss';
 import { useNavigate } from 'react-router-dom';
 import { useState, useEffect, useContext } from 'react';
@@ -21,15 +21,12 @@ export const Post = (props) => {
 
   const { setActiveModal } = useContext(PostsContext);
 
-
   const [isClicked, setClicked] = useState(isLike);
   const [users, setUsers] = useState([]);
 
   const [showForm, setShowForm] = useState(false);
 
   const [reviewsProduct, setReviewsProduct] = useState(props?.comments);
-
-
 
   // небезопасный способ вставки данных с бэка
   const desctiptionHTML = {
@@ -51,9 +48,7 @@ export const Post = (props) => {
     api.getUsers().then((data) => setUsers(data));
   }, []);
 
-  const {deletePost } = useContext(PostsContext);
-
-
+  const { deletePost } = useContext(PostsContext);
 
   const getUser = (id) => {
     if (!users.length) return '';
@@ -71,7 +66,7 @@ export const Post = (props) => {
     required: {
       value: true,
       message: VALIDATE_CONFIG.requiredMessage,
-    }, 
+    },
     minLength: {
       value: 5,
       message: 'Минимум 5 символов',
@@ -79,8 +74,7 @@ export const Post = (props) => {
   });
 
   const sendComment = (data) => {
-    props.onSendComment({ ...data
-    });
+    props.onSendComment({ ...data });
     // setShowForm(false);
   };
 
@@ -93,22 +87,37 @@ export const Post = (props) => {
     setActivePostModal({ ...activePostModal, isOpen: false });
   };
 
-  console.log({activePostModal});
+  console.log({ activePostModal });
 
   return (
-    <div>
-      <div onClick={() => navigate(-1)} className="post__button_back">
-        <LeftOutlined />
-        <span>Назад</span>
-      </div>
-      {props?.currentUser?._id === props?.post?.author?._id &&
-        <p onClick={() =>
+    <div className="post">
+      <div className="post__controls">
+        <div onClick={() => navigate(-1)} className="post__button_back">
+          <LeftOutlined />
+          <span>Назад</span>
+        </div>
+
+        <div className="post__edit">
+          {props?.currentUser?._id === props?.post?.author?._id && (
+            <button
+              className="post__edit_icon"
+              onClick={() =>
                 setActivePostModal({ component: 'editPost', isOpen: true })
-              }>Edit Post</p>}
-      <div className="post">
-      {props?.currentUser?._id === props?.post?.author?._id &&
-      <span onClick={()=>deletePost(props.post._id)}>delete</span>
-      }
+              }>
+              <FormOutlined />
+            </button>
+          )}
+
+          {props?.currentUser?._id === props?.post?.author?._id && (
+            <button
+              className="post__edit_icon"
+              onClick={() => deletePost(props.post._id)}>
+              <DeleteOutlined />
+            </button>
+          )}
+        </div>
+      </div>
+      <div className="post__content">
         <div className="post__wrapper">
           <div className="post__intro">
             <div className="post__intro_info">
@@ -163,44 +172,46 @@ export const Post = (props) => {
         </div>
         <div className="post__reviews">
           Comments {props?.comments?.length}
-          {props?.comments?.sort((a, b) => new Date(b.created_at) - new Date(a.created_at)).map((e) => (
-            <div>
-              <span>{getUser(e.author)}</span>
-              <span>
-                {new Date(e?.created_at)
-                  .toLocaleString('ru-RU', options)
-                  .slice(0, -3)}
-              </span>
-              <p>{e.text}</p>
-            {e.author === props?.currentUser?._id && <b onClick={()=>props.onDeleteComment(e._id)}>Delete comment</b>}
-            </div>
-
-          ))}
+          {props?.comments
+            ?.sort((a, b) => new Date(b.created_at) - new Date(a.created_at))
+            .map((e) => (
+              <div>
+                <span>{getUser(e.author)}</span>
+                <span>
+                  {new Date(e?.created_at)
+                    .toLocaleString('ru-RU', options)
+                    .slice(0, -3)}
+                </span>
+                <p>{e.text}</p>
+                {e.author === props?.currentUser?._id && (
+                  <b onClick={() => props.onDeleteComment(e._id)}>
+                    Delete comment
+                  </b>
+                )}
+              </div>
+            ))}
           <div>Comment post</div>
-          <Form
-            handleFormSubmit={handleSubmit(sendComment)}
-            title="Review">
+          <Form handleFormSubmit={handleSubmit(sendComment)} title="Review">
             <textarea
-          {...reviewRegister}
-              type='text'
-              name='text'
-              placeholder='Send review'
+              {...reviewRegister}
+              type="text"
+              name="text"
+              placeholder="Send review"
             />
             {errors.text && <p>{errors?.text?.message}</p>}
-            
+
             <button type="submit">Send review</button>
           </Form>
         </div>
-<div className='modal__container'>
-
-        <Modal
-          activeModal={activePostModal.isOpen}
-          setActiveModal={handleCloseModal}
-          >
-          {activePostModal.component === 'editPost' && <EditPostForm editPost={props.editPost} />}
-          
-        </Modal>
-</div>
+        <div className="modal__container">
+          <Modal
+            activeModal={activePostModal.isOpen}
+            setActiveModal={handleCloseModal}>
+            {activePostModal.component === 'editPost' && (
+              <EditPostForm editPost={props.editPost} />
+            )}
+          </Modal>
+        </div>
       </div>
     </div>
   );

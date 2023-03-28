@@ -1,5 +1,6 @@
 import {
   CommentOutlined,
+  DeleteOutlined,
   FireOutlined,
   RightOutlined,
   UserOutlined,
@@ -25,11 +26,10 @@ export const Card = (props) => {
 
   const { deletePost } = useContext(PostsContext);
 
-
-  
   return (
     <div className="card">
-      <Link to={`/post/${props._id}`}
+      <Link
+        to={`/post/${props._id}`}
         className={'card__wrapper'}
         onMouseDown={() => setClassActiveCard(true)}
         onMouseUp={() => setClassActiveCard(false)}
@@ -74,10 +74,11 @@ export const Card = (props) => {
           </div>
         </div>
       </Link>
-      {props.currentUser._id === props.post.author._id &&
-
-      <b onClick={()=>deletePost(props.post._id)}>Delete Post</b>
-      }
+      {props.currentUser._id === props.post.author._id && (
+        <button onClick={() => deletePost(props.post._id)} className='card__delete' >
+          <DeleteOutlined />
+        </button>
+      )}
 
       <div>
         <span className="card__like_length">

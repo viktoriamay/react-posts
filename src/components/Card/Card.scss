@@ -87,6 +87,25 @@
     color: #f1b600;
   }
 
+  &__delete {
+    cursor: pointer;
+    background: none;
+    border: none;
+    position: absolute;
+    right: 50px;
+    bottom: 8px;
+    padding: 5px;
+    svg {
+      width: 22px;
+      height: 22px;
+      transition: all 0.3s ease;
+
+      &:hover {
+        fill: #f1b600;
+        stroke: #f1b600;
+      }}
+  }
+
   &__like {
     position: absolute;
     right: 10px;

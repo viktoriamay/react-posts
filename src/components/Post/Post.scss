@@ -1,13 +1,14 @@
 .post {
-  display: flex;
-  flex-direction: column;
-  gap: 2rem;
-  margin: 2rem 0;
+  &__controls {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    margin-top: 2rem;
+  }
 
   &__button_back {
     display: inline-flex;
     align-items: center;
-    margin-top: 2rem;
     color: #404040a3;
     cursor: pointer;
     transition: 0.1s ease;
@@ -21,6 +22,34 @@
     }
   }
 
+  &__edit {
+    display: flex;
+    gap: 2rem;
+  }
+
+  &__edit_icon {
+    cursor: pointer;
+    background: none;
+    border: none;
+    
+    padding: 5px;
+    svg {
+      width: 26px;
+      height: 26px;
+      transition: all 0.3s ease;
+
+      &:hover {
+        fill: #f1b600;
+        stroke: #f1b600;
+      }}
+  }
+
+  &__content {
+    display: flex;
+    flex-direction: column;
+    gap: 2rem;
+    margin: 2rem 0;
+  }
   &__wrapper {
     display: grid;
     grid-template-columns: 1.2fr 2fr;
