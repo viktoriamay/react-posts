@@ -57,16 +57,16 @@ export const EditPostForm = ({ editPost, post }) => {
     });
   }; */
 
-  const [imageSrc, setImageSrc] = useState(post?.image);
+   const [imageSrc, setImageSrc] = useState(post?.image);
 
-  function handleImageChange(event) {
-    setImageSrc(event.target.value);
+  const handleImageChange = (e) => {
+    setImageSrc(e.target.value);
   }
-
+/*
   const [activeHeaderModal, setActiveHeaderModal] = useState({
     isOpen: false,
     component: 'register',
-  });
+  }); */
 
   return (
     <Form
@@ -83,7 +83,9 @@ export const EditPostForm = ({ editPost, post }) => {
         placeholder="Заголовок"
         defaultValue={post?.title}
       />
-        {errors.title && <span className='edit_post_form_'>{errors?.title.message}</span>}
+      {errors.title && (
+        <span className="edit_post_form_">{errors?.title.message}</span>
+      )}
 
       <textarea
         className="edit_post_form__textarea"
@@ -95,8 +97,17 @@ export const EditPostForm = ({ editPost, post }) => {
         placeholder="Текст"
         defaultValue={post?.text}
       />
-        {errors.text && <span>{errors?.text.message}</span>}
-
+      {errors.text && <span>{errors?.text.message}</span>}
+      <input
+        className="edit_post_form__input"
+        {...register('tags', {
+          required,
+        })}
+        type="text"
+        name="tags"
+        placeholder="Теги"
+        defaultValue={post?.tags}
+      />
       <input
         className="edit_post_form__input"
         {...register('image', {
@@ -108,7 +119,7 @@ export const EditPostForm = ({ editPost, post }) => {
         defaultValue={post?.image}
         onChange={handleImageChange}
       />
-        {errors.image && <span>{errors?.image.message}</span>}
+      {errors.image && <span>{errors?.image.message}</span>}
 
       <div className="edit_post_form__image">
         <img src={imageSrc || post?.image} alt="post-pic" />
