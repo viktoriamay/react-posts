@@ -3,7 +3,7 @@ import { RegisterForm } from './RegisterForm';
 import { LoginForm } from './LoginForm';
 import { ResetPassForm } from './ResetPassForm';
 
-export const Authorization = ({ activeModal, handleCloseModal }) => {
+export const Authorization = ({ activeModal, headerCloseModal }) => {
   const [showAuthComponent, setShowAuthComponent] = useState('login');
 
   useEffect(() => {
@@ -16,19 +16,19 @@ export const Authorization = ({ activeModal, handleCloseModal }) => {
     <div>
       {showAuthComponent === 'login' && (
         <LoginForm
-          handleCloseModal={handleCloseModal}
+          headerCloseModal={headerCloseModal}
           setShowAuthComponent={setShowAuthComponent}
         />
       )}
       {showAuthComponent === 'register' && (
         <RegisterForm
-          handleCloseModal={handleCloseModal}
+          headerCloseModal={headerCloseModal}
           setShowAuthComponent={setShowAuthComponent}
         />
       )}
       {showAuthComponent === 'reset-pass' && (
         <ResetPassForm
-          handleCloseModal={handleCloseModal}
+          headerCloseModal={headerCloseModal}
           setShowAuthComponent={setShowAuthComponent}
         />
       )}

@@ -11,12 +11,23 @@ import { authApi } from './../../utils/authApi';
 import { useState, useContext } from 'react';
 import { PostsContext } from './../../context/PostsContext';
 
-export const ResetPassForm = ({ setShowAuthComponent, handleCloseModal }) => {
+export const ResetPassForm = ({ setShowAuthComponent, headerCloseModal }) => {
   const {
     register,
     handleSubmit,
     formState: { errors },
   } = useForm({ mode: 'onBlur' });
+  
+  const { resetPasswordRequest, tokenResp } = useContext(PostsContext);
+
+  const tokenRegister =
+    tokenResp &&
+    register('token', {
+      required: {
+        value: !!tokenResp,
+        message: VALIDATE_CONFIG.requiredMessage,
+      }
+    });
 
   const emailRegister = register('email', {
     required: {
@@ -28,8 +39,7 @@ export const ResetPassForm = ({ setShowAuthComponent, handleCloseModal }) => {
       message: VALIDATE_CONFIG.email,
     },
   });
-  const [tokenResp, setTokenResp] = useState(false);
-const {setIsAuth} = useContext(PostsContext);
+
   const passwordRegister =
     tokenResp &&
     register('password', {
@@ -43,47 +53,11 @@ const {setIsAuth} = useContext(PostsContext);
       },
     });
 
-    const tokenRegister =
-    tokenResp &&
-    register('token', {
-      required: {
-        value: !!tokenResp,
-        message: VALIDATE_CONFIG.requiredMessage,
-      }
-    });
-    
-
-  const sendData = (formData) => {
-    if (tokenResp) {
-      authApi
-        .resetPasswordToken({ password: formData.password }, formData.token)
-        .then(({ token, data }) => {
-          if (token) {
-            localStorage.setItem('token', token);
-            localStorage.setItem('userData', JSON.stringify(data));
-            setIsAuth(true);
-          }
-        })
-        .catch((error) => {
-          console.error(error);
-        }).finally(handleCloseModal());;
-    } else {
-      authApi
-        .resetPassword(formData)
-        .then(() => {
-          setTokenResp(true);
-        })
-        .catch((error) => {
-          console.error(error);
-        })
-    }
-  };
-
   return (
     <Form
-      handleFormSubmit={handleSubmit(sendData)}
+      handleFormSubmit={handleSubmit(resetPasswordRequest)}
       className="login"
-      title="ResetPass">
+      title="Восстановление пароля">
       <input
         className=""
         {...emailRegister}
@@ -99,7 +73,7 @@ const {setIsAuth} = useContext(PostsContext);
           {...passwordRegister}
           type="password"
           name="password"
-          placeholder="Password"
+          placeholder="Пароль"
           disabled={tokenResp ? false : true}
         />
         {errors.password && <p>{errors?.password?.message}</p>}
@@ -112,9 +86,9 @@ const {setIsAuth} = useContext(PostsContext);
         />
       </div>
 
-      <button type="submit">Reset Password</button>
+      <button type="submit">Восстановить пароль</button>
 
-      <div onClick={() => setShowAuthComponent('login')}>Login</div>
+      <div onClick={() => setShowAuthComponent('login')}>Вход</div>
     </Form>
   );
 };

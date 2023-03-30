@@ -12,7 +12,7 @@ import { PostsContext } from './../../context/PostsContext';
 import { useNavigate } from 'react-router-dom';
 import { authApi } from './../../utils/authApi';
 
-export const LoginForm = ({ setShowAuthComponent, handleCloseModal }) => {
+export const LoginForm = ({ setShowAuthComponent, headerCloseModal }) => {
   const {
     register,
     handleSubmit,
@@ -42,27 +42,11 @@ export const LoginForm = ({ setShowAuthComponent, handleCloseModal }) => {
   });
 
 
-const {setIsAuth} = useContext(PostsContext);
-
-  const navigate = useNavigate();
-
-  const sendData = (data) => {
-    authApi
-      .login(data)
-      .then((result) => {
-        const { token } = result;
-        localStorage.setItem('token', token);
-        setIsAuth(true)
-      })
-      .catch((error) => {
-        console.log(error);
-      })
-      .finally(handleCloseModal());
-  };
+const { loginRequest} = useContext(PostsContext);
 
   return (
     <Form
-      handleFormSubmit={handleSubmit(sendData)}
+      handleFormSubmit={handleSubmit(loginRequest)}
       className="login"
       title="Login">
       <input {...emailRegister} type="email" name="email" placeholder="Email" />
@@ -71,14 +55,14 @@ const {setIsAuth} = useContext(PostsContext);
         {...passwordRegister}
         type="password"
         name="password"
-        placeholder="Password"
+        placeholder="Пароль"
       />
       {errors.password && <p>{errors?.password?.message}</p>}
-      <button type="submit">Login</button>
+      <button type="submit">Вход</button>
       <div onClick={() => setShowAuthComponent('reset-pass')}>
-        Reset password
+        Восстановление пароля
       </div>
-      <div onClick={() => setShowAuthComponent('register')}>Register</div>
+      <div onClick={() => setShowAuthComponent('register')}>Регистрация</div>
     </Form>
   );
 };

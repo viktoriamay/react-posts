@@ -7,11 +7,10 @@ import {
   VALIDATE_CONFIG,
   PASS_REGEXP,
 } from './../../constants/constants';
-import { authApi } from './../../utils/authApi';
 import { useContext } from 'react';
 import { PostsContext } from './../../context/PostsContext';
 
-export const RegisterForm = ({ setShowAuthComponent, handleCloseModal }) => {
+export const RegisterForm = ({ setShowAuthComponent, headerCloseModal }) => {
   const {
     register,
     handleSubmit,
@@ -40,37 +39,22 @@ export const RegisterForm = ({ setShowAuthComponent, handleCloseModal }) => {
     },
   });
 
-const {setIsAuth} = useContext(PostsContext);
-
-
-  const sendData = (data) => {
-    authApi
-      .registration({...data, group: 'group-9'})
-      .then((result) => {
-        const { token } = result;
-        localStorage.setItem('token', token);
-        setIsAuth(true)
-
-      })
-      .catch((error) => console.log(error))
-      .finally(handleCloseModal());
-    console.log({ data });
-  };
+const { registrationRequest} = useContext(PostsContext);
 
   const navigate = useNavigate();
 
   return (
     <Form
-      handleFormSubmit={handleSubmit(sendData)}
+      handleFormSubmit={handleSubmit(registrationRequest)}
       className="login"
-      title="Register">
+      title="Регистрация">
       <input {...emailRegister} type="email" name="email" placeholder="Email" />
       {errors.email && <p>{errors?.email?.message}</p>}
       <input
         {...passwordRegister}
         type="password"
         name="password"
-        placeholder="Password"
+        placeholder="Пароль"
       />
       {errors.password && <p>{errors?.password?.message}</p>}
       <p
@@ -82,9 +66,9 @@ const {setIsAuth} = useContext(PostsContext);
         Регистрируясь на сайте, вы соглашаетесь с нашими Правилами и Политикой
         конфиденциальности и соглашаетесь на информационную рассылку.
       </p>
-      <button type="submit">Register</button>
+      <button type="submit">Регистрация</button>
 
-      <div onClick={() => setShowAuthComponent('login')}>Login</div>
+      <div onClick={() => setShowAuthComponent('login')}>Вход</div>
     </Form>
   );
 };
