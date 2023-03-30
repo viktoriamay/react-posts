@@ -1,20 +1,11 @@
-import { useContext } from 'react';
 import { Card } from '../Card/Card';
 import './CardList.scss';
-import { PostsContext } from './../../context/PostsContext';
 
-export const CardList = () => {
-
-  const { posts = [] } = useContext(PostsContext);
-
+export const CardList = ({ posts = [] }) => {
   return (
     <div className="cards">
       {posts?.map((post) => (
-        <Card
-          key={post._id}
-          {...post}
-          post={post}
-        />
+        <Card key={post._id} {...post} post={post} />
       ))}
     </div>
   );

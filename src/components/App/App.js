@@ -1,40 +1,82 @@
 import { useState, useEffect } from 'react';
 import api from '../../utils/api';
-import { Card } from '../Card/Card';
-import { CardList } from '../CardList/CardList';
 import { Header } from '../Header/Header';
 import { SearchInfo } from '../SearchInfo/SearchInfo';
 import './App.scss';
 import useDebounce from './../../hooks/useDebounce';
 import { Search } from '../Search/Search';
 import Spinner from '../Spinner/Spinner';
-import { Route, Routes, useNavigate } from 'react-router-dom';
+import { Route, Routes, useNavigate} from 'react-router-dom';
 import { PostPage } from '../../pages/PostPage/PostPage';
 import { PostsContext } from '../../context/PostsContext';
 import { FavoritePage } from '../../pages/FavoritePage/FavoritePage';
 import { PostsPage } from '../../pages/PostsPage/PostsPage';
-import { RegisterForm } from '../Authorization/RegisterForm';
-import { Authorization } from '../Authorization/Authorization';
-import { Modal } from './../Modal/Modal';
 import { Profile } from '../Profile/Profile';
+import { authApi } from './../../utils/authApi';
 
 function App() {
-  const [posts, setPosts] = useState([]);
-  const [currentUser, setCurrentUser] = useState(null);
-  const [searchQuery, setSearchQuery] = useState('');
-  const [favorites, setFavorites] = useState([]);
+  const [posts, setPosts] = useState([]); // посты
+  const [currentUser, setCurrentUser] = useState(null); // пользователь
+  const [users, setUsers] = useState([]); // все юзеры
+  const [searchQuery, setSearchQuery] = useState(''); // поисковой запрос
+  const [favorites, setFavorites] = useState([]); //лайки
+  const [isAuth, setIsAuth] = useState(false); // авторизация по токену
+  const [sortedId, setSortedId] = useState('newest'); // сортировка
+  const [tokenResp, setTokenResp] = useState(false); //токен
+  const [activeModal, setActiveModal] = useState(false); // модалка
+  const [activeHeaderModal, setActiveHeaderModal] = useState({
+    // модалка в хедере
+    isOpen: false,
+    component: 'register',
+  });
 
-  const [activeModal, setActiveModal] = useState(false);
-  const [isAuth, setIsAuth] = useState(false);
+  const tabs = [ // вкладки сортировки
+    { id: 'newest', title: 'Самые новые ' },
+    { id: 'popular', title: 'Популярные ' },
+    { id: 'discussed', title: 'Обсуждаемые ' },
+    { id: 'oldest', title: 'Самые старые ' },
+  ];
 
+  const options = { // перевод даты в формат 12 окт 2021
+    day: 'numeric',
+    month: 'long',
+    year: 'numeric',
+  };
+
+  const handleChangeSort = (id) => { // сортировка постов
+    setSortedId(id);
+    sortedData(id);
+  };
+
+  const handleCloseModal = () => {
+    setActiveModal(false);
+  };
+
+  const handleHeaderCloseModal = () => {
+    setActiveHeaderModal({ ...activeHeaderModal, isOpen: false });
+  };
+
+  const getUserCommentsAvatar = (id) => { // получение данных пользователя (аватар) по айди в комментариях
+    if (!users.length) return '';
+    const user = users.find((el) => el._id === id);
+    return user?.avatar ?? 'User';
+  };
+
+  const getUserComments = (id) => { // получение данных пользователя (имя) по айди в комментариях
+    if (!users.length) return '';
+    const user = users.find((el) => el._id === id);
+    return user?.name ?? 'User';
+  };
+
+  const handleLogout = () => { // выход из аккаунта
+    localStorage.removeItem('token');
+    navigate('/');
+  };
 
   // возвращает накопленное сёрчКвери
   const debounceSearchQuery = useDebounce(searchQuery, 1000);
 
   const navigate = useNavigate();
-
-  // метод some возвращает тру в данном случае если среди массива лайков поста (там хранятся айди тех, кто поставил лайки) есть каррентЮзер__айди
-  const isLiked = (likes, userId) => likes?.some((id) => id === userId);
 
   // здесь мы получаем информацию с сервера апи запросами и помещаем данные в соответствующие стейты
   useEffect(() => {
@@ -68,8 +110,6 @@ function App() {
       setCurrentUser(userData); 
     }); */
   }, [isAuth]);
-
-
 
   // console.log(posts[0]._id); вывод в консоль данных айди первого элемента (поста) в массиве с сервера
 
@@ -107,14 +147,17 @@ function App() {
     filterPostsRequest();
   }, [debounceSearchQuery]);
 
-  // создаем функцию фильтрации постов по нажатию на баттон сабмит в сёрче
-  const formSubmitRequest = (e) => {
+  const formSubmitRequest = (e) => { // фильтрация постов по нажатию на сабмит в сёрче, после текстового запроса
     e.preventDefault();
     filterPostsRequest();
     navigate('/');
   };
 
-  const handlePostLike = (post) => {
+  // метод some возвращает тру в данном случае если среди массива лайков поста (там хранятся айди тех, кто поставил лайки) есть каррентЮзер__айди
+  const isLiked = (likes, userId) => likes?.some((id) => id === userId); // проверка отлайкан ли пост
+
+  const handlePostLike = (post) => { // постановка лайка на пост
+
     // найти в посте в массиве лайков тот айди, который будет равен каррентЮзер._айди
     const liked = isLiked(post?.likes, currentUser?._id);
 
@@ -148,7 +191,7 @@ function App() {
     });
   };
 
-  const sortedData = (currentSort) => {
+  const sortedData = (currentSort) => { // сортировка постов
     switch (currentSort) {
       case 'popular':
         setPosts([
@@ -184,17 +227,19 @@ function App() {
     }
   };
 
-  const addPost = async (data) => {
-    try {
-      await api.addPost(data).then((newPost) => {
+  const addPostRequest = (data) => { // добавление поста
+    const tags = data.tags.replaceAll(' ', '').split(',');
+
+    api
+      .addPost({ ...data, tags })
+      .then((newPost) => {
         setPosts((state) => [newPost, ...state]);
-      });
-    } catch (error) {}
+      })
+      .catch()
+      .finally(handleHeaderCloseModal());
   };
 
-  
-  const deletePost = (postId) => {
-    console.log({postId});
+  const deletePost = (postId) => { // удаление поста
     api
       .deletePost(postId)
       .then(() => {
@@ -204,11 +249,79 @@ function App() {
       .then(navigate('/'));
   };
 
-  
+  const loginRequest = (data) => { // вход по логину
+    authApi
+      .login(data)
+      .then((result) => {
+        const { token } = result;
+        localStorage.setItem('token', token);
+        setIsAuth(true);
+      })
+      .catch((error) => {
+        console.log(error);
+      })
+      .finally(handleCloseModal());
+  };
 
-  /* const editProfile =  (data) => {
-    api.editUserInfo({name: data.name, about: data.about}).then((newUser) => setCurrentUser({...newUser}));
-  }; */
+  const registrationRequest = (data) => { // регистрация
+    authApi
+      .registration({ ...data, group: 'group-9' })
+      .then((result) => {
+        const { token } = result;
+        localStorage.setItem('token', token);
+        setIsAuth(true);
+      })
+      .catch((error) => console.log(error))
+      .finally(handleCloseModal());
+  };
+
+  const resetPasswordRequest = (formData) => { // восстановление пароля по токену
+    if (tokenResp) { // если токен есть, происходит запрос на изменение пароля с помощью токена
+      authApi
+        .resetPasswordToken({ password: formData.password }, formData.token)
+        .then(({ token, data }) => {
+          if (token) {
+            localStorage.setItem('token', token);
+            localStorage.setItem('userData', JSON.stringify(data));
+            setIsAuth(true);
+          }
+        })
+        .catch((error) => {
+          console.error(error);
+        })
+        .finally(handleCloseModal());
+    } else { // если токена нет, то происходит запрос на отправку письма для восстановления пароля
+      authApi
+        .resetPassword(formData)
+        .then(() => {
+          setTokenResp(true);
+        })
+        .catch((error) => {
+          console.error(error);
+        });
+    }
+  };
+
+  useEffect(() => {
+    api.getUsers().then((data) => setUsers(data)); // получение всех юзеров
+  }, []);
+
+  const editProfileRequest = (data) => { // изменение данных пользователя
+    api
+      .editUserInfo({ name: data.name, about: data.about })
+      .then((newUser) => setCurrentUser({ ...newUser }));
+  };
+
+  const editAvatarRequest = (src) => { // изменение аватара
+    api
+      .editUserAvatar({ avatar: src.avatar })
+      .then((newUser) => setCurrentUser({ ...newUser }));
+  };
+
+  useEffect(() => { // проверка наличия токена
+    const haveToken = localStorage.getItem('token');
+    setIsAuth(!!haveToken);
+  });
 
   const valueContextProvider = {
     posts,
@@ -222,65 +335,47 @@ function App() {
     setIsAuth,
     isAuth,
     setCurrentUser,
-    addPost,
+    addPostRequest,
     deletePost,
+    setActiveHeaderModal,
+    activeHeaderModal,
+    handleHeaderCloseModal,
+    loginRequest,
+    registrationRequest,
+    resetPasswordRequest,
+    tokenResp,
+    setTokenResp,
+    options,
+    users,
+    setUsers,
+    editProfileRequest,
+    editAvatarRequest,
+    handleLogout,
+    tabs,
+    sortedId,
+    setSortedId,
+    handleChangeSort,
+    handleCloseModal,
+    getUserCommentsAvatar,
+    getUserComments,
+    formSubmitRequest,
+    changeInput,
   };
-
-  /* 
-  const handleCloseModal = () => {
-    setActiveModal(false);
-  }; */
-
-  useEffect(() => {
-    const haveToken = localStorage.getItem('token');
-    setIsAuth(!!haveToken);
-  });
 
   return (
     <div className="App">
       <PostsContext.Provider value={valueContextProvider}>
-        <Header
-          activeModal={activeModal}
-          setActiveModal={setActiveModal}
-          currentUser={currentUser}
-          isAuth={isAuth}
-          setIsAuth={setIsAuth}>
-          {/* прокидываем пропсы, => formSubmitRequest={formSubmitRequest} changeInput={changeInput} то же самое что и ниже.  */}
-
-          <Search isAuth={isAuth} onSubmit={formSubmitRequest} onInput={changeInput} />
+        <Header>
+          <Search />
         </Header>
 
         <main className="main container">
           {/* прокидываем данные с вводимого значения в инпуте через условную переменную сёрчТекст. серчКаунт это количество постов (элементов в массиве) после фильтрации по запросу */}
           <SearchInfo searchText={searchQuery} searchCount={posts.length} />
-
-          {/* прокидываем данные с постов в кардлист, чтобы принять их в карде */}
           <Routes>
-            <Route
-              path="/"
-              element={
-                <PostsPage
-                  // posts={posts}// заменила на контекст
-                  currentUser={currentUser}
-                  handlePostLike={handlePostLike}
-                />
-              }
-            />
-            <Route
-              path="/post/:postId"
-              element={
-                <PostPage
-                  currentUser={currentUser}
-                  handlePostLike={handlePostLike}
-                  posts={posts}
-                  setPosts={setPosts}
-                />
-              }
-            />
-            <Route
-              path="/favorites"
-              element={<FavoritePage currentUser={currentUser} />}
-            />
+            <Route path="/" element={<PostsPage />} />
+            <Route path="/post/:postId" element={<PostPage />} />
+            <Route path="/favorites" element={<FavoritePage />} />
             <Route path="/profile" element={<Profile />} />
             <Route path="*" element={<div>Not Found</div>} />
           </Routes>

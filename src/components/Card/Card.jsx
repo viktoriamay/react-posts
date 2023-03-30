@@ -6,21 +6,19 @@ import {
   UserOutlined,
 } from '@ant-design/icons';
 import './Card.scss';
-import { useState, useContext } from 'react';
+import { useContext, useState } from 'react';
 import { Link } from 'react-router-dom';
-import api from './../../utils/api';
 import { PostsContext } from './../../context/PostsContext';
 
 export const Card = (props) => {
   const {
     deletePost,
-    classActiveCard,
-    setClassActiveCard,
-    classHoverCard,
-    setClassHoverCard,
     currentUser,
     handlePostLike,
   } = useContext(PostsContext);
+
+  const [classActiveCard, setClassActiveCard] = useState(false);
+  const [classHoverCard, setClassHoverCard] = useState(false);
 
   const handleLikeClick = () => {
     // пробрасываем айди поста и массив лайков этого поста, в апе он принимает значение пост и именно поэтому здесь нам нужно передать параметры объектом
@@ -81,7 +79,7 @@ export const Card = (props) => {
           </div>
         </div>
       </Link>
-      {props?.currentUser?._id === props?.post?.author?._id && (
+      {currentUser?._id === props?.post?.author?._id && (
         <button
           onClick={() => deletePost(props?.post?._id)}
           className="card__delete">

@@ -1,8 +1,7 @@
 import { DeleteOutlined, FormOutlined, LeftOutlined } from '@ant-design/icons';
 import './Post.scss';
 import { useNavigate } from 'react-router-dom';
-import { useState, useEffect, useContext } from 'react';
-import api from './../../utils/api';
+import { useEffect, useContext } from 'react';
 import { Form } from '../Form/Form';
 import { useForm } from 'react-hook-form';
 import { VALIDATE_CONFIG } from './../../constants/constants';
@@ -11,50 +10,14 @@ import { Modal } from './../Modal/Modal';
 import { EditPostForm } from './../EditPostForm/EditPostForm';
 
 export const Post = (props) => {
-  const options = {
-    day: 'numeric',
-    month: 'long',
-    year: 'numeric',
-  };
+  const { options, deletePost, activeHeaderModal, setActiveHeaderModal } = useContext(PostsContext);
 
-  const isLike = props?.likes?.some((id) => id === props?.currentUser?._id);
-
-  const { setActiveModal } = useContext(PostsContext);
-
-  const [isClicked, setClicked] = useState(isLike);
-  const [users, setUsers] = useState([]);
-
-  const [showForm, setShowForm] = useState(false);
-
-  const [reviewsProduct, setReviewsProduct] = useState(props?.comments);
-
-  // небезопасный способ вставки данных с бэка
-  const desctiptionHTML = {
-    __html: props?.text?.replace(props?.text[0], props?.text[0].toUpperCase()),
-  };
+  /* const [activePostModal, setActivePostModal] = useState({
+    isOpen: false,
+    component: 'editPost',
+  }); */
 
   const navigate = useNavigate();
-
-  const onLike = (e) => {
-    props?.onPostLike(e);
-    setClicked((state) => !state);
-  };
-
-  /* api.getUserById(id).then((data) => {
-      console.log(data);
-    }); */
-
-  useEffect(() => {
-    api.getUsers().then((data) => setUsers(data));
-  }, []);
-
-  const { deletePost } = useContext(PostsContext);
-
-  const getUser = (id) => {
-    if (!users.length) return '';
-    const user = users.find((el) => el._id === id);
-    return user?.name ?? 'User';
-  };
 
   const {
     register,
@@ -73,27 +36,20 @@ export const Post = (props) => {
     },
   });
 
-  const sendComment = (data) => {
-    props.onSendComment({ ...data });
-    // setShowForm(false);
+  // небезопасный способ вставки данных с бэка
+  const desctiptionHTML = {
+    __html: props?.text?.replace(props?.text[0], props?.text[0].toUpperCase()),
   };
 
-  const [activePostModal, setActivePostModal] = useState({
-    isOpen: false,
-    component: 'editPost',
-  });
+  useEffect(() => {
+    if (!props.activeModal) {
+      // setShowAuthComponent('editPost');
+    }
+  }, [props.activeModal]);
 
   const handleCloseModal = () => {
-    setActivePostModal({ ...activePostModal, isOpen: false });
+    setActiveHeaderModal({ ...activeHeaderModal, isOpen: false });
   };
-
-  const getUserAvatar = (id) => {
-    if (!users.length) return '';
-    const user = users.find((el) => el._id === id);
-    return user?.avatar ?? 'User';
-  };
-
-  console.log(getUserAvatar('63d1bc5859b98b038f77abe4'));
 
   return (
     <div className="post">
@@ -104,17 +60,17 @@ export const Post = (props) => {
         </div>
 
         <div className="post__edit">
-          {props?.currentUser?._id === props?.post?.author?._id && (
+          {props?.postCurrentUser?._id === props?.post?.author?._id && (
             <button
               className="post__edit_icon"
               onClick={() =>
-                setActivePostModal({ component: 'editPost', isOpen: true })
+                setActiveHeaderModal({ component: 'editPost', isOpen: true })
               }>
               <FormOutlined />
             </button>
           )}
 
-          {props?.currentUser?._id === props?.post?.author?._id && (
+          {props?.postCurrentUser?._id === props?.post?.author?._id && (
             <button
               className="post__edit_icon"
               onClick={() => deletePost(props.post._id)}>
@@ -171,9 +127,11 @@ export const Post = (props) => {
             Нравится <span>{props?.likes?.length}</span>
           </div>
           <div
-            className={isLike ? 'post__like_info_active' : 'post__like_info'}
-            onClick={(e) => onLike(e)}>
-            {isLike ? 'Удалить лайк' : 'Поставить лайк'}
+            className={
+              props?.isLike ? 'post__like_info_active' : 'post__like_info'
+            }
+            onClick={(e) => props.onPostLike(e)}>
+            {props?.isLike ? 'Удалить лайк' : 'Поставить лайк'}
           </div>
         </div>
         <div className="post__comments">
@@ -181,60 +139,72 @@ export const Post = (props) => {
             Комментарии <span>{props?.comments?.length}</span>
           </h2>
           <div className="post__comments_wrapper">
-          {props?.comments
-            ?.sort((a, b) => new Date(b.created_at) - new Date(a.created_at))
-            .map((e) => (
-              <div className="post__comments_author_flex">
-              <div className="post__comments_author">
-
-                <div className="post__comments_author_avatar">
-                  <img src={getUserAvatar(e.author)} alt="avatar" />
-                </div>
-                <div className="post__comments_author_data">
-                  <h3 className="post__comments_author_name">
-                    {getUser(e.author)}
-                  </h3>
-                  <span className="post__comments_author_date">
-                    {new Date(e?.created_at)
-                      .toLocaleString('ru-RU', options)
-                      .slice(0, -3)}
-                  </span>
-                  <p className="post__comments_author_text">{e.text}</p>
-                </div>
-              </div>
-                  {e.author === props?.currentUser?._id && (
+            {props?.comments
+              ?.sort((a, b) => new Date(b.created_at) - new Date(a.created_at))
+              .map((e) => (
+                <div className="post__comments_author_flex" key={e.created_at}>
+                  <div className="post__comments_author">
+                    <div className="post__comments_author_avatar">
+                      <img src={props.getUserCommentsAvatar(e.author)} alt="avatar" />
+                    </div>
+                    <div className="post__comments_author_data">
+                      <h3 className="post__comments_author_name">
+                        {props.getUserComments(e.author)}
+                      </h3>
+                      <span className="post__comments_author_date">
+                        {new Date(e?.created_at)
+                          .toLocaleString('ru-RU', options)
+                          .slice(0, -3)}
+                      </span>
+                      <p className="post__comments_author_text">{e.text}</p>
+                    </div>
+                  </div>
+                  {e.author === props?.postCurrentUser?._id && (
                     <button
                       className="post__edit_icon post__edit_icon_comments"
-                      onClick={() => props.onDeleteComment(e._id)}>
+                      onClick={() => props.deleteCommentRequest(e._id)}>
                       <DeleteOutlined />
                     </button>
                   )}
-              </div>
-            ))}
-            </div>
+                </div>
+              ))}
+          </div>
           <div>
-          <h2>Оставьте свой комментарий</h2>
-          <Form className='post__comments_form' handleFormSubmit={handleSubmit(sendComment)} title="">
-            <textarea className='post__comments_textarea'
-              {...reviewRegister}
-              type="text"
-              name="text"
-              placeholder="Комментарий"
-            />
-            {errors.text && <span className='post__comments_errors>'>{errors?.text?.message}</span>}
+            <h2>Оставьте свой комментарий</h2>
+            <Form
+              className="post__comments_form"
+              handleFormSubmit={handleSubmit(props.sendCommentRequest)}
+              title="">
+              <textarea
+                className="post__comments_textarea"
+                {...reviewRegister}
+                type="text"
+                name="text"
+                placeholder="Комментарий"
+              />
+              {errors.text && (
+                <span className="post__comments_errors>">
+                  {errors?.text?.message}
+                </span>
+              )}
 
-            <button className='post__comments_button' type="submit">Отправить комментарий</button>
-          </Form>
+              <button className="post__comments_button" type="submit">
+                Отправить комментарий
+              </button>
+            </Form>
           </div>
         </div>
         <div className="modal__container">
           <Modal
-            activeModal={activePostModal.isOpen}
-            setActiveModal={handleCloseModal}>
-            {activePostModal.component === 'editPost' && (
-              <EditPostForm editPost={props.editPost} post={props.post} />
+            activeHeaderModal={activeHeaderModal.isOpen}
+            setActiveHeaderModal={handleCloseModal}>
+            {activeHeaderModal.component === 'editPost' && (
+              <EditPostForm
+                editPostRequest={props.editPostRequest}
+                post={props.post}
+              />
             )}
-          </Modal>
+          </Modal> 
         </div>
       </div>
     </div>

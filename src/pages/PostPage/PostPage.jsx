@@ -13,10 +13,10 @@ export const PostPage = () => {
   const isLike = post?.likes?.some((id) => id === postCurrentUser?._id);
   const [isClicked, setClicked] = useState(isLike);
 
-  const [activePostModal, setActivePostModal] = useState({
+  /* const [activePostModal, setActivePostModal] = useState({
     isOpen: false,
     component: 'editPost',
-  });
+  }); */
 
   const {
     favorites,
@@ -26,7 +26,7 @@ export const PostPage = () => {
     handlePostLike,
     users,
     getUserCommentsAvatar,
-    getUserComments,
+    getUserComments, activeHeaderModal, setActiveHeaderModal
   } = useContext(PostsContext);
 
   // парамс это то, что приходит в апе в роутах path="/post/:postId", а именно :postId - динамический путь это и есть парамс
@@ -37,7 +37,7 @@ export const PostPage = () => {
   // console.log({params}); напоминалка посмотреть что там хранится
 
   const postCloseModal = () => {
-    setActivePostModal({ ...activePostModal, isOpen: false });
+    setActiveHeaderModal({ ...activeHeaderModal, isOpen: false });
   };
 
   useEffect(() => {
@@ -128,8 +128,8 @@ export const PostPage = () => {
           getUserComments={getUserComments}
           isLike={isLike}
           
-          activePostModal={activePostModal}
-          setActivePostModal={setActivePostModal}
+          activeHeaderModal={activeHeaderModal}
+          setActiveHeaderModal={setActiveHeaderModal}
           activeModal={activeModal}
           setActiveModal={setActiveModal}
           postCloseModal={postCloseModal}

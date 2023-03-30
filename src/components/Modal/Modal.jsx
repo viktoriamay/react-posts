@@ -1,21 +1,26 @@
 import './Modal.scss';
 import cn from 'classnames';
-import { useState, useEffect, useRef } from 'react';
+import { useState, useEffect, useRef, useContext } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { RegisterForm } from '../Authorization/RegisterForm';
+import { PostsContext } from './../../context/PostsContext';
 
 export const Modal = ({
   children,
-  activeModal,
-  setActiveModal,
+  activeHeaderModal,
+  setActiveHeaderModal,
   handleCloseModal,
+  
 }) => {
   // const [active, setActive] = useState(false);
+
+  const { /* activeHeaderModal, setActiveHeaderModal */ } = useContext(PostsContext);
+
   // console.log({ children });
   const onKeydown = (e) => {
     switch (e.key) {
       case 'Escape':
-        handleCloseModal();
+        setActiveHeaderModal(false);
         break;
       default:
         break;
@@ -43,15 +48,15 @@ export const Modal = ({
 
   return (
     <div
-      className={cn('modal', { ['active']: activeModal })}
-      onClick={() =>     setActiveModal(false)}
+      className={cn('modal', { ['active']: activeHeaderModal })}
+      onClick={() =>     setActiveHeaderModal(false)}
       // tabIndex={1} для того, чтобы можно было делать события клавиатуры
       // onKeyDown={closeModalEsc}
 
       // role="button"
     >
       <div
-        className={cn('modal_content', { ['active']: activeModal })}
+        className={cn('modal_content', { ['active']: activeHeaderModal })}
         onClick={(e) => e.stopPropagation()}
         >
         {children}

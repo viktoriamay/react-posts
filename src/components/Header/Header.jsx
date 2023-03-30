@@ -8,35 +8,24 @@ import { useContext, useState } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 import { PostsContext } from '../../context/PostsContext';
 import { Logo } from '../Logo/Logo';
-import { Search } from '../Search/Search';
 import './Header.scss';
 import { Authorization } from './../Authorization/Authorization';
 import { Modal } from '../Modal/Modal';
-import { RegisterForm } from '../Authorization/RegisterForm';
 import { AddPostForm } from './../AddPostForm/AddPostForm';
 
-export const Header = ({
-  children,
-  currentUser,
-  setActiveModal,
-  activeModal,
-  setIsAuth,
-}) => {
-  
-  const { favorites, isAuth } = useContext(PostsContext);
+export const Header = ({ children }) => {
+  const { favorites, isAuth, setIsAuth, activeHeaderModal, setActiveHeaderModal } = useContext(PostsContext);
   // console.log(currentUser?.name); не забывать ставить ?
-  const [activeHeaderModal, setActiveHeaderModal] = useState({
-    isOpen: false,
-    component: 'register',
-  });
+  // const [activeHeaderModal, setActiveHeaderModal] = useState({
+  //   isOpen: false,
+  //   component: 'register',
+  // });
 
-
+  const navigate = useNavigate();
 
   const handleCloseModal = () => {
     setActiveHeaderModal({ ...activeHeaderModal, isOpen: false });
   };
-
-  const navigate = useNavigate();
 
   return (
     <header className="header">
@@ -46,49 +35,50 @@ export const Header = ({
             <Link to={'/'}>
               <Logo />
             </Link>
-
             {children}
           </div>
           <div className="header__icons_menu">
-            {isAuth && (
-              <>
             <PlusCircleOutlined
               onClick={() =>
                 setActiveHeaderModal({ component: 'addPost', isOpen: true })
               }
               className="header__add_icon"
             />
-
-              <Link to={'/favorites'}><div className='header__favorites_icon_wrapper'>
-
-                {favorites.length !== 0 && (
-                  <span className='header__favorites_counter'>{favorites.length}</span>
-                )}
-                <HeartOutlined className="header__favorites_icon" />
-              </div>
+            {isAuth && (
+              <Link to={'/favorites'}>
+                <div className="header__favorites_icon_wrapper">
+                  {favorites.length !== 0 && (
+                    <span className="header__favorites_counter">
+                      {favorites.length}
+                    </span>
+                  )}
+                  <HeartOutlined className="header__favorites_icon" />
+                </div>
               </Link>
-              </>
             )}
             {isAuth ? (
-              <SmileOutlined onClick={() => navigate('/profile')}
-                
+              <SmileOutlined
+                onClick={() => navigate('/profile')}
                 className="header__login_icon"></SmileOutlined>
             ) : (
-              <LoginOutlined className="header__login_icon" onClick={() =>
+              <LoginOutlined
+                className="header__add_icon"
+                onClick={() =>
                   setActiveHeaderModal({ component: 'register', isOpen: true })
-                }  />
+                }
+              />
             )}
           </div>
         </div>
       </div>
       <div className="modal__container">
         <Modal
-          activeModal={activeHeaderModal.isOpen}
-          setActiveModal={handleCloseModal}>
+          activeHeaderModal={activeHeaderModal.isOpen}
+          setActiveHeaderModal={setActiveHeaderModal}>
           {activeHeaderModal.component === 'addPost' && <AddPostForm />}
           {activeHeaderModal.component === 'register' && (
             <Authorization
-              activeModal={activeHeaderModal.isOpen}
+              activeHeaderModal={activeHeaderModal.isOpen}
               setIsAuth={setIsAuth}
               handleCloseModal={handleCloseModal}
             />

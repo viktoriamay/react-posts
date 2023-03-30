@@ -4,7 +4,7 @@ import { VALIDATE_CONFIG } from '../../constants/constants';
 import { useState } from 'react';
 import './EditPostForm.scss';
 
-export const EditPostForm = ({ editPostRequest, post, headerCloseModal }) => {
+export const EditPostForm = ({ editPostRequest, post }) => {
   const {
     register,
     handleSubmit,
