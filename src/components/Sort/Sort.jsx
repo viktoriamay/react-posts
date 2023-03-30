@@ -5,7 +5,6 @@ import './Sort.scss';
 export const Sort = () => {
   const { tabs, sortedId, handleChangeSort } = useContext(PostsContext);
   
-  // можно деструктурировать, и вместо (tab) => <span>{tab.title}</span> ) писать так как показано ниже
   return (
     <div className="sort">
       {tabs.map(({ id, title }) => (

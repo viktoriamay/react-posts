@@ -4,7 +4,7 @@ import {
   PlusCircleOutlined,
   SmileOutlined,
 } from '@ant-design/icons';
-import { useContext, useState } from 'react';
+import { useContext } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 import { PostsContext } from '../../context/PostsContext';
 import { Logo } from '../Logo/Logo';
@@ -15,11 +15,6 @@ import { AddPostForm } from './../AddPostForm/AddPostForm';
 
 export const Header = ({ children }) => {
   const { favorites, isAuth, setIsAuth, activeHeaderModal, setActiveHeaderModal } = useContext(PostsContext);
-  // console.log(currentUser?.name); не забывать ставить ?
-  // const [activeHeaderModal, setActiveHeaderModal] = useState({
-  //   isOpen: false,
-  //   component: 'register',
-  // });
 
   const navigate = useNavigate();
 

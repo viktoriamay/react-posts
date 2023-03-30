@@ -9,14 +9,9 @@ export const PostPage = () => {
   const [postCurrentUser, setPostCurrentUser] = useState(null); // текущий юзер на странице поста
   const [post, setPost] = useState(null); // текущий пост
   const [isLoading, setIsLoading] = useState(false);
-
-  const isLike = post?.likes?.some((id) => id === postCurrentUser?._id);
   const [isClicked, setClicked] = useState(isLike);
 
-  /* const [activePostModal, setActivePostModal] = useState({
-    isOpen: false,
-    component: 'editPost',
-  }); */
+  const isLike = post?.likes?.some((id) => id === postCurrentUser?._id);
 
   const {
     favorites,
@@ -32,21 +27,13 @@ export const PostPage = () => {
   // парамс это то, что приходит в апе в роутах path="/post/:postId", а именно :postId - динамический путь это и есть парамс
   const params = useParams();
 
-  // можно деструктуризовать и использовать напрямую, а не params.postId
-  // const {postId} = useParams();
-  // console.log({params}); напоминалка посмотреть что там хранится
-
   const postCloseModal = () => {
     setActiveHeaderModal({ ...activeHeaderModal, isOpen: false });
   };
 
   useEffect(() => {
     setIsLoading(true);
-    // вызываем апи получения данных юзера и данных поста
-    // в получение данных поста добавляем параметр постАйди, который мы получаем из юзПарамс, который в свою очередь ловится, когда мы наживаем на карточку (оно ловится потому что в карде в линке мы указали to={`/post/${props._id}`} именно props._id и ловится в парамсе и является айди поста)
-    // далее мы кладем данные с сервера с стейт юзера и в стейт поста
-    // ловится не массив постДата, а данные о текущем посте, так как метод апи ловит по айди конкретный пост
-    // стейт передаём далее в пост и там ловим в пропсах, и прокидываем динамически в вёрстку
+    
     Promise.all([api.getUserInfo(), api.getPostById(params.postId)])
       .then(([userData, postData]) => {
         setPostCurrentUser(userData);

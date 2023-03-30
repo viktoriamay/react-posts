@@ -3,7 +3,6 @@ import { PostsContext } from './../../context/PostsContext';
 import { useForm } from 'react-hook-form';
 import { Form } from './../Form/Form';
 import { VALIDATE_CONFIG } from './../../constants/constants';
-import api from './../../utils/api';
 import { useNavigate } from 'react-router-dom';
 import { LeftOutlined } from '@ant-design/icons';
 import './Profile.scss';

@@ -1,14 +1,12 @@
 import { Form } from './../Form/Form';
 import './Authorization.scss';
 import { useForm } from 'react-hook-form';
-import { useNavigate } from 'react-router-dom';
 import {
   EMAIL_REGEXP,
   VALIDATE_CONFIG,
   PASS_REGEXP,
 } from './../../constants/constants';
-import { authApi } from './../../utils/authApi';
-import { useState, useContext } from 'react';
+import { useContext } from 'react';
 import { PostsContext } from './../../context/PostsContext';
 
 export const ResetPassForm = ({ setShowAuthComponent, headerCloseModal }) => {

@@ -12,11 +12,6 @@ import { EditPostForm } from './../EditPostForm/EditPostForm';
 export const Post = (props) => {
   const { options, deletePost, activeHeaderModal, setActiveHeaderModal } = useContext(PostsContext);
 
-  /* const [activePostModal, setActivePostModal] = useState({
-    isOpen: false,
-    component: 'editPost',
-  }); */
-
   const navigate = useNavigate();
 
   const {
@@ -40,12 +35,6 @@ export const Post = (props) => {
   const desctiptionHTML = {
     __html: props?.text?.replace(props?.text[0], props?.text[0].toUpperCase()),
   };
-
-  useEffect(() => {
-    if (!props.activeModal) {
-      // setShowAuthComponent('editPost');
-    }
-  }, [props.activeModal]);
 
   const handleCloseModal = () => {
     setActiveHeaderModal({ ...activeHeaderModal, isOpen: false });

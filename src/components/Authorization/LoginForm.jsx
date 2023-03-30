@@ -9,8 +9,6 @@ import {
 
 import { useForm } from 'react-hook-form';
 import { PostsContext } from './../../context/PostsContext';
-import { useNavigate } from 'react-router-dom';
-import { authApi } from './../../utils/authApi';
 
 export const LoginForm = ({ setShowAuthComponent, headerCloseModal }) => {
   const {
