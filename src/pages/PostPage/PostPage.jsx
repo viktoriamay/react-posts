@@ -1,20 +1,33 @@
 import Spinner from '../../components/Spinner/Spinner';
 import { useState, useEffect, useContext } from 'react';
-// import api from '../../utils/api';
 import { Post } from '../../components/Post/Post';
-import { useParams, useNavigate } from 'react-router-dom';
+import { useParams } from 'react-router-dom';
 import { PostsContext } from './../../context/PostsContext';
 import api from './../../utils/api';
 
-export const PostPage = ({ handlePostLike /* setPosts */ }) => {
-  const [cards, setCards] = useState([]);
-  const [searchQuery, setSearchQuery] = useState('');
-  const [currentUser, setCurrentUser] = useState(null);
+export const PostPage = () => {
+  const [postCurrentUser, setPostCurrentUser] = useState(null); // текущий юзер на странице поста
+  const [post, setPost] = useState(null); // текущий пост
   const [isLoading, setIsLoading] = useState(false);
-  const [post, setPost] = useState(null);
 
-  const { favorites, setPosts, posts } = useContext(PostsContext);
-  // const handlePostLike = () => {};
+  const isLike = post?.likes?.some((id) => id === postCurrentUser?._id);
+  const [isClicked, setClicked] = useState(isLike);
+
+  const [activePostModal, setActivePostModal] = useState({
+    isOpen: false,
+    component: 'editPost',
+  });
+
+  const {
+    favorites,
+    setPosts,
+    activeModal,
+    setActiveModal,
+    handlePostLike,
+    users,
+    getUserCommentsAvatar,
+    getUserComments,
+  } = useContext(PostsContext);
 
   // парамс это то, что приходит в апе в роутах path="/post/:postId", а именно :postId - динамический путь это и есть парамс
   const params = useParams();
@@ -22,6 +35,10 @@ export const PostPage = ({ handlePostLike /* setPosts */ }) => {
   // можно деструктуризовать и использовать напрямую, а не params.postId
   // const {postId} = useParams();
   // console.log({params}); напоминалка посмотреть что там хранится
+
+  const postCloseModal = () => {
+    setActivePostModal({ ...activePostModal, isOpen: false });
+  };
 
   useEffect(() => {
     setIsLoading(true);
@@ -32,9 +49,8 @@ export const PostPage = ({ handlePostLike /* setPosts */ }) => {
     // стейт передаём далее в пост и там ловим в пропсах, и прокидываем динамически в вёрстку
     Promise.all([api.getUserInfo(), api.getPostById(params.postId)])
       .then(([userData, postData]) => {
-        setCurrentUser(userData);
+        setPostCurrentUser(userData);
         setPost(postData);
-        // console.log({ postData });
       })
       .catch((error) => console.log(error))
       .finally(setIsLoading(false));
@@ -43,9 +59,29 @@ export const PostPage = ({ handlePostLike /* setPosts */ }) => {
   const onPostLike = () => {
     handlePostLike(post);
     setPost({ ...post });
+    setClicked((state) => !state);
   };
 
-  const onSendComment = (data) => {
+  const editPostRequest = (data) => {
+    const tags = data.tags.replaceAll(' ', '').split(',');
+
+    api
+      .editPost(post._id, { ...data, tags })
+      .then((result) => {
+        const updatedPost = { ...result, data }; // создаем новый объект для обновления состояния post
+        setPost(updatedPost);
+      })
+      .then((updatedPost) => {
+        setPosts((state) =>
+          state.map((post) =>
+            post?._id === updatedPost?._id ? updatedPost : post,
+          ),
+        );
+      })
+      .finally(postCloseModal());
+  };
+
+  const sendCommentRequest = (data) => {
     // setIsLoading(true);
     api
       .addComment(post._id, data)
@@ -55,66 +91,13 @@ export const PostPage = ({ handlePostLike /* setPosts */ }) => {
       })
       .catch((error) => {
         // openNotification('error', 'Ошибка', 'Не получилось отправить отзыв');
+      })
+      .finally(() => {
+        // setIsLoading(false);
       });
-    /* .finally(() => {
-        setIsLoading(false);
-      }); */
   };
 
-
-  /* const editPost = (data) => {
-    api.editPost(post._id, data).then((result) => {setPost({...result, ...data})}).then((post) => {
-      setPosts((state) => [post, ...state]);
-    });
-  } */
-
-  /* const editPost = (data) => {
-    api.editPost(post._id, data)
-      .then((result) => {
-        setPost({...result, data});
-        return result;
-      })
-      .then((post) => {
-        setPosts(post);
-      });
-  } */
-
-  /* const editPost = (data) => {
-    api.editPost(post._id, data)
-      .then((result) => {
-        setPost({...result, ...data});
-        if(currentUser?._id !== post?.author?._id) {
-          return post
-        }
-        // currentUser._id === props.post.author._id
-        return result;
-      })
-      .then((updatedPost) => {
-        setPosts((state) => state.map((post) => post._id === updatedPost._id ? updatedPost : post));
-      });
-  } */
-
-  const editPost = (data) => {
-    api.editPost(post._id, data)
-      .then((result) => {
-        const updatedPost = {...result, data}; // создаем новый объект для обновления состояния post
-        if (currentUser?._id !== post?.author?._id) {
-          return post; // не изменять состояние post, если это не пост текущего пользователя
-        }
-        setPost(updatedPost);
-        // return updatedPost; // возвращаем новый объект, а не result
-      })
-      .then((updatedPost) => {
-        setPosts((state) => state.map((post) => post?._id === updatedPost?._id ? updatedPost : post));
-      });
-  }
-
-  console.log(currentUser?._id);
-  console.log(post?.author?._id);
-
-
-  const onDeleteComment = (comment) => {
-    console.log(comment);
+  const deleteCommentRequest = (comment) => {
     api
       .deleteComment(post._id, comment)
       .then((result) => {
@@ -126,9 +109,6 @@ export const PostPage = ({ handlePostLike /* setPosts */ }) => {
       });
   };
 
-  const navigate = useNavigate();
-
-  
   return (
     <div>
       {isLoading ? (
@@ -138,12 +118,21 @@ export const PostPage = ({ handlePostLike /* setPosts */ }) => {
           {...post}
           post={post}
           setPost={setPost}
-          currentUser={currentUser}
+          postCurrentUser={postCurrentUser}
           onPostLike={onPostLike}
-          onSendComment={onSendComment}
-          onDeleteComment={onDeleteComment}
-          editPost={editPost}
-          // onDeletePost={onDeletePost}
+          sendCommentRequest={sendCommentRequest}
+          deleteCommentRequest={deleteCommentRequest}
+          editPostRequest={editPostRequest}
+          users={users}
+          getUserCommentsAvatar={getUserCommentsAvatar}
+          getUserComments={getUserComments}
+          isLike={isLike}
+          
+          activePostModal={activePostModal}
+          setActivePostModal={setActivePostModal}
+          activeModal={activeModal}
+          setActiveModal={setActiveModal}
+          postCloseModal={postCloseModal}
         />
       )}
     </div>
