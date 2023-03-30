@@ -7,13 +7,12 @@ export const PostsPage = () => {
   const { isAuth } = useContext(PostsContext);
   return (
     <>
-
-    {isAuth &&
-    <div>
-    <Sort />
-      <CardList />
-      </div>
-      }
+      {isAuth && (
+        <div>
+          <Sort />
+          <CardList />
+        </div>
+      )}
     </>
   );
 };
