@@ -1,4 +1,4 @@
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useMemo } from 'react';
 import api from '../../utils/api';
 import { Header } from '../Header/Header';
 import { SearchInfo } from '../SearchInfo/SearchInfo';
@@ -6,13 +6,14 @@ import './App.scss';
 import useDebounce from './../../hooks/useDebounce';
 import { Search } from '../Search/Search';
 import Spinner from '../Spinner/Spinner';
-import { Route, Routes, useNavigate} from 'react-router-dom';
+import { Route, Routes, useNavigate, useParams } from 'react-router-dom';
 import { PostPage } from '../../pages/PostPage/PostPage';
 import { PostsContext } from '../../context/PostsContext';
 import { FavoritePage } from '../../pages/FavoritePage/FavoritePage';
 import { PostsPage } from '../../pages/PostsPage/PostsPage';
 import { Profile } from '../Profile/Profile';
 import { authApi } from './../../utils/authApi';
+import { UsersProfile } from './../UsersProfile/UsersProfile';
 
 function App() {
   const [posts, setPosts] = useState([]); // посты
@@ -30,20 +31,25 @@ function App() {
     component: 'register',
   });
 
-  const tabs = [ // вкладки сортировки
-    { id: 'newest', title: 'Самые новые ' },
-    { id: 'popular', title: 'Популярные ' },
-    { id: 'discussed', title: 'Обсуждаемые ' },
-    { id: 'oldest', title: 'Самые старые ' },
-  ];
+  const tabs = useMemo(() => {
+    return [
+      { id: 'newest', title: 'Самые новые ' },
+      { id: 'popular', title: 'Популярные ' },
+      { id: 'discussed', title: 'Обсуждаемые ' },
+      { id: 'oldest', title: 'Самые старые ' },
+    ];
+  }, []);
 
-  const options = { // перевод даты в формат 12 окт 2021
-    day: 'numeric',
-    month: 'long',
-    year: 'numeric',
-  };
+  const options = useMemo(() => {
+    return {
+      day: 'numeric',
+      month: 'long',
+      year: 'numeric',
+    };
+  }, []);
 
-  const handleChangeSort = (id) => { // сортировка постов
+  const handleChangeSort = (id) => {
+    // сортировка постов
     setSortedId(id);
     sortedData(id);
   };
@@ -56,19 +62,19 @@ function App() {
     setActiveHeaderModal({ ...activeHeaderModal, isOpen: false });
   };
 
-  const getUserCommentsAvatar = (id) => { // получение данных пользователя (аватар) по айди в комментариях
-    if (!users.length) return '';
+  const getUserCommentsInfo = (id) => {
+    // получение данных пользователя (аватар и имя) по айди в комментариях
+    if (!users.length) return { name: '', avatar: '' };
     const user = users.find((el) => el._id === id);
-    return user?.avatar ?? 'User';
+    return {
+      name: user?.name ?? 'User',
+      avatar: user?.avatar ?? 'User',
+      id: user?._id ?? 'User',
+    };
   };
 
-  const getUserComments = (id) => { // получение данных пользователя (имя) по айди в комментариях
-    if (!users.length) return '';
-    const user = users.find((el) => el._id === id);
-    return user?.name ?? 'User';
-  };
-
-  const handleLogout = () => { // выход из аккаунта
+  const handleLogout = () => {
+    // выход из аккаунта
     localStorage.removeItem('token');
     navigate('/');
   };
@@ -82,8 +88,9 @@ function App() {
     if (!isAuth) {
       return;
     }
-  
-    Promise.all([api.getPostsList(), api.getUserInfo()]).then( // получение информации о постах и текущем юзере
+
+    Promise.all([api.getPostsList(), api.getUserInfo()]).then(
+      // получение информации о постах и текущем юзере
       ([postsData, userData]) => {
         setPosts(postsData);
         setCurrentUser(userData);
@@ -96,17 +103,21 @@ function App() {
     );
   }, [isAuth]);
 
-
   const changeInput = (e) => {
     setSearchQuery(e.target.value); // добавляем в стейт сёрчКвери значение из инпута
   };
 
-  const filterPostsRequest = () => { // фильтрация карточек по запросу в поисковой строке
+  const filterPostsRequest = () => {
+    // фильтрация карточек по запросу в поисковой строке
     api
-      .search(searchQuery)
+      .search(searchQuery.replace('#', ''))
       .then((filteredPosts) => {
-        setPosts([...filteredPosts]);
+        const postsFilteredByTag = posts?.filter((post) => // поиск по тегам
+          post?.tags?.includes(searchQuery.replace('#', '')),
+        );
+        setPosts([...filteredPosts, ...postsFilteredByTag]);
       })
+
       .catch((error) => console.log(error));
   };
 
@@ -118,7 +129,8 @@ function App() {
     filterPostsRequest(); // реквест (запрос на сервер по вводимому значению в инпут) вызывается только тогда, когда изменяется дебаунсквери
   }, [debounceSearchQuery]);
 
-  const formSubmitRequest = (e) => { // фильтрация постов по нажатию на сабмит в сёрче, после текстового запроса
+  const formSubmitRequest = (e) => {
+    // фильтрация постов по нажатию на сабмит в сёрче, после текстового запроса
     e.preventDefault();
     filterPostsRequest();
     navigate('/');
@@ -127,20 +139,21 @@ function App() {
   // метод some возвращает тру в данном случае если среди массива лайков поста (там хранятся айди тех, кто поставил лайки) есть каррентЮзер__айди
   const isLiked = (likes, userId) => likes?.some((id) => id === userId); // проверка отлайкан ли пост
 
-  const handlePostLike = (post) => { // постановка лайка на пост
+  const handlePostLike = (post) => {
+    // постановка лайка на пост
 
     const liked = isLiked(post?.likes, currentUser?._id);
 
-    api.changeLikePost(post?._id, liked).then((newCard) => { 
-
-      const newPosts = posts?.map((postState) => { // получаем массив новых карточек после постановки лайка и возвращаем старые карточки, если лайк не поставлен и новую если поставлен
+    api.changeLikePost(post?._id, liked).then((newCard) => {
+      const newPosts = posts?.map((postState) => {
+        // получаем массив новых карточек после постановки лайка и возвращаем старые карточки, если лайк не поставлен и новую если поставлен
         return postState?._id === newCard?._id ? newCard : postState;
       });
 
       if (!liked) {
         setFavorites((prevState) => [...prevState, newCard]);
       } else {
-        setFavorites((prevState) => 
+        setFavorites((prevState) =>
           prevState.filter((card) => card._id !== newCard._id),
         );
       }
@@ -149,7 +162,8 @@ function App() {
     });
   };
 
-  const sortedData = (currentSort) => { // сортировка постов
+  const sortedData = (currentSort) => {
+    // сортировка постов
     switch (currentSort) {
       case 'popular':
         setPosts([
@@ -183,7 +197,8 @@ function App() {
     }
   };
 
-  const addPostRequest = (data) => { // добавление поста
+  const addPostRequest = (data) => {
+    // добавление поста
     const tags = data.tags.replaceAll(' ', '').split(',');
 
     api
@@ -192,10 +207,11 @@ function App() {
         setPosts((state) => [newPost, ...state]);
       })
       .catch()
-      .finally(handleHeaderCloseModal());
+      .finally(handleHeaderCloseModal);
   };
 
-  const deletePost = (postId) => { // удаление поста
+  const deletePostRequest = (postId) => {
+    // удаление поста
     api
       .deletePost(postId)
       .then(() => {
@@ -205,7 +221,8 @@ function App() {
       .then(navigate('/'));
   };
 
-  const loginRequest = (data) => { // вход по логину
+  const loginRequest = (data) => {
+    // вход по логину
     authApi
       .login(data)
       .then((result) => {
@@ -216,10 +233,11 @@ function App() {
       .catch((error) => {
         console.log(error);
       })
-      .finally(handleCloseModal());
+      .finally(handleHeaderCloseModal);
   };
 
-  const registrationRequest = (data) => { // регистрация
+  const registrationRequest = (data) => {
+    // регистрация
     authApi
       .registration({ ...data, group: 'group-9' })
       .then((result) => {
@@ -228,11 +246,13 @@ function App() {
         setIsAuth(true);
       })
       .catch((error) => console.log(error))
-      .finally(handleCloseModal());
+      .finally(handleHeaderCloseModal);
   };
 
-  const resetPasswordRequest = (formData) => { // восстановление пароля по токену
-    if (tokenResp) { // если токен есть, происходит запрос на изменение пароля с помощью токена
+  const resetPasswordRequest = (formData) => {
+    // восстановление пароля по токену
+    if (tokenResp) {
+      // если токен есть, происходит запрос на изменение пароля с помощью токена
       authApi
         .resetPasswordToken({ password: formData.password }, formData.token)
         .then(({ token, data }) => {
@@ -245,8 +265,9 @@ function App() {
         .catch((error) => {
           console.error(error);
         })
-        .finally(handleCloseModal());
-    } else { // если токена нет, то происходит запрос на отправку письма для восстановления пароля
+        .finally(handleHeaderCloseModal);
+    } else {
+      // если токена нет, то происходит запрос на отправку письма для восстановления пароля
       authApi
         .resetPassword(formData)
         .then(() => {
@@ -262,19 +283,22 @@ function App() {
     api.getUsers().then((data) => setUsers(data)); // получение всех юзеров
   }, []);
 
-  const editProfileRequest = (data) => { // изменение данных пользователя
+  const editProfileRequest = (data) => {
+    // изменение данных пользователя
     api
       .editUserInfo({ name: data.name, about: data.about })
       .then((newUser) => setCurrentUser({ ...newUser }));
   };
 
-  const editAvatarRequest = (src) => { // изменение аватара
+  const editAvatarRequest = (src) => {
+    // изменение аватара
     api
       .editUserAvatar({ avatar: src.avatar })
       .then((newUser) => setCurrentUser({ ...newUser }));
   };
 
-  useEffect(() => { // проверка наличия токена
+  useEffect(() => {
+    // проверка наличия токена
     const haveToken = localStorage.getItem('token');
     setIsAuth(!!haveToken);
   });
@@ -292,7 +316,7 @@ function App() {
     isAuth,
     setCurrentUser,
     addPostRequest,
-    deletePost,
+    deletePostRequest,
     setActiveHeaderModal,
     activeHeaderModal,
     handleHeaderCloseModal,
@@ -312,8 +336,7 @@ function App() {
     setSortedId,
     handleChangeSort,
     handleCloseModal,
-    getUserCommentsAvatar,
-    getUserComments,
+    getUserCommentsInfo,
     formSubmitRequest,
     changeInput,
   };
@@ -332,6 +355,8 @@ function App() {
             <Route path="/post/:postId" element={<PostPage />} />
             <Route path="/favorites" element={<FavoritePage />} />
             <Route path="/profile" element={<Profile />} />
+            <Route path="/user/:userId" element={<UsersProfile />} />
+
             <Route path="*" element={<div>Not Found</div>} />
           </Routes>
         </main>
