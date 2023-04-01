@@ -157,7 +157,7 @@ function App() {
       });
 
       if (!liked) {
-        setFavorites((prevState) => [...prevState, newCard]);
+        setFavorites((prevState) => [newCard, ...prevState ]);
       } else {
         setFavorites((prevState) =>
           prevState.filter((card) => card._id !== newCard._id),
@@ -313,6 +313,7 @@ function App() {
     posts,
     setPosts,
     favorites,
+    setFavorites,
     handlePostLike,
     currentUser,
     onSortData: sortedData,
