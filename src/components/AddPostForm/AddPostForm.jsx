@@ -59,7 +59,7 @@ export const AddPostForm = () => {
           {...register('tags')}
           type="text"
           name="tags"
-          placeholder="Добавьте ваши теги через запятую "
+          placeholder="Добавьте теги через запятую "
           defaultValue={''}
         />
         <input

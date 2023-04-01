@@ -110,14 +110,13 @@ function App() {
   const filterPostsRequest = () => {
     // фильтрация карточек по запросу в поисковой строке
     api
-      .search(searchQuery.replace('#', ''))
+      .search(searchQuery.replace(' ' && '#', ''))
       .then((filteredPosts) => {
-        const postsFilteredByTag = posts?.filter((post) => // поиск по тегам
-          post?.tags?.includes(searchQuery.replace('#', '')),
+        const postsFilteredByTag = posts?.filter((post) =>
+          post?.tags?.includes(searchQuery.replace(' ' && '#', '')),
         );
         setPosts([...filteredPosts, ...postsFilteredByTag]);
       })
-
       .catch((error) => console.log(error));
   };
 

@@ -4,6 +4,7 @@ import { PostsContext } from '../../context/PostsContext';
 import { Sort } from '../../components/Sort/Sort';
 
 export const PostsPage = ({}) => {
+  
   const { posts, isAuth } = useContext(PostsContext);
 
   return (

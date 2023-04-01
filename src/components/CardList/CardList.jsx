@@ -5,7 +5,7 @@ export const CardList = ({ posts = [] }) => {
   return (
     <div className="cards">
       {posts?.map((post) => (
-        <Card key={post._id} {...post} post={post} />
+        <Card key={post._id + Math.random()} {...post} post={post} />
       ))}
     </div>
   );

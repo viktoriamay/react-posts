@@ -5,13 +5,13 @@ import { useParams } from 'react-router-dom';
 import { PostsContext } from './../../context/PostsContext';
 import api from './../../utils/api';
 
-export const PostPage = () => {
+export const PostPage = ({userById}) => {
   const [postCurrentUser, setPostCurrentUser] = useState(null); // текущий юзер на странице поста
   const [post, setPost] = useState(null); // текущий пост
   const [isLoading, setIsLoading] = useState(false);
+  const isLike = post?.likes?.some((id) => id === postCurrentUser?._id);
   const [isClicked, setClicked] = useState(isLike);
 
-  const isLike = post?.likes?.some((id) => id === postCurrentUser?._id);
 
   const {
     favorites,
@@ -19,10 +19,11 @@ export const PostPage = () => {
     activeModal,
     setActiveModal,
     handlePostLike,
-    users,
-    getUserCommentsAvatar,
-    getUserComments, activeHeaderModal, setActiveHeaderModal
+    users, 
+     activeHeaderModal, setActiveHeaderModal, getUserCommentsInfo
   } = useContext(PostsContext);
+
+  
 
   // парамс это то, что приходит в апе в роутах path="/post/:postId", а именно :postId - динамический путь это и есть парамс
   const params = useParams();
@@ -96,6 +97,11 @@ export const PostPage = () => {
       });
   };
 
+
+
+  console.log({userById});
+
+
   return (
     <div>
       {isLoading ? (
@@ -111,8 +117,6 @@ export const PostPage = () => {
           deleteCommentRequest={deleteCommentRequest}
           editPostRequest={editPostRequest}
           users={users}
-          getUserCommentsAvatar={getUserCommentsAvatar}
-          getUserComments={getUserComments}
           isLike={isLike}
           
           activeHeaderModal={activeHeaderModal}
@@ -120,6 +124,8 @@ export const PostPage = () => {
           activeModal={activeModal}
           setActiveModal={setActiveModal}
           postCloseModal={postCloseModal}
+
+          getUserCommentsInfo={getUserCommentsInfo}
         />
       )}
     </div>

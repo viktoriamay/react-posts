@@ -1,6 +1,6 @@
 import { DeleteOutlined, FormOutlined, LeftOutlined } from '@ant-design/icons';
 import './Post.scss';
-import { useNavigate } from 'react-router-dom';
+import { useNavigate, Link } from 'react-router-dom';
 import { useEffect, useContext } from 'react';
 import { Form } from '../Form/Form';
 import { useForm } from 'react-hook-form';
@@ -10,7 +10,7 @@ import { Modal } from './../Modal/Modal';
 import { EditPostForm } from './../EditPostForm/EditPostForm';
 
 export const Post = (props) => {
-  const { options, deletePost, activeHeaderModal, setActiveHeaderModal } = useContext(PostsContext);
+  const { options, deletePostRequest, activeHeaderModal, setActiveHeaderModal, userById } = useContext(PostsContext);
 
   const navigate = useNavigate();
 
@@ -31,10 +31,17 @@ export const Post = (props) => {
     },
   });
 
+
   // небезопасный способ вставки данных с бэка
   const desctiptionHTML = {
     __html: props?.text?.replace(props?.text[0], props?.text[0].toUpperCase()),
   };
+
+  /* useEffect(() => {
+    if (!props.activeModal) {
+      setShowAuthComponent('editPost');
+    }
+  }, [props.activeModal]); */
 
   const handleCloseModal = () => {
     setActiveHeaderModal({ ...activeHeaderModal, isOpen: false });
@@ -62,7 +69,7 @@ export const Post = (props) => {
           {props?.postCurrentUser?._id === props?.post?.author?._id && (
             <button
               className="post__edit_icon"
-              onClick={() => deletePost(props.post._id)}>
+              onClick={() => deletePostRequest(props.post._id)}>
               <DeleteOutlined />
             </button>
           )}
@@ -85,7 +92,7 @@ export const Post = (props) => {
                   .slice(0, -3)}
               </span>
             </div>
-            <div className="post__author">
+            <Link to={`/user/${props?.post?.author?._id}`} className="post__author">
               <div className="post__author_avatar">
                 <div className="post__author_avatar_img_container">
                   <img alt="imag" src={props?.author?.avatar} />
@@ -93,7 +100,7 @@ export const Post = (props) => {
                 <span>{props?.author?.name}</span>
               </div>
               <span className="post__author_about">{props?.author?.about}</span>
-            </div>
+            </Link>
           </div>
           <div className="post__image">
             <img alt="imag" src={props?.image} />
@@ -132,13 +139,13 @@ export const Post = (props) => {
               ?.sort((a, b) => new Date(b.created_at) - new Date(a.created_at))
               .map((e) => (
                 <div className="post__comments_author_flex" key={e.created_at}>
-                  <div className="post__comments_author">
+                  <Link to={`/user/${props?.getUserCommentsInfo(e.author).id}`} className="post__comments_author">
                     <div className="post__comments_author_avatar">
-                      <img src={props.getUserCommentsAvatar(e.author)} alt="avatar" />
+                      <img src={props?.getUserCommentsInfo(e.author).avatar} alt="avatar" />
                     </div>
                     <div className="post__comments_author_data">
                       <h3 className="post__comments_author_name">
-                        {props.getUserComments(e.author)}
+                        {props?.getUserCommentsInfo(e.author).name}
                       </h3>
                       <span className="post__comments_author_date">
                         {new Date(e?.created_at)
@@ -147,7 +154,7 @@ export const Post = (props) => {
                       </span>
                       <p className="post__comments_author_text">{e.text}</p>
                     </div>
-                  </div>
+                  </Link>
                   {e.author === props?.postCurrentUser?._id && (
                     <button
                       className="post__edit_icon post__edit_icon_comments"

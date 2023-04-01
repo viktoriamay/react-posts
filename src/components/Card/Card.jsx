@@ -12,7 +12,7 @@ import { PostsContext } from './../../context/PostsContext';
 
 export const Card = (props) => {
   const {
-    deletePost,
+    deletePostRequest,
     currentUser,
     handlePostLike,
   } = useContext(PostsContext);
@@ -81,7 +81,7 @@ export const Card = (props) => {
       </Link>
       {currentUser?._id === props?.post?.author?._id && (
         <button
-          onClick={() => deletePost(props?.post?._id)}
+          onClick={() => deletePostRequest(props?.post?._id)}
           className="card__delete">
           <DeleteOutlined />
         </button>
