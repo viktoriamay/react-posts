@@ -14,6 +14,7 @@ export const PostPage = ({ userById }) => {
 
   const {
     favorites,
+    setFavorites,
     setPosts,
     posts,
     activeModal,
@@ -58,13 +59,15 @@ export const PostPage = ({ userById }) => {
       .then((result) => {
         const updatedPost = { ...result, data }; // создаем новый объект для обновления состояния post
         setPost(updatedPost);
+        return updatedPost
       })
       .then((updatedPost) => {
-        setPosts((state) =>
-          state.map((post) =>
-            post?._id === updatedPost?._id ? updatedPost : post,
-          ),
-        );
+        const updatedPosts = posts.map((prevPost) => {
+          return prevPost._id === updatedPost._id ? updatedPost : prevPost;
+        })
+
+        setPosts(updatedPosts)
+        setFavorites(updatedPosts)
       })
       .finally(postCloseModal());
   };
@@ -81,12 +84,13 @@ export const PostPage = ({ userById }) => {
         return updatedPost; // возвращаем обновленный пост из метода then
       })
       .then((updatedPost) => {
-        const newPosts = posts?.map((postsState) => {
+        const updatedPosts = posts?.map((prevPost) => {
           // получаем массив новых карточек после постановки лайка и возвращаем старые карточки, если лайк не поставлен и новую если поставлен
-          return postsState?._id === updatedPost?._id ? updatedPost : postsState;
+          return prevPost?._id === updatedPost?._id ? updatedPost : prevPost;
         });
 
-        setPosts(newPosts); // передаем новое состояние posts в setPosts
+        setPosts(updatedPosts); // передаем новое состояние posts в setPosts
+        setFavorites(updatedPosts)
       })
 
       .catch((error) => {
@@ -107,10 +111,12 @@ export const PostPage = ({ userById }) => {
         return updatedPost;
       })
       .then((updatedPost) => {
-        const updatedPosts = posts.map((postsState) => {
-          return postsState._id === updatedPost._id ? updatedPost : postsState;
+        const updatedPosts = posts.map((prevPost) => {
+          return prevPost._id === updatedPost._id ? updatedPost : prevPost;
         });
         setPosts(updatedPosts);
+        setFavorites(updatedPosts)
+
       })
       .catch((error) => {
         // openNotification('error', 'Ошибка', 'Не получилось отправить отзыв');
