@@ -157,7 +157,7 @@ function App() {
       });
 
       if (!liked) {
-        setFavorites((prevState) => [newCard, ...prevState ]);
+        setFavorites((prevState) => [...prevState, newCard]);
       } else {
         setFavorites((prevState) =>
           prevState.filter((card) => card._id !== newCard._id),
