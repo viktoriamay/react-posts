@@ -110,12 +110,19 @@ function App() {
   const filterPostsRequest = () => {
     // фильтрация карточек по запросу в поисковой строке
     api
-      .search(searchQuery.replace(' ' && '#', ''))
+      .search(searchQuery.replace('#', '%23').replace(' ' && '%23', ''))
       .then((filteredPosts) => {
-        const postsFilteredByTag = posts?.filter((post) =>
-          post?.tags?.includes(searchQuery.replace(' ' && '#', '')),
-        );
-        setPosts([...filteredPosts, ...postsFilteredByTag]);
+        setPosts([...filteredPosts]);
+      })
+      .then(() => {
+        if (searchQuery.includes('#')) {
+          const postsFilteredByTag = posts?.filter((post) =>
+            post?.tags?.includes(
+              searchQuery.replace('#', '%23').replace(' ' && '%23', ''),
+            ),
+          );
+          setPosts([...postsFilteredByTag]);
+        }
       })
       .catch((error) => console.log(error));
   };
@@ -348,7 +355,7 @@ function App() {
         </Header>
 
         <main className="main container">
-          <SearchInfo searchText={searchQuery} searchCount={posts.length} />
+          <SearchInfo searchText={searchQuery} searchCount={posts?.length} />
           <Routes>
             <Route path="/" element={<PostsPage />} />
             <Route path="/post/:postId" element={<PostPage />} />
