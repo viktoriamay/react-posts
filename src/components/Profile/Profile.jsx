@@ -6,6 +6,7 @@ import { VALIDATE_CONFIG } from './../../constants/constants';
 import { useNavigate } from 'react-router-dom';
 import { LeftOutlined } from '@ant-design/icons';
 import './Profile.scss';
+import { PagesBackButton } from '../PagesBackButton/PagesBackButton';
 
 export const Profile = () => {
   const { currentUser, editProfileRequest, editAvatarRequest, handleLogout } =
@@ -26,15 +27,14 @@ export const Profile = () => {
 
   return (
     <div>
-      <div onClick={() => navigate(-1)} className="post__button_back">
-        <LeftOutlined />
-        <span>Назад</span>
+      <div className='button_back_offset'>
+        <PagesBackButton />
       </div>
       <h2>Редактирование профиля</h2>
       {currentUser ? (
         <div className="profile">
           <div className="profile__avatar">
-            <img src={currentUser.avatar} alt='user-avatar' />
+            <img src={currentUser.avatar} alt="user-avatar" />
           </div>
           <Form
             className="profile__form"

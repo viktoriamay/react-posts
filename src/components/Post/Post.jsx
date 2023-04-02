@@ -8,11 +8,10 @@ import { VALIDATE_CONFIG } from './../../constants/constants';
 import { PostsContext } from './../../context/PostsContext';
 import { Modal } from './../Modal/Modal';
 import { EditPostForm } from './../EditPostForm/EditPostForm';
+import { PagesBackButton } from '../PagesBackButton/PagesBackButton';
 
 export const Post = (props) => {
-  const { options, deletePostRequest, activeHeaderModal, setActiveHeaderModal, userById } = useContext(PostsContext);
-
-  const navigate = useNavigate();
+  const { options, deletePostRequest, activeHeaderModal, setActiveHeaderModal } = useContext(PostsContext);
 
   const {
     register,
@@ -50,10 +49,7 @@ export const Post = (props) => {
   return (
     <div className="post">
       <div className="post__controls">
-        <div onClick={() => navigate(-1)} className="post__button_back">
-          <LeftOutlined />
-          <span>Назад</span>
-        </div>
+        <PagesBackButton />
 
         <div className="post__edit">
           {props?.postCurrentUser?._id === props?.post?.author?._id && (
