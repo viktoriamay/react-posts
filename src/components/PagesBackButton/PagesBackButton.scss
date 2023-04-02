@@ -1,0 +1,15 @@
+.button_back {
+  display: inline-flex;
+  align-items: center;
+  color: #404040a3;
+  cursor: pointer;
+  transition: 0.1s ease;
+
+  svg {
+    height: 12px;
+  }
+
+  &:hover {
+    color: #404040;
+  }
+}
