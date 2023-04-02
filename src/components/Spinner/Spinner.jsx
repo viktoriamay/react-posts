@@ -1,12 +1,10 @@
-import { LoadingOutlined } from '@ant-design/icons';
-import { Spin } from 'antd';
-const antIcon = (
-  <LoadingOutlined
-    style={{
-      fontSize: 100,
-    }}
-    spin
-  />
-);
-const Spinner = () => <Spin indicator={antIcon} />;
-export default Spinner;
+import spinnerLogo from './spin.svg';
+import './Spinner.scss';
+
+export const Spinner = () => {
+  return (
+    <div className="spinner">
+      <img className="spinner__logo" src={spinnerLogo} alt='spinner-logo' />
+    </div>
+  );
+};
