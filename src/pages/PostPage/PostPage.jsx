@@ -1,9 +1,9 @@
-import Spinner from '../../components/Spinner/Spinner';
 import { useState, useEffect, useContext } from 'react';
 import { Post } from '../../components/Post/Post';
 import { useParams } from 'react-router-dom';
 import { PostsContext } from './../../context/PostsContext';
 import api from './../../utils/api';
+import { Spinner } from '../../components/Spinner/Spinner';
 
 export const PostPage = ({ userById }) => {
   const [postCurrentUser, setPostCurrentUser] = useState(null); // текущий юзер на странице поста
@@ -33,7 +33,7 @@ export const PostPage = ({ userById }) => {
     setActiveHeaderModal({ ...activeHeaderModal, isOpen: false });
   };
 
-  useEffect(() => {
+ /*  useEffect(() => {
     setIsLoading(true);
 
     Promise.all([api.getUserInfo(), api.getPostById(params.postId)])
@@ -43,6 +43,18 @@ export const PostPage = ({ userById }) => {
       })
       .catch((error) => console.log(error))
       .finally(setIsLoading(false));
+  }, [params.postId, favorites]); */
+
+  useEffect(() => {
+    setIsLoading(true);
+
+    Promise.all([api.getUserInfo(), api.getPostById(params.postId)])
+      .then(([userData, postData]) => {
+        setPostCurrentUser(userData);
+        setPost(postData);
+      })
+      .catch((error) => console.log(error))
+      .finally(() => setIsLoading(false));
   }, [params.postId, favorites]);
 
   const onPostLike = () => {
@@ -114,9 +126,9 @@ export const PostPage = ({ userById }) => {
         const updatedPosts = posts.map((prevPost) => {
           return prevPost._id === updatedPost._id ? updatedPost : prevPost;
         });
+
         setPosts(updatedPosts);
         setFavorites(updatedPosts)
-
       })
       .catch((error) => {
         // openNotification('error', 'Ошибка', 'Не получилось отправить отзыв');
@@ -124,10 +136,11 @@ export const PostPage = ({ userById }) => {
   };
 
   return (
-    <div>
+    <>
       {isLoading ? (
         <Spinner />
       ) : (
+         <>
         <Post
           {...post}
           post={post}
@@ -146,7 +159,10 @@ export const PostPage = ({ userById }) => {
           postCloseModal={postCloseModal}
           getUserCommentsInfo={getUserCommentsInfo}
         />
+        <Spinner/>
+
+        </>
       )}
-    </div>
+    </>
   );
 };
