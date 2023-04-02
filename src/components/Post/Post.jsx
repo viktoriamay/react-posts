@@ -11,7 +11,7 @@ import { EditPostForm } from './../EditPostForm/EditPostForm';
 import { PagesBackButton } from '../PagesBackButton/PagesBackButton';
 
 export const Post = (props) => {
-  const { options, deletePostRequest, activeHeaderModal, setActiveHeaderModal } = useContext(PostsContext);
+  const { options, deletePostRequest, activeHeaderModal, setActiveHeaderModal, currentUser } = useContext(PostsContext);
 
   const {
     register,
@@ -52,7 +52,7 @@ export const Post = (props) => {
         <PagesBackButton />
 
         <div className="post__edit">
-          {props?.postCurrentUser?._id === props?.post?.author?._id && (
+          {currentUser?._id === props?.post?.author?._id && (
             <button
               className="post__edit_icon"
               onClick={() =>
@@ -62,7 +62,7 @@ export const Post = (props) => {
             </button>
           )}
 
-          {props?.postCurrentUser?._id === props?.post?.author?._id && (
+          {currentUser?._id === props?.post?.author?._id && (
             <button
               className="post__edit_icon"
               onClick={() => deletePostRequest(props.post._id)}>
@@ -151,7 +151,7 @@ export const Post = (props) => {
                       <p className="post__comments_author_text">{e.text}</p>
                     </div>
                   </Link>
-                  {e.author === props?.postCurrentUser?._id && (
+                  {e.author === currentUser?._id && (
                     <button
                       className="post__edit_icon post__edit_icon_comments"
                       onClick={() => props.deleteCommentRequest(e._id)}>
