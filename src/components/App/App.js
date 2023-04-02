@@ -1,4 +1,4 @@
-import { useState, useEffect, useMemo } from 'react';
+import { useState, useEffect, useMemo, useCallback } from 'react';
 import api from '../../utils/api';
 import { Header } from '../Header/Header';
 import { SearchInfo } from '../SearchInfo/SearchInfo';
@@ -95,10 +95,10 @@ function App() {
         setPosts(postsData);
         setCurrentUser(userData);
 
-        const favProducts = postsData.filter((post) =>
-          isLiked(post.likes, userData._id),
+        const favPosts = postsData?.filter((post) =>
+          isLiked(post?.likes, userData?._id),
         );
-        setFavorites(favProducts);
+        setFavorites(favPosts);
       },
     );
   }, [isAuth]);
@@ -110,7 +110,7 @@ function App() {
   const filterPostsRequest = () => {
     // фильтрация карточек по запросу в поисковой строке
     api
-      .search(searchQuery.replace('#', '%23').replace(' ' && '%23', ''))
+      .search(debounceSearchQuery.replace('#', '%23').replace(' ' && '%23', ''))
       .then((filteredPosts) => {
         setPosts([...filteredPosts]);
       })
@@ -145,28 +145,30 @@ function App() {
   // метод some возвращает тру в данном случае если среди массива лайков поста (там хранятся айди тех, кто поставил лайки) есть каррентЮзер__айди
   const isLiked = (likes, userId) => likes?.some((id) => id === userId); // проверка отлайкан ли пост
 
-  const handlePostLike = (post) => {
-    // постановка лайка на пост
+  const handlePostLike = useCallback(
+    (post) => {
+      // постановка лайка на пост
 
-    const liked = isLiked(post?.likes, currentUser?._id);
+      const liked = isLiked(post?.likes, currentUser?._id);
 
-    api.changeLikePost(post?._id, liked).then((newCard) => {
-      const newPosts = posts?.map((postState) => {
-        // получаем массив новых карточек после постановки лайка и возвращаем старые карточки, если лайк не поставлен и новую если поставлен
-        return postState?._id === newCard?._id ? newCard : postState;
+      api.changeLikePost(post?._id, liked).then((newCard) => {
+        const newPosts = posts?.map((postState) => {
+          // получаем массив новых карточек после постановки лайка и возвращаем старые карточки, если лайк не поставлен и новую если поставлен
+          return postState?._id === newCard?._id ? newCard : postState;
+        });
+
+        if (!liked) {
+          setFavorites((prevState) => [...prevState, newCard]);
+        } else {
+          setFavorites((prevState) => {
+            return prevState?.filter((card) => card?._id !== newCard?._id);
+          });
+        }
+        setPosts(newPosts);
       });
-
-      if (!liked) {
-        setFavorites((prevState) => [...prevState, newCard]);
-      } else {
-        setFavorites((prevState) =>
-          prevState.filter((card) => card._id !== newCard._id),
-        );
-      }
-
-      setPosts(newPosts);
-    });
-  };
+    },
+    [currentUser?._id, posts],
+  );
 
   const sortedData = (currentSort) => {
     // сортировка постов
@@ -309,6 +311,7 @@ function App() {
     setIsAuth(!!haveToken);
   });
 
+  // console.log({favorites});
   const valueContextProvider = {
     posts,
     setPosts,
@@ -346,6 +349,7 @@ function App() {
     getUserCommentsInfo,
     formSubmitRequest,
     changeInput,
+    isLiked,
   };
 
   return (

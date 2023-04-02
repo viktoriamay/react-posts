@@ -1,4 +1,4 @@
-import { useState, useEffect, useContext } from 'react';
+import { useState, useEffect, useContext, useCallback } from 'react';
 import { Post } from '../../components/Post/Post';
 import { useParams } from 'react-router-dom';
 import { PostsContext } from './../../context/PostsContext';
@@ -24,6 +24,7 @@ export const PostPage = ({ userById }) => {
     activeHeaderModal,
     setActiveHeaderModal,
     getUserCommentsInfo,
+    isLiked,
   } = useContext(PostsContext);
 
   // парамс это то, что приходит в апе в роутах path="/post/:postId", а именно :postId - динамический путь это и есть парамс
@@ -32,18 +33,6 @@ export const PostPage = ({ userById }) => {
   const postCloseModal = () => {
     setActiveHeaderModal({ ...activeHeaderModal, isOpen: false });
   };
-
- /*  useEffect(() => {
-    setIsLoading(true);
-
-    Promise.all([api.getUserInfo(), api.getPostById(params.postId)])
-      .then(([userData, postData]) => {
-        setPostCurrentUser(userData);
-        setPost(postData);
-      })
-      .catch((error) => console.log(error))
-      .finally(setIsLoading(false));
-  }, [params.postId, favorites]); */
 
   useEffect(() => {
     setIsLoading(true);
@@ -59,8 +48,15 @@ export const PostPage = ({ userById }) => {
 
   const onPostLike = () => {
     handlePostLike(post);
-    setPost({ ...post });
-    setClicked((state) => !state);
+    const liked = isLiked(post.likes, postCurrentUser?._id);
+    if (liked) {
+      const filteredLikes = post.likes.filter((e) => e !== postCurrentUser._id);
+      setPost({ ...post, likes: filteredLikes });
+    } else {
+      const addedLikes = [...post.likes, `${postCurrentUser._id}`];
+      setPost({ ...post, likes: addedLikes });
+    }
+    // setClicked((state) => !state);
   };
 
   const editPostRequest = (data) => {
@@ -71,15 +67,20 @@ export const PostPage = ({ userById }) => {
       .then((result) => {
         const updatedPost = { ...result, data }; // создаем новый объект для обновления состояния post
         setPost(updatedPost);
-        return updatedPost
+        return updatedPost;
       })
       .then((updatedPost) => {
         const updatedPosts = posts.map((prevPost) => {
-          return prevPost._id === updatedPost._id ? updatedPost : prevPost;
-        })
+          return prevPost?._id === updatedPost?._id ? updatedPost : prevPost;
+        });
+        setPosts(updatedPosts);
 
-        setPosts(updatedPosts)
-        setFavorites(updatedPosts)
+        // const updatedFavorites = favorites?.map((prevFavorite) => {
+        //   return prevFavorite?._id === updatedPost?._id
+        //     ? updatedPost
+        //     : prevFavorite;
+        // });
+        // setFavorites(updatedFavorites);
       })
       .finally(postCloseModal());
   };
@@ -97,14 +98,26 @@ export const PostPage = ({ userById }) => {
       })
       .then((updatedPost) => {
         const updatedPosts = posts?.map((prevPost) => {
-          // получаем массив новых карточек после постановки лайка и возвращаем старые карточки, если лайк не поставлен и новую если поставлен
           return prevPost?._id === updatedPost?._id ? updatedPost : prevPost;
         });
-
         setPosts(updatedPosts); // передаем новое состояние posts в setPosts
-        setFavorites(updatedPosts)
-      })
 
+        // const updatedFavorites = favorites?.map((prevFavorite) => {
+        //   return prevFavorite?._id === updatedPost._id
+        //   ? updatedPost
+        //   : prevFavorite;
+        // });
+        // setFavorites(updatedFavorites);
+
+      })
+      .then((updatedPost) => {
+        const updatedFavorites = favorites?.map((prevFavorite) => {
+          return prevFavorite?._id === updatedPost._id
+            ? updatedPost
+            : prevFavorite;
+        });
+        setFavorites(updatedFavorites);
+      })
       .catch((error) => {
         // openNotification('error', 'Ошибка', 'Не получилось отправить отзыв');
       })
@@ -113,9 +126,9 @@ export const PostPage = ({ userById }) => {
       });
   };
 
-  const deleteCommentRequest = (comment) => {
+  const deleteCommentRequest = (id) => {
     api
-      .deleteComment(post._id, comment)
+      .deleteComment(post._id, id)
       .then((result) => {
         const updatedPost = { ...result };
         setPost(updatedPost);
@@ -123,44 +136,59 @@ export const PostPage = ({ userById }) => {
         return updatedPost;
       })
       .then((updatedPost) => {
-        const updatedPosts = posts.map((prevPost) => {
-          return prevPost._id === updatedPost._id ? updatedPost : prevPost;
-        });
+        const updatedPosts = posts?.map((prevPost) => {
+          return prevPost?._id === updatedPost?._id ? updatedPost : prevPost
+        }
+        );
 
         setPosts(updatedPosts);
-        setFavorites(updatedPosts)
+
+        // const updatedFavorites = favorites?.map((prevFavorite) => {
+        //   return prevFavorite?._id === updatedPost?._id
+        //     ? updatedPost
+        //     : prevFavorite;
+        // });
+        // setFavorites(updatedFavorites);
+      })
+      
+      .then((updatedPost) => {
+        const updatedFavorites = favorites?.map((prevFavorite) => {
+          return prevFavorite?._id === updatedPost?._id
+            ? updatedPost
+            : prevFavorite;
+        });
+        setFavorites(updatedFavorites);
       })
       .catch((error) => {
         // openNotification('error', 'Ошибка', 'Не получилось отправить отзыв');
       });
-  };
+  }
 
   return (
     <>
       {isLoading ? (
         <Spinner />
       ) : (
-         <>
-        <Post
-          {...post}
-          post={post}
-          setPost={setPost}
-          postCurrentUser={postCurrentUser}
-          onPostLike={onPostLike}
-          sendCommentRequest={sendCommentRequest}
-          deleteCommentRequest={deleteCommentRequest}
-          editPostRequest={editPostRequest}
-          users={users}
-          isLike={isLike}
-          activeHeaderModal={activeHeaderModal}
-          setActiveHeaderModal={setActiveHeaderModal}
-          activeModal={activeModal}
-          setActiveModal={setActiveModal}
-          postCloseModal={postCloseModal}
-          getUserCommentsInfo={getUserCommentsInfo}
-        />
-        <Spinner/>
-
+        <>
+          <Post
+            {...post}
+            post={post}
+            setPost={setPost}
+            postCurrentUser={postCurrentUser}
+            onPostLike={onPostLike}
+            sendCommentRequest={sendCommentRequest}
+            deleteCommentRequest={deleteCommentRequest}
+            editPostRequest={editPostRequest}
+            users={users}
+            isLike={isLike}
+            activeHeaderModal={activeHeaderModal}
+            setActiveHeaderModal={setActiveHeaderModal}
+            activeModal={activeModal}
+            setActiveModal={setActiveModal}
+            postCloseModal={postCloseModal}
+            getUserCommentsInfo={getUserCommentsInfo}
+            setClicked={setClicked}
+          />
         </>
       )}
     </>

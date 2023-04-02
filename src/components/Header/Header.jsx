@@ -49,9 +49,9 @@ export const Header = ({ children }) => {
                 />
                 <Link to={'/favorites'}>
                   <div className="header__favorites_icon_wrapper">
-                    {favorites.length !== 0 && (
+                    {favorites?.length !== 0 && (
                       <span className="header__favorites_counter">
-                        {favorites.length}
+                        {favorites?.length}
                       </span>
                     )}
                     <HeartOutlined className="header__favorites_icon" />
