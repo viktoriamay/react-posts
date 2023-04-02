@@ -3,15 +3,14 @@ import { useContext } from 'react';
 import { PostsContext } from '../../context/PostsContext';
 import { Sort } from '../../components/Sort/Sort';
 
-export const PostsPage = ({}) => {
-  
+export const PostsPage = () => {
   const { posts, isAuth } = useContext(PostsContext);
 
   return (
     <>
       {isAuth && (
         <div>
-          <Sort />
+          {posts?.length > 1 && <Sort />}
           <CardList posts={posts} />
         </div>
       )}
