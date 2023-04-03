@@ -225,6 +225,12 @@ function App() {
       .then(() => {
         const updatedPosts = posts.filter((post) => post._id !== postId);
         setPosts(updatedPosts);
+
+        setFavorites((prevState) => {
+          return prevState?.filter((card) => card?._id !== postId);
+        });
+
+        return updatedPosts;
       })
       .then(navigate('/'));
   };
