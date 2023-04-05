@@ -1,0 +1,21 @@
+.footer {
+  background-color: #404040;
+  color: #f1b600;
+  margin-top: 4rem;
+  padding: 1rem;
+
+  &__wrapper {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+
+    a {
+      text-decoration: none;
+    }
+  }
+
+  &__socials {
+    display: flex;
+    gap: 1.5rem;
+  }
+}
