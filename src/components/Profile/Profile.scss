@@ -22,9 +22,22 @@
     display: grid;
     grid-template-columns: 1fr 1fr;
     width: 100%;
+    gap: 2rem;
   }
+  
+  &__input_block {
+    display: flex;
+    flex-direction: column;
+    position: relative;
+  }
+
+  &_form__errors {
+    position: absolute;
+    bottom: -22px;
+  }
+
 }
 
-.form__button_profile {
-  width: 100%;
+.profile__button {
+  margin-top: 0;
 }
