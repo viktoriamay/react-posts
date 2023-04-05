@@ -6,7 +6,7 @@
   width: 100%;
   padding: 0px;
   border-bottom: 2px solid #f1b600;
-  height: 42px;
+  height: 42px; 
 
   &__input {
     width: 100%;
@@ -19,10 +19,6 @@
     line-height: 30px;
     caret-color: #f1b600;
     background: transparent;
-
-    &:focus {
-      // background: #ffffff;
-    }
 
     &::placeholder {
       color: #7b8e98;
