@@ -15,7 +15,8 @@ export const FavoritePage = () => {
       <CardList
         posts={favorites}
         handlePostLike={handlePostLike}
-        currentUser={currentUser}></CardList>
+        currentUser={currentUser}
+      />
     </div>
   );
 };
