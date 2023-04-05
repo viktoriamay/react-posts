@@ -1,7 +1,7 @@
-import { DeleteOutlined, FormOutlined, LeftOutlined } from '@ant-design/icons';
+import { DeleteOutlined, FormOutlined } from '@ant-design/icons';
 import './Post.scss';
-import { useNavigate, Link } from 'react-router-dom';
-import { useEffect, useContext } from 'react';
+import { Link } from 'react-router-dom';
+import { useContext } from 'react';
 import { Form } from '../Form/Form';
 import { useForm } from 'react-hook-form';
 import { VALIDATE_CONFIG } from './../../constants/constants';
@@ -35,13 +35,7 @@ export const Post = (props) => {
   const desctiptionHTML = {
     __html: props?.text?.replace(props?.text[0], props?.text[0].toUpperCase()),
   };
-
-  /* useEffect(() => {
-    if (!props.activeModal) {
-      setShowAuthComponent('editPost');
-    }
-  }, [props.activeModal]); */
-
+  
   const handleCloseModal = () => {
     setActiveHeaderModal({ ...activeHeaderModal, isOpen: false });
   };
@@ -132,17 +126,20 @@ export const Post = (props) => {
           </h2>
           <div className="post__comments_wrapper">
             {props?.comments
-              ?.sort((a, b) => new Date(b.created_at) - new Date(a.created_at))
+              ?.sort((a, b) => new Date(a.created_at) - new Date(b.created_at))
               .map((e) => (
                 <div className="post__comments_author_flex" key={e.created_at}>
-                  <Link to={`/user/${props?.getUserCommentsInfo(e.author).id}`} className="post__comments_author">
+                  <div className="post__comments_author">
+                    <Link to={`/user/${props?.getUserCommentsInfo(e.author).id}`}  className="post__comments_author_link">
                     <div className="post__comments_author_avatar">
+
                       <img src={props?.getUserCommentsInfo(e.author).avatar} alt="avatar" />
                     </div>
-                    <div className="post__comments_author_data">
                       <h3 className="post__comments_author_name">
                         {props?.getUserCommentsInfo(e.author).name}
                       </h3>
+                    </Link>
+                    <div className="post__comments_author_data">
                       <span className="post__comments_author_date">
                         {new Date(e?.created_at)
                           .toLocaleString('ru-RU', options)
@@ -150,7 +147,7 @@ export const Post = (props) => {
                       </span>
                       <p className="post__comments_author_text">{e.text}</p>
                     </div>
-                  </Link>
+                  </div>
                   {e.author === currentUser?._id && (
                     <button
                       className="post__edit_icon post__edit_icon_comments"
@@ -168,7 +165,7 @@ export const Post = (props) => {
               handleFormSubmit={handleSubmit(props.sendCommentRequest)}
               title="">
               <textarea
-                className="post__comments_textarea"
+                className="form__textarea"
                 {...reviewRegister}
                 type="text"
                 name="text"
@@ -180,7 +177,7 @@ export const Post = (props) => {
                 </span>
               )}
 
-              <button className="post__comments_button" type="submit">
+              <button className="form__button" type="submit">
                 Отправить комментарий
               </button>
             </Form>

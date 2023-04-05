@@ -45,12 +45,9 @@
     }
 
     &_comments {
-
-      
-
       padding: 0;
       margin-left: 10%;
-      
+
       svg {
         width: 20px;
         height: 20px;
@@ -90,6 +87,17 @@
 
   &__author {
     cursor: pointer;
+    text-decoration: none;
+    color: #404040;
+    transition: 0.2s ease;
+
+    img {
+      transition: 0.2s ease;
+    }
+
+    &:hover {
+      color: #f1b600;
+    }
 
     &:hover img {
       box-shadow: 0 2px 20px #40404053;
@@ -178,7 +186,6 @@
   &__like_info_active {
     color: #e31b1b;
     cursor: pointer;
-
   }
 
   &__comments {
@@ -193,16 +200,10 @@
     gap: 2rem;
   }
 
-  &__comments_author {
-    display: flex;
-    gap: 1rem;
-    
-  }
-  
   &__comments_author_flex {
     padding: 1.5rem 2rem 1.3rem 1.5rem;
     box-shadow: 0 2px 20px #4040402f;
-width: 100%;
+    width: 100%;
     display: flex;
     justify-content: space-between;
   }
@@ -220,10 +221,29 @@ width: 100%;
     }
   }
 
+  &__comments_author_link {
+    display: inline-flex;
+    gap: 1rem;
+    text-decoration: none;
+    color: #404040;
+    cursor: pointer;
+    transition: 0.2s ease;
+
+    img {
+      transition: 0.2s ease;
+    }
+
+    &:hover img {
+      box-shadow: 0 2px 20px #40404053;
+    }
+
+    &:hover {
+      color: #f1b600;
+    }
+  }
+
   &__comments_author_data {
-    display: flex;
-    flex-direction: column;
-    gap: 0.5rem; 
+    margin: -1.4rem 0 0 4.2rem;
   }
 
   &__comments_author_name {
@@ -239,21 +259,17 @@ width: 100%;
     margin: 8px 0;
     font-size: 19px;
   }
-&__comments_form{
-  max-width: 50%;
-  // background-color: #e31b1b;
-}
+
+  &__comments_form {
+    max-width: 50%;
+  }
   &__comments_textarea {
     padding: 1rem;
     resize: none;
   }
 
   &__comments_button {
-padding: 0.5rem;
-  cursor: pointer;}
-}
-
-.modal__containerr {
-  width: 200px;
-  height: 200px;
+    padding: 0.5rem;
+    cursor: pointer;
+  }
 }
