@@ -26,9 +26,9 @@ export const EditPostForm = ({ editPostRequest, post }) => {
     <Form
       handleFormSubmit={handleSubmit(editPostRequest)}
       title="Изменить пост"
-      className="edit_post_form">
+      className="form__modals">
       <input
-        className="edit_post_form__input"
+        className="form__input"
         {...register('title', {
           required,
         })}
@@ -38,11 +38,11 @@ export const EditPostForm = ({ editPostRequest, post }) => {
         defaultValue={post?.title}
       />
       {errors.title && (
-        <span className="edit_post_form_">{errors?.title.message}</span>
+        <span className="form__errors">{errors?.title.message}</span>
       )}
 
       <textarea
-        className="edit_post_form__textarea"
+        className="form__textarea"
         {...register('text', {
           required,
         })}
@@ -51,19 +51,21 @@ export const EditPostForm = ({ editPostRequest, post }) => {
         placeholder="Текст"
         defaultValue={post?.text}
       />
-      {errors.text && <span>{errors?.text.message}</span>}
+      {errors.text && (
+        <span className="form__errors">{errors?.text.message}</span>
+      )}
       <input
-        className="edit_post_form__input"
+        className="form__input"
         {...register('tags', {
           required,
         })}
         type="text"
         name="tags"
-        placeholder="Теги"
+        placeholder="Добавьте теги через запятую"
         defaultValue={post?.tags}
       />
       <input
-        className="edit_post_form__input"
+        className="form__input"
         {...register('image', {
           required,
         })}
@@ -73,12 +75,14 @@ export const EditPostForm = ({ editPostRequest, post }) => {
         defaultValue={post?.image}
         onChange={handleImageChange}
       />
-      {errors.image && <span>{errors?.image.message}</span>}
+      {errors.image && (
+        <span className="form__errors">{errors?.image.message}</span>
+      )}
 
       <div className="edit_post_form__image">
         <img src={imageSrc || post?.image} alt="post-pic" />
       </div>
-      <button className="edit_post_form__button" type="submit">
+      <button className="form__button" type="submit">
         Сохранить изменения
       </button>
     </Form>
