@@ -54,39 +54,42 @@ export const ResetPassForm = ({ setShowAuthComponent, headerCloseModal }) => {
   return (
     <Form
       handleFormSubmit={handleSubmit(resetPasswordRequest)}
-      className="login"
+      className="form__modals"
       title="Восстановление пароля">
       <input
-        className=""
         {...emailRegister}
         type="email"
         name="email"
         placeholder="Email"
         disabled={tokenResp}
+        className='form__input'
       />
-      {errors.email && <p>{errors?.email?.message}</p>}
+      {errors.email && <span className="form__errors">{errors?.email?.message}</span>}
 
-      <div style={tokenResp ? { display: 'block' } : { display: 'none' }}>
+      <div className={tokenResp ? 'reset_pass__active' : 'reset_pass__hide'} >
         <input
           {...passwordRegister}
           type="password"
           name="password"
           placeholder="Пароль"
           disabled={tokenResp ? false : true}
+          className='form__input'
         />
-        {errors.password && <p>{errors?.password?.message}</p>}
+        {errors.password && <span className="form__errors">{errors?.password?.message}</span>}
         <input
           {...tokenRegister}
           type="text"
           name="token"
           placeholder="Token"
           disabled={tokenResp ? false : true}
+          className='form__input'
         />
+        {errors.token && <span className="form__errors">{errors?.token?.message}</span>}
       </div>
 
-      <button type="submit">Восстановить пароль</button>
+      <button className='form__button' type="submit">Восстановить пароль</button>
 
-      <div onClick={() => setShowAuthComponent('login')}>Вход</div>
+      <div className='auth__navigation' onClick={() => setShowAuthComponent('login')}>Вход</div>
     </Form>
   );
 };

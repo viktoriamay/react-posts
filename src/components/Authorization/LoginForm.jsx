@@ -39,28 +39,42 @@ export const LoginForm = ({ setShowAuthComponent, headerCloseModal }) => {
     },
   });
 
-
-const { loginRequest} = useContext(PostsContext);
+  const { loginRequest } = useContext(PostsContext);
 
   return (
     <Form
       handleFormSubmit={handleSubmit(loginRequest)}
-      className="login"
-      title="Login">
-      <input {...emailRegister} type="email" name="email" placeholder="Email" />
-      {errors.email && <p>{errors?.email?.message}</p>}
+      className="form__modals"
+      title="Вход">
+      <input
+        {...emailRegister}
+        type="email"
+        name="email"
+        placeholder="Email"
+        className="form__input"
+      />
+      {errors.email && <span className="form__errors">{errors?.email?.message}</span>}
       <input
         {...passwordRegister}
         type="password"
         name="password"
         placeholder="Пароль"
+        className="form__input"
       />
-      {errors.password && <p>{errors?.password?.message}</p>}
-      <button type="submit">Вход</button>
-      <div onClick={() => setShowAuthComponent('reset-pass')}>
+      {errors.password && <span className="form__errors">{errors?.password?.message}</span>}
+      <button className="form__button" type="submit">
+        Вход
+      </button>
+      <div
+        className="auth__navigation"
+        onClick={() => setShowAuthComponent('reset-pass')}>
         Восстановление пароля
       </div>
-      <div onClick={() => setShowAuthComponent('register')}>Регистрация</div>
+      <div
+        className="auth__navigation"
+        onClick={() => setShowAuthComponent('register')}>
+        Регистрация
+      </div>
     </Form>
   );
 };
