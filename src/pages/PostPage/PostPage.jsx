@@ -4,6 +4,7 @@ import { useParams } from 'react-router-dom';
 import { PostsContext } from './../../context/PostsContext';
 import api from './../../utils/api';
 import { Spinner } from '../../components/Spinner/Spinner';
+import { openNotification } from './../../components/Notification/Notification';
 
 export const PostPage = ({ userById }) => {
   const [postCurrentUser, setPostCurrentUser] = useState(null); // текущий юзер на странице поста
@@ -95,6 +96,7 @@ export const PostPage = ({ userById }) => {
       .then((result) => {
         const updatedPost = { ...result };
         setPost(updatedPost);
+        openNotification('success', 'Успешно', 'Ваш комментарий успешно отправлен');
         return updatedPost; // возвращаем обновленный пост из метода then
       })
       .then((updatedPost) => {
@@ -113,7 +115,7 @@ export const PostPage = ({ userById }) => {
         setFavorites(updatedFavorites);
       })
       .catch((error) => {
-        // openNotification('error', 'Ошибка', 'Не получилось отправить отзыв');
+        openNotification('error', 'Ошибка', 'Не получилось отправить комментарий');
       })
       .finally(() => {
         // setIsLoading(false);
@@ -126,7 +128,7 @@ export const PostPage = ({ userById }) => {
       .then((result) => {
         const updatedPost = { ...result };
         setPost(updatedPost);
-        // openNotification('success', 'Успешно', 'Ваш отзыв успешно отправлен');
+        openNotification('success', 'Успешно', 'Ваш комментарий успешно удалён');
         return updatedPost;
       })
       .then((updatedPost) => {
@@ -147,7 +149,7 @@ export const PostPage = ({ userById }) => {
         setFavorites(updatedFavorites);
       })
       .catch((error) => {
-        // openNotification('error', 'Ошибка', 'Не получилось отправить отзыв');
+        openNotification('error', 'Ошибка', 'Не получилось удалить комментарий');
       });
   };
 
@@ -161,7 +163,6 @@ export const PostPage = ({ userById }) => {
             {...post}
             post={post}
             setPost={setPost}
-            // postCurrentUser={postCurrentUser}
             onPostLike={onPostLike}
             sendCommentRequest={sendCommentRequest}
             deleteCommentRequest={deleteCommentRequest}

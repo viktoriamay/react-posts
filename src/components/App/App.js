@@ -14,6 +14,10 @@ import { PostsPage } from '../../pages/PostsPage/PostsPage';
 import { Profile } from '../Profile/Profile';
 import { authApi } from './../../utils/authApi';
 import { UsersProfile } from './../UsersProfile/UsersProfile';
+import { Unauthorized } from './../Unauthorized/Unauthorized';
+import { Footer } from './../Footer/Footer';
+import { PolicyPage } from './../../pages/PolicyPage/PolicyPage';
+import { openNotification } from './../Notification/Notification';
 
 function App() {
   const [posts, setPosts] = useState([]); // посты
@@ -301,14 +305,26 @@ function App() {
     // изменение данных пользователя
     api
       .editUserInfo({ name: data.name, about: data.about })
-      .then((newUser) => setCurrentUser({ ...newUser }));
+      .then((newUser) => {
+        setCurrentUser({ ...newUser });
+        openNotification('success', 'Успешно', 'Ваши данные успешно изменены');
+      })
+      .catch(() => {
+        openNotification('error', 'Ошибка', 'Не получилось изменить данные');
+      });
   };
 
   const editAvatarRequest = (src) => {
     // изменение аватара
     api
       .editUserAvatar({ avatar: src.avatar })
-      .then((newUser) => setCurrentUser({ ...newUser }));
+      .then((newUser) => {
+        setCurrentUser({ ...newUser });
+        openNotification('success', 'Успешно', 'Ваш аватар успешно изменён');
+      })
+      .catch(() => {
+        openNotification('error', 'Ошибка', 'Не получилось изменить аватар');
+      });
   };
 
   useEffect(() => {
@@ -368,15 +384,21 @@ function App() {
         <main className="main container">
           <SearchInfo searchText={searchQuery} searchCount={posts?.length} />
           <Routes>
-            <Route path="/" element={<PostsPage />} />
+            {!isAuth ? (
+              <Route path="/" element={<Unauthorized />} />
+            ) : (
+              <Route path="/" element={<PostsPage />} />
+            )}
             <Route path="/post/:postId" element={<PostPage />} />
             <Route path="/favorites" element={<FavoritePage />} />
             <Route path="/profile" element={<Profile />} />
             <Route path="/user/:userId" element={<UsersProfile />} />
+            <Route path="/policy" element={<PolicyPage />} />
 
             <Route path="*" element={<div>Not Found</div>} />
           </Routes>
         </main>
+        <Footer />
       </PostsContext.Provider>
     </div>
   );
