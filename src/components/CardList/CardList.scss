@@ -6,6 +6,54 @@
 	margin: 16px 0;
 }
 
+.pagination {
+  margin-top: 3.5rem;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+
+  .ant-pagination-item-active {
+    border: 1px solid #f1b600;
+    transition: 0.1s ease;
+    a {
+      color: #f1b600;
+    }
+  }
+
+  .ant-pagination-item-active:hover {
+    border: 1px solid #404040;
+    a {
+      color: #f1b600;
+    }
+  }
+  .ant-pagination-item-container svg {
+    color: #f1b600;
+    fill: #f1b600;
+    stroke: #f1b600;
+  }
+
+  .ant-select-focused:where(
+      .css-dev-only-do-not-override-ph9edi
+    ).ant-select:not(.ant-select-disabled):not(.ant-select-customize-input):not(
+      .ant-pagination-size-changer
+    )
+    .ant-select-selector {
+    box-shadow: 0 0 2px #f1b600 !important;
+    border-color: #f1b600 !important;
+  }
+
+  :where(.css-dev-only-do-not-override-ph9edi).ant-select-dropdown
+    .ant-select-item-option-selected:not(.ant-select-item-option-disabled) {
+    background-color: #f1b50012;
+  }
+
+  .ant-select-selector:hover,
+  .ant-select-selector:active {
+    border-color: #f1b600 !important;
+  }
+}
+
+
 @media (max-width: 880px) {
 	.cards {
 		grid-template-columns: repeat(2, 1fr);

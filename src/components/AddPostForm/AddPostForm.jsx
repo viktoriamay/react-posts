@@ -12,7 +12,7 @@ export const AddPostForm = () => {
     register,
     handleSubmit,
     formState: { errors },
-  } = useForm({ mode: 'onBlur' });
+  } = useForm({ mode: 'onChange' });
 
   const required = {
     value: true,
@@ -28,7 +28,7 @@ export const AddPostForm = () => {
   return (
     <>
       <Form
-        className="add_post_form"
+        className="form__modals"
         handleFormSubmit={handleSubmit(addPostRequest)}
         title="Добавьте ваш пост">
         <input
@@ -41,7 +41,7 @@ export const AddPostForm = () => {
           placeholder="Заголовок"
           defaultValue={''}
         />
-        {errors.title && <span>{errors?.title.message}</span>}
+        {errors.title && <span className="form__errors">{errors?.title.message}</span>}
 
         <textarea
           className="form__textarea"
@@ -53,7 +53,7 @@ export const AddPostForm = () => {
           placeholder="Описание"
           defaultValue={''}
         />
-        {errors.text && <span>{errors?.text.message}</span>}
+        {errors.text && <span className="form__errors">{errors?.text.message}</span>}
         <input
           className="form__input"
           {...register('tags')}
@@ -74,7 +74,7 @@ export const AddPostForm = () => {
           onChange={handleImageChange}
         />
         {imageSrc && <img src={imageSrc} alt="add-post-pic" />}
-        {errors.image && <span>{errors?.image.message}</span>}
+        {errors.image && <span className="form__errors">{errors?.image.message}</span>}
         <button className="form__button" type="submit">
           Добавить пост
         </button>

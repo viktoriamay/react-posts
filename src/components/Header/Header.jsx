@@ -14,13 +14,7 @@ import { Modal } from '../Modal/Modal';
 import { AddPostForm } from './../AddPostForm/AddPostForm';
 
 export const Header = ({ children }) => {
-  const {
-    favorites,
-    isAuth,
-    setIsAuth,
-    activeHeaderModal,
-    setActiveHeaderModal,
-  } = useContext(PostsContext);
+  const { favorites, isAuth, setIsAuth, activeHeaderModal, setActiveHeaderModal } = useContext(PostsContext);
 
   const navigate = useNavigate();
 
@@ -41,22 +35,23 @@ export const Header = ({ children }) => {
           <div className="header__icons_menu">
             {isAuth && (
               <>
-                <PlusCircleOutlined
-                  onClick={() =>
-                    setActiveHeaderModal({ component: 'addPost', isOpen: true })
-                  }
-                  className="header__add_icon"
-                />
-                <Link to={'/favorites'}>
-                  <div className="header__favorites_icon_wrapper">
-                    {favorites?.length !== 0 && (
-                      <span className="header__favorites_counter">
-                        {favorites?.length}
-                      </span>
-                    )}
-                    <HeartOutlined className="header__favorites_icon" />
-                  </div>
-                </Link>
+
+            <PlusCircleOutlined
+              onClick={() =>
+                setActiveHeaderModal({ component: 'addPost', isOpen: true })
+              }
+              className="header__add_icon"
+            />
+              <Link to={'/favorites'}>
+                <div className="header__favorites_icon_wrapper">
+                  {favorites.length !== 0 && (
+                    <span className="header__favorites_counter">
+                      {favorites.length}
+                    </span>
+                  )}
+                  <HeartOutlined className="header__favorites_icon" />
+                </div>
+              </Link>
               </>
             )}
             {isAuth ? (

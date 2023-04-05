@@ -6,7 +6,7 @@ import './App.scss';
 import useDebounce from './../../hooks/useDebounce';
 import { Search } from '../Search/Search';
 import Spinner from '../Spinner/Spinner';
-import { Route, Routes, useNavigate, useParams } from 'react-router-dom';
+import { Route, Routes, useNavigate, useParams, useLocation } from 'react-router-dom';
 import { PostPage } from '../../pages/PostPage/PostPage';
 import { PostsContext } from '../../context/PostsContext';
 import { FavoritePage } from '../../pages/FavoritePage/FavoritePage';
@@ -14,6 +14,9 @@ import { PostsPage } from '../../pages/PostsPage/PostsPage';
 import { Profile } from '../Profile/Profile';
 import { authApi } from './../../utils/authApi';
 import { UsersProfile } from './../UsersProfile/UsersProfile';
+import { PolicyPage } from '../../pages/PolicyPage/PolicyPage';
+import { Footer } from '../Footer/Footer';
+import { Unauthorized } from '../Unauthorized/Unauthorized';
 
 function App() {
   const [posts, setPosts] = useState([]); // посты
@@ -31,6 +34,8 @@ function App() {
     component: 'register',
   });
 
+  const [isLoading, setIsLoading] = useState()
+  const location = useLocation()
   const tabs = useMemo(() => {
     return [
       { id: 'newest', title: 'Самые новые ' },
@@ -247,7 +252,7 @@ function App() {
       .catch((error) => {
         console.log(error);
       })
-      .finally(handleHeaderCloseModal);
+      .finally(handleHeaderCloseModal, navigate('/'));
   };
 
   const registrationRequest = (data) => {
@@ -260,7 +265,7 @@ function App() {
         setIsAuth(true);
       })
       .catch((error) => console.log(error))
-      .finally(handleHeaderCloseModal);
+      .finally(handleHeaderCloseModal, navigate('/'));
   };
 
   const resetPasswordRequest = (formData) => {
@@ -279,7 +284,7 @@ function App() {
         .catch((error) => {
           console.error(error);
         })
-        .finally(handleHeaderCloseModal);
+        .finally(handleHeaderCloseModal, navigate('/'));
     } else {
       // если токена нет, то происходит запрос на отправку письма для восстановления пароля
       authApi
@@ -355,7 +360,7 @@ function App() {
     getUserCommentsInfo,
     formSubmitRequest,
     changeInput,
-    isLiked,
+    isLiked,isLoading, setIsLoading
   };
 
   return (
@@ -373,10 +378,13 @@ function App() {
             <Route path="/favorites" element={<FavoritePage />} />
             <Route path="/profile" element={<Profile />} />
             <Route path="/user/:userId" element={<UsersProfile />} />
+            <Route path="/policy" element={<PolicyPage />} />
 
             <Route path="*" element={<div>Not Found</div>} />
           </Routes>
+          {!isAuth && location && <Unauthorized />}
         </main>
+        <Footer />
       </PostsContext.Provider>
     </div>
   );

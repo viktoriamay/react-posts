@@ -8,7 +8,7 @@ import { Spinner } from '../../components/Spinner/Spinner';
 export const PostPage = ({ userById }) => {
   const [postCurrentUser, setPostCurrentUser] = useState(null); // текущий юзер на странице поста
   const [post, setPost] = useState(null); // текущий пост
-  const [isLoading, setIsLoading] = useState(false);
+  // const [isLoading, setIsLoading] = useState(false);
 
   const {
     favorites,
@@ -24,6 +24,7 @@ export const PostPage = ({ userById }) => {
     getUserCommentsInfo,
     isLiked,
     currentUser,
+    isLoading, setIsLoading
   } = useContext(PostsContext);
 
   const isLike = post?.likes?.some((id) => id === currentUser?._id);
@@ -38,14 +39,13 @@ export const PostPage = ({ userById }) => {
   useEffect(() => {
     setIsLoading(true);
 
-    Promise.all([api.getUserInfo(), api.getPostById(params.postId)])
-      .then(([userData, postData]) => {
-        setPostCurrentUser(userData);
+    api.getPostById(params.postId)
+      .then((postData) => {
         setPost(postData);
       })
       .catch((error) => console.log(error))
       .finally(() => setIsLoading(false));
-  }, [params.postId]);
+  }, [params.postId, setIsLoading]);
 
   const onPostLike = () => {
     handlePostLike(post);
@@ -110,7 +110,7 @@ export const PostPage = ({ userById }) => {
             ? updatedPost
             : prevFavorite;
         });
-        setFavorites(updatedFavorites);
+        setFavorites(updatedFavorites.length);
       })
       .catch((error) => {
         // openNotification('error', 'Ошибка', 'Не получилось отправить отзыв');

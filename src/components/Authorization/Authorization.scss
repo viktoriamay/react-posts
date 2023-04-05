@@ -1,18 +1,27 @@
-.login {
-  padding: 2rem;
-  max-width: 300px;
-
-
-  input {
-    padding: 0.5rem;
+.auth {
+  &__navigation {
+    cursor: pointer;
   }
 
-  button  {
-    padding: 0.5rem;
-
+  &__info {
+    max-width: 15vw;
+    text-align: left;
+    font-size: 12px;
+    line-height: 14px;
+    cursor: pointer;
+    transition: 0.3s ease;
+     &:hover {
+      color: #f1b600;
+     }
   }
+}
 
-  p {
-    margin: 0;
-  }
+.reset_pass__active {
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
+}
+
+.reset_pass__hide {
+  display: none;
 }

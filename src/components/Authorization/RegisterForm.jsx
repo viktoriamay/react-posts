@@ -39,36 +39,54 @@ export const RegisterForm = ({ setShowAuthComponent, headerCloseModal }) => {
     },
   });
 
-const { registrationRequest} = useContext(PostsContext);
+  const { registrationRequest, handleHeaderCloseModal } =
+    useContext(PostsContext);
 
   const navigate = useNavigate();
 
   return (
     <Form
       handleFormSubmit={handleSubmit(registrationRequest)}
-      className="login"
+      className="form__modals"
       title="Регистрация">
-      <input {...emailRegister} type="email" name="email" placeholder="Email" />
-      {errors.email && <p>{errors?.email?.message}</p>}
+      <input
+        {...emailRegister}
+        type="email"
+        name="email"
+        placeholder="Email"
+        className="form__input"
+      />
+      {errors.email && (
+        <span className="form__errors">{errors?.email?.message}</span>
+      )}
       <input
         {...passwordRegister}
         type="password"
         name="password"
         placeholder="Пароль"
+        className="form__input"
       />
-      {errors.password && <p>{errors?.password?.message}</p>}
-      <p
+      {errors.password && (
+        <span className="form__errors">{errors?.password?.message}</span>
+      )}
+      <span
         className="auth__info"
         onClick={() => {
           navigate('/policy');
-        }}
-        style={{ textAlign: 'left', fontSize: '12px', lineHeight: '14px' }}>
+          handleHeaderCloseModal();
+        }}>
         Регистрируясь на сайте, вы соглашаетесь с нашими Правилами и Политикой
         конфиденциальности и соглашаетесь на информационную рассылку.
-      </p>
-      <button type="submit">Регистрация</button>
+      </span>
+      <button className="form__button" type="submit">
+        Регистрация
+      </button>
 
-      <div onClick={() => setShowAuthComponent('login')}>Вход</div>
+      <div
+        className="auth__navigation"
+        onClick={() => setShowAuthComponent('login')}>
+        Вход
+      </div>
     </Form>
   );
 };
