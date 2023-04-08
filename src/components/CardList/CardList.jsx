@@ -21,13 +21,13 @@ export const CardList = ({ posts = [] }) => {
   };
 
   useEffect(() => {
-    const sliced = posts.slice((page - 1) * size, size * page);
+    const sliced = posts?.slice((page - 1) * size, size * page);
     setPaginated(sliced);
   }, [page, posts, size]);
 
   useEffect(() => {
     setPage(1);
-  }, [posts.length, size]);
+  }, [posts?.length, size]);
 
   return (
     <>
@@ -41,7 +41,7 @@ export const CardList = ({ posts = [] }) => {
           locale={locale}
           defaultCurrent={1}
           current={page}
-          total={Math.ceil(posts.length)}
+          total={Math.ceil(posts?.length)}
           showSizeChanger
           defaultPageSize={6}
           pageSizeOptions={[6, 9, 30]}

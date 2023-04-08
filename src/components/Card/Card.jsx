@@ -52,14 +52,13 @@ export const Card = (props) => {
             </span>
           </div>
           <h2 className="card__title">
-            {props?.title.replace(
+            {props?.title?.replace(
               props?.title[0],
               props?.title[0].toUpperCase(),
             )}
           </h2>
           <p className="card__text">
-            {props.text
-              .replaceAll(/<\/?[A-Za-z]+[^>]*>/gi, '')
+            {props?.text?.replaceAll(/<\/?[A-Za-z]+[^>]*>/gi, '')
               .slice(0, 50)
               .replace(props?.text[0], props?.text[0].toUpperCase())}
             {props.text?.length > 40 && '...'}
