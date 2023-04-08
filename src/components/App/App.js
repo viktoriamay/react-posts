@@ -5,8 +5,7 @@ import { SearchInfo } from '../SearchInfo/SearchInfo';
 import './App.scss';
 import useDebounce from './../../hooks/useDebounce';
 import { Search } from '../Search/Search';
-import Spinner from '../Spinner/Spinner';
-import { Route, Routes, useNavigate, useParams } from 'react-router-dom';
+import { Route, Routes, useNavigate } from 'react-router-dom';
 import { PostPage } from '../../pages/PostPage/PostPage';
 import { PostsContext } from '../../context/PostsContext';
 import { FavoritePage } from '../../pages/FavoritePage/FavoritePage';
@@ -37,10 +36,10 @@ function App() {
 
   const tabs = useMemo(() => {
     return [
-      { id: 'newest', title: 'Самые новые ' },
-      { id: 'popular', title: 'Популярные ' },
-      { id: 'discussed', title: 'Обсуждаемые ' },
-      { id: 'oldest', title: 'Самые старые ' },
+      { id: 'newest', title: 'Самые новые' },
+      { id: 'popular', title: 'Популярные' },
+      { id: 'discussed', title: 'Обсуждаемые' },
+      { id: 'oldest', title: 'Самые старые' },
     ];
   }, []);
 
@@ -112,20 +111,18 @@ function App() {
   };
 
   const filterPostsRequest = () => {
-    // фильтрация карточек по запросу в поисковой строке
+    const searchQuery = debounceSearchQuery;
     api
-      .search(debounceSearchQuery.replace('#', '%23').replace(' ' && '%23', ''))
+      .search(searchQuery)
       .then((filteredPosts) => {
-        setPosts([...filteredPosts]);
-      })
-      .then(() => {
         if (searchQuery.includes('#')) {
-          const postsFilteredByTag = posts?.filter((post) =>
-            post?.tags?.includes(
-              searchQuery.replace('#', '%23').replace(' ' && '%23', ''),
-            ),
-          );
+          const postsFilteredByTag = filteredPosts?.filter((post) => {
+            const result = post?.tags?.includes(searchQuery.replace('#', ''));
+            return result;
+          });
           setPosts([...postsFilteredByTag]);
+        } else {
+          setPosts([...filteredPosts]);
         }
       })
       .catch((error) => console.log(error));
@@ -179,24 +176,24 @@ function App() {
     switch (currentSort) {
       case 'popular':
         setPosts([
-          ...posts.sort((a, b) => b?.likes?.length - a?.likes?.length),
+          ...posts?.sort((a, b) => b?.likes?.length - a?.likes?.length),
         ]);
         break;
       case 'discussed':
         setPosts([
-          ...posts.sort((a, b) => b?.comments?.length - a?.comments?.length),
+          ...posts?.sort((a, b) => b?.comments?.length - a?.comments?.length),
         ]);
         break;
       case 'newest':
         setPosts([
-          ...posts.sort(
+          ...posts?.sort(
             (a, b) => new Date(b?.created_at) - new Date(a?.created_at),
           ),
         ]);
         break;
       case 'oldest':
         setPosts([
-          ...posts.sort(
+          ...posts?.sort(
             (a, b) => new Date(a?.created_at) - new Date(b?.created_at),
           ),
         ]);
