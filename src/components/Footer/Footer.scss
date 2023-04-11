@@ -2,7 +2,7 @@
   background-color: #404040;
   color: #f1b600;
   margin-top: 4rem;
-  padding: 1rem;
+  padding: 2rem 1rem;
 
   &__wrapper {
     display: flex;
@@ -14,8 +14,31 @@
     }
   }
 
+  &__madeby {
+    display: flex;
+    flex-direction: column;
+    text-align: center;
+    margin: 0;
+    gap: 0.5rem;
+  }
+
   &__socials {
     display: flex;
     gap: 1.5rem;
+  }
+}
+
+@media (max-width: 576px) {
+  .footer__wrapper {
+    flex-direction: column;
+    gap: 1.5rem;
+  }
+
+  .title__footer {
+    display: block;
+  }
+
+  .footer__madeby {
+    flex-direction: row;
   }
 }
