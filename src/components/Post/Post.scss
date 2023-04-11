@@ -200,6 +200,11 @@
     gap: 2rem;
   }
 
+  &__comments_author {
+    display: flex;
+    flex-direction: column;
+    gap: 1.2rem;
+  }
   &__comments_author_flex {
     padding: 1.5rem 2rem 1.3rem 1.5rem;
     box-shadow: 0 2px 20px #4040402f;
@@ -223,6 +228,7 @@
 
   &__comments_author_link {
     display: inline-flex;
+    align-items: center;
     gap: 1rem;
     text-decoration: none;
     color: #404040;
@@ -240,10 +246,6 @@
     &:hover {
       color: #f1b600;
     }
-  }
-
-  &__comments_author_data {
-    margin: -1.4rem 0 0 4.2rem;
   }
 
   &__comments_author_name {
@@ -271,5 +273,28 @@
   &__comments_button {
     padding: 0.5rem;
     cursor: pointer;
+  }
+}
+
+
+@media (max-width: 576px)  {
+  .post__wrapper {
+    display: flex;
+    flex-direction: column;
+  }
+
+  .post__likes {
+    flex-direction: column;
+  }
+
+  .post__comments_form {
+    max-width: 100%;
+  }
+}
+
+@media (max-width: 420px) {
+  .post__comments_author_link {
+    flex-direction: column;
+    align-items: flex-start;
   }
 }
