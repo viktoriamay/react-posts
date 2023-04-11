@@ -4,7 +4,7 @@ import {
   PlusCircleOutlined,
   SmileOutlined,
 } from '@ant-design/icons';
-import { useContext } from 'react';
+import { useContext, useState } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 import { PostsContext } from '../../context/PostsContext';
 import { Logo } from '../Logo/Logo';
@@ -12,6 +12,7 @@ import './Header.scss';
 import { Authorization } from './../Authorization/Authorization';
 import { Modal } from '../Modal/Modal';
 import { AddPostForm } from './../AddPostForm/AddPostForm';
+import { BurgerMenu } from '../BurgerMenu/BurgerMenu';
 
 export const Header = ({ children }) => {
   const {
@@ -28,33 +29,39 @@ export const Header = ({ children }) => {
     setActiveHeaderModal({ ...activeHeaderModal, isOpen: false });
   };
 
+  const [logoTitle, setLogoTitle] = useState(true);
+
   return (
     <header className="header">
       <div className="container">
         <div className="header__wrapper">
           <div className="header__action_menu">
             <Link to={'/'}>
-              <Logo />
+              <Logo logoTitle={logoTitle} />
             </Link>
             {children}
           </div>
           <div className="header__icons_menu">
             {isAuth && (
               <>
+                <BurgerMenu
+                  activeHeaderModal={activeHeaderModal}
+                  setActiveHeaderModal={setActiveHeaderModal}
+                />
                 <PlusCircleOutlined
                   onClick={() =>
                     setActiveHeaderModal({ component: 'addPost', isOpen: true })
                   }
-                  className="header__add_icon"
+                  className="header__nav_icon project_icon__svg"
                 />
-                <Link to={'/favorites'}>
+                <Link to={'/favorites'} className='header__fav_link'>
                   <div className="header__favorites_icon_wrapper">
                     {favorites?.length !== 0 && (
                       <span className="header__favorites_counter">
                         {favorites?.length}
                       </span>
                     )}
-                    <HeartOutlined className="header__favorites_icon" />
+                    <HeartOutlined className="project_icon__svg" />
                   </div>
                 </Link>
               </>
@@ -62,10 +69,10 @@ export const Header = ({ children }) => {
             {isAuth ? (
               <SmileOutlined
                 onClick={() => navigate('/profile')}
-                className="header__login_icon"></SmileOutlined>
+                className="header__nav_icon project_icon__svg"></SmileOutlined>
             ) : (
               <LoginOutlined
-                className="header__add_icon"
+                className="header__nav_icon project_icon__svg"
                 onClick={() =>
                   setActiveHeaderModal({ component: 'register', isOpen: true })
                 }
