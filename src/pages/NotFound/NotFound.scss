@@ -1,0 +1,21 @@
+.not_found {
+  height: 50vh;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  text-align: center;
+
+  &__title {
+    font-size: 30px;
+    line-height: 45px;
+  }
+
+  &__link {
+    color: #404040;
+    text-decoration: none;
+    font-size: 20px;
+
+    border-bottom: 2px solid #f1b600;
+  }
+}
