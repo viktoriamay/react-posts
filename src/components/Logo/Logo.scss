@@ -37,3 +37,9 @@
     margin: 0;
   }
 }
+
+@media (max-width: 576px) {
+  .logo__title_wrapper {
+    display: none;
+  }
+}
