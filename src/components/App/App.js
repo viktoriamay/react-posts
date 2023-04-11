@@ -17,6 +17,8 @@ import { Unauthorized } from './../Unauthorized/Unauthorized';
 import { Footer } from './../Footer/Footer';
 import { PolicyPage } from './../../pages/PolicyPage/PolicyPage';
 import { openNotification } from './../Notification/Notification';
+import { useCurrentWidth } from '../../hooks/useCurrentWidth';
+import { NotFound } from '../../pages/NotFound/NotFound';
 
 function App() {
   const [posts, setPosts] = useState([]); // посты
@@ -33,6 +35,7 @@ function App() {
     isOpen: false,
     component: 'register',
   });
+  const [isMobileView, setMobileView] = useState(false);
 
   const tabs = useMemo(() => {
     return [
@@ -330,8 +333,16 @@ function App() {
     setIsAuth(!!haveToken);
   });
 
-  // console.log({favorites});
+  let width = useCurrentWidth();
+
+  useEffect(() => {
+    if (width < 576) {
+      setMobileView(true);
+    } else setMobileView(false);
+  }, [width]);
+
   const valueContextProvider = {
+    sortedData,
     posts,
     setPosts,
     favorites,
@@ -369,6 +380,7 @@ function App() {
     formSubmitRequest,
     changeInput,
     isLiked,
+    isMobileView,
   };
 
   return (
@@ -392,7 +404,7 @@ function App() {
             <Route path="/user/:userId" element={<UsersProfile />} />
             <Route path="/policy" element={<PolicyPage />} />
 
-            <Route path="*" element={<div>Not Found</div>} />
+            <Route path="*" element={<NotFound />} />
           </Routes>
         </main>
         <Footer />
