@@ -25,3 +25,15 @@
     transform: rotate(360deg);
   }
 }
+
+@media (max-width: 768px) {
+  .unauthorized {
+    flex-direction: column;
+    gap: 3rem;
+
+    &__animation {
+      max-width: 300px;
+      max-height: 300px;
+    }
+  }
+}
