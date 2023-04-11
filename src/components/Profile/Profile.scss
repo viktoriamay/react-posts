@@ -5,8 +5,7 @@
   align-items: center;
 
   &__avatar {
-    width: 20rem;
-    height: 20rem;
+    width: 40%;
     display: flex;
     justify-content: center;
     align-items: center;
@@ -40,4 +39,14 @@
 
 .profile__button {
   margin-top: 0;
+}
+
+@media (max-width: 576px) {
+  .profile__avatar {
+    width: 85%;
+  }
+
+  .profile__form {
+    grid-template-columns: 1fr;
+  }
 }

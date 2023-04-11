@@ -27,7 +27,7 @@ export const Profile = () => {
     <div>
       <div className="button_back_offset">
         <PagesBackButton />
-        <LogoutOutlined onClick={handleLogout} className="header__login_icon" />
+        <LogoutOutlined onClick={handleLogout} className="project_icon__svg" />
       </div>
       <h2>Редактирование профиля</h2>
       {currentUser ? (
