@@ -27,7 +27,7 @@ export const Footer = () => {
               <SendOutlined className="project_icon__svg" />
             </a>
           </div>
-          <Link to={'/'}>
+          <Link to={'/react-posts'}>
             <Logo />
           </Link>
         </div>

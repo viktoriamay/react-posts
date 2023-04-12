@@ -36,7 +36,7 @@ export const Header = ({ children }) => {
       <div className="container">
         <div className="header__wrapper">
           <div className="header__action_menu">
-            <Link to={'/'}>
+            <Link to={'/react-posts'}>
               <Logo logoTitle={logoTitle} />
             </Link>
             {children}
