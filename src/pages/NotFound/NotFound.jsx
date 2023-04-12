@@ -8,7 +8,7 @@ export const NotFound = () => {
       <h2 className="not_found__title">
         Страница не найдена <FrownOutlined />
       </h2>
-      <Link to="/" className="not_found__link">
+      <Link to="/react-posts" className="not_found__link">
         Обратно на главную
       </Link>
     </div>
