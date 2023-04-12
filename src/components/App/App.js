@@ -82,7 +82,7 @@ function App() {
   const handleLogout = () => {
     // выход из аккаунта
     localStorage.removeItem('token');
-    navigate('/');
+    navigate('/react-posts');
   };
 
   // возвращает накопленное сёрчКвери
@@ -143,7 +143,7 @@ function App() {
     // фильтрация постов по нажатию на сабмит в сёрче, после текстового запроса
     e.preventDefault();
     filterPostsRequest();
-    navigate('/');
+    navigate('/react-posts');
   };
 
   // метод some возвращает тру в данном случае если среди массива лайков поста (там хранятся айди тех, кто поставил лайки) есть каррентЮзер__айди
@@ -236,7 +236,7 @@ function App() {
 
         return updatedPosts;
       })
-      .then(navigate('/'));
+      .then(navigate('/react-posts'));
   };
 
   const loginRequest = (data) => {
