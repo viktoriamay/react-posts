@@ -5,7 +5,7 @@ export const SearchInfo = ({ searchText, searchCount }) => {
   const location = useLocation();
 
   return (
-    location.pathname === '/' &&
+    location.pathname === '/react-posts' &&
     (searchText && searchCount !== 0 ? (
       <div className="search__info">
         По запросу <span className="search__info_request">{searchText}</span>{' '}
