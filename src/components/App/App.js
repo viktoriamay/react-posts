@@ -394,9 +394,9 @@ function App() {
           <SearchInfo searchText={searchQuery} searchCount={posts?.length} />
           <Routes>
             {!isAuth ? (
-              <Route path="/" element={<Unauthorized />} />
+              <Route path="/react-posts" element={<Unauthorized />} />
             ) : (
-              <Route path="/" element={<PostsPage />} />
+              <Route path="/react-posts" element={<PostsPage />} />
             )}
             <Route path="/post/:postId" element={<PostPage />} />
             <Route path="/favorites" element={<FavoritePage />} />
