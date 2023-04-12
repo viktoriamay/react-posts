@@ -72,7 +72,7 @@ export const Header = ({ children }) => {
                 className="header__nav_icon project_icon__svg"></SmileOutlined>
             ) : (
               <LoginOutlined
-                className="header__nav_icon project_icon__svg"
+                className="project_icon__svg"
                 onClick={() =>
                   setActiveHeaderModal({ component: 'register', isOpen: true })
                 }
